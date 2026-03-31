@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, FileImage, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n-context';
 
 interface DicomUploaderProps {
   onFilesLoaded: (files: ArrayBuffer[]) => void;
@@ -13,6 +14,7 @@ interface DicomUploaderProps {
 
 export default function DicomUploader({ onFilesLoaded, isLoading, progress }: DicomUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
+  const { t } = useI18n();
 
   const handleFiles = useCallback(async (fileList: FileList) => {
     const buffers: ArrayBuffer[] = [];
@@ -63,11 +65,22 @@ export default function DicomUploader({ onFilesLoaded, isLoading, progress }: Di
       transition={{ duration: 0.4 }}
       className="flex flex-col items-center justify-center min-h-[60vh] px-4"
     >
+      {/* SEO-visible h1 */}
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 mb-2 text-center">
+        BrainAxis
+      </h1>
+      <p className="text-sm text-slate-500 mb-8 text-center max-w-md">
+        {t('app.tagline')}
+      </p>
+
       <div
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onClick={handleClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(); }}
         className={`
           relative w-full max-w-xl cursor-pointer rounded-2xl border-2 border-dashed p-12
           transition-all duration-300 ease-out
@@ -90,8 +103,8 @@ export default function DicomUploader({ onFilesLoaded, isLoading, progress }: Di
               <Loader2 className="w-12 h-12 text-indigo-500 animate-spin" />
               <p className="text-slate-700 font-medium">
                 {progress
-                  ? `Parsing ${progress.current} of ${progress.total} slices...`
-                  : 'Processing DICOM files...'
+                  ? t('upload.parsing', { current: progress.current, total: progress.total })
+                  : t('upload.processing')
                 }
               </p>
               {progress && (
@@ -125,15 +138,15 @@ export default function DicomUploader({ onFilesLoaded, isLoading, progress }: Di
               </motion.div>
               <div>
                 <p className="text-lg font-semibold text-slate-700">
-                  {isDragging ? 'Drop DICOM files here' : 'Drag & drop DICOM files'}
+                  {isDragging ? t('upload.titleDragging') : t('upload.title')}
                 </p>
                 <p className="text-sm text-slate-500 mt-1">
-                  or click to browse — supports .dcm files and folder upload
+                  {t('upload.subtitle')}
                 </p>
               </div>
               <div className="flex items-center gap-2 mt-2 text-xs text-slate-400">
                 <div className="w-8 h-px bg-slate-300" />
-                <span>100% client-side — files never leave your browser</span>
+                <span>{t('upload.privacy')}</span>
                 <div className="w-8 h-px bg-slate-300" />
               </div>
             </motion.div>
@@ -141,9 +154,9 @@ export default function DicomUploader({ onFilesLoaded, isLoading, progress }: Di
         </AnimatePresence>
       </div>
       <p className="mt-4 text-sm text-slate-400">
-        First time?{' '}
+        {t('upload.guide')}{' '}
         <Link href="/how-to-use" className="text-indigo-500 hover:text-indigo-600 underline underline-offset-2">
-          See the step-by-step guide
+          {t('upload.guideLink')}
         </Link>
       </p>
     </motion.div>

@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send, Check } from 'lucide-react';
+import { useI18n } from '@/lib/i18n-context';
 
 export default function FeedbackButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
-
-  const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID || '';
+  const { t } = useI18n();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,12 +18,25 @@ export default function FeedbackButton() {
 
     setStatus('sending');
     try {
+      // Send via Formspree
+      const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID || '';
       if (formspreeId) {
         await fetch(`https://formspree.io/f/${formspreeId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message, email: email || 'not provided' }),
+          body: JSON.stringify({
+            message,
+            email: email || 'not provided',
+            _replyto: email || undefined,
+            _subject: `BrainAxis Feedback: ${message.slice(0, 50)}`,
+          }),
         });
+      }
+      // Also send directly via mailto fallback using a hidden form
+      // This ensures feedback reaches the email even without Formspree
+      if (!formspreeId) {
+        const mailto = `mailto:taeshinkim11@gmail.com?subject=${encodeURIComponent('BrainAxis Feedback')}&body=${encodeURIComponent(`Feedback: ${message}\n\nFrom: ${email || 'Anonymous'}`)}`;
+        window.open(mailto, '_blank');
       }
       setStatus('sent');
       setTimeout(() => {
@@ -44,6 +57,7 @@ export default function FeedbackButton() {
         className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-slate-200 shadow-lg hover:shadow-xl flex items-center justify-center text-slate-600 hover:text-indigo-500 transition-all duration-200"
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
+        aria-label="Send feedback"
       >
         <MessageSquare className="w-5 h-5" />
       </motion.button>
@@ -58,7 +72,7 @@ export default function FeedbackButton() {
             className="fixed bottom-20 right-6 z-50 w-80 bg-white/90 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-              <h3 className="text-sm font-semibold text-slate-800">Send Feedback</h3>
+              <h3 className="text-sm font-semibold text-slate-800">{t('feedback.title')}</h3>
               <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-slate-600">
                 <X className="w-4 h-4" />
               </button>
@@ -67,14 +81,14 @@ export default function FeedbackButton() {
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="How can we improve BrainAxis?"
+                placeholder={t('feedback.placeholder')}
                 className="w-full h-24 px-3 py-2 text-sm border border-slate-200 rounded-lg resize-none focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 bg-white text-slate-700 placeholder:text-slate-400"
               />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email (optional)"
+                placeholder={t('feedback.email')}
                 className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 bg-white text-slate-700 placeholder:text-slate-400"
               />
               <button
@@ -91,14 +105,14 @@ export default function FeedbackButton() {
                 {status === 'sent' ? (
                   <>
                     <Check className="w-4 h-4" />
-                    Thanks for your feedback!
+                    {t('feedback.thanks')}
                   </>
                 ) : status === 'sending' ? (
-                  'Sending...'
+                  t('feedback.sending')
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    Send Feedback
+                    {t('feedback.send')}
                   </>
                 )}
               </button>

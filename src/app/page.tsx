@@ -13,8 +13,10 @@ import { Point3D, computeACPCAlignment, buildRotationMatrix, resliceVolume } fro
 import { exportPngSnapshots, exportDicomZip } from '@/lib/export';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { _post } from '@/utils/analytics';
+import { useI18n } from '@/lib/i18n-context';
 
 export default function Home() {
+  const { t } = useI18n();
   const [volume, setVolume] = useState<DicomVolume | null>(null);
   const [originalVolume, setOriginalVolume] = useState<DicomVolume | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,13 +75,13 @@ export default function Home() {
           y: Math.floor(vol.height / 2),
           z: Math.floor(vol.depth / 2),
         });
-        setStatusMessage(`Loaded ${slices.length} slices (${vol.width}×${vol.height}×${vol.depth})`);
+        setStatusMessage(t('status.loaded', { count: slices.length, w: vol.width, h: vol.height, d: vol.depth }));
         _post({ action: 'upload', dicom_modality: vol.modality, num_slices: slices.length });
       } else {
-        setStatusMessage('Failed to build volume from DICOM files');
+        setStatusMessage(t('status.failed'));
       }
     } catch {
-      setStatusMessage('Error parsing DICOM files');
+      setStatusMessage(t('status.error'));
     }
 
     setIsLoading(false);
@@ -90,18 +92,18 @@ export default function Home() {
     if (markingMode === 'ac') {
       setAcPoint(point);
       setMarkingMode('none');
-      setStatusMessage(`AC marked at (${point.x}, ${point.y}, ${point.z})`);
+      setStatusMessage(t('status.acMarked', { x: point.x, y: point.y, z: point.z }));
     } else if (markingMode === 'pc') {
       setPcPoint(point);
       setMarkingMode('none');
-      setStatusMessage(`PC marked at (${point.x}, ${point.y}, ${point.z})`);
+      setStatusMessage(t('status.pcMarked', { x: point.x, y: point.y, z: point.z }));
     }
   }, [markingMode]);
 
   const handleAutoAlign = useCallback(() => {
     if (!acPoint || !pcPoint || !originalVolume) return;
     setIsAligning(true);
-    setStatusMessage('Computing AC-PC alignment...');
+    setStatusMessage(t('status.aligning'));
 
     // Use setTimeout to allow UI to update before heavy computation
     setTimeout(() => {
@@ -120,13 +122,13 @@ export default function Home() {
         setRollDeg(alignment.rollDeg);
         setYawDeg(alignment.yawDeg);
         setIsAligned(true);
-        setStatusMessage(`Aligned: pitch=${alignment.pitchDeg.toFixed(1)}° roll=${alignment.rollDeg.toFixed(1)}° yaw=${alignment.yawDeg.toFixed(1)}°`);
+        setStatusMessage(t('status.aligned', { pitch: alignment.pitchDeg.toFixed(1), roll: alignment.rollDeg.toFixed(1), yaw: alignment.yawDeg.toFixed(1) }));
         _post({
           action: 'align',
           alignment_angles: { x: alignment.pitchDeg, y: alignment.rollDeg, z: alignment.yawDeg },
         });
       } catch {
-        setStatusMessage('Alignment failed');
+        setStatusMessage(t('status.alignFailed'));
       }
       setIsAligning(false);
     }, 50);
@@ -154,7 +156,7 @@ export default function Home() {
       setIsAligned(false);
       setAcPoint(null);
       setPcPoint(null);
-      setStatusMessage('Reset to original volume');
+      setStatusMessage(t('status.reset'));
     }
   }, [originalVolume]);
 
@@ -172,17 +174,17 @@ export default function Home() {
 
   const handleExportPng = useCallback(async () => {
     if (!volume) return;
-    setStatusMessage('Exporting PNG snapshots...');
+    setStatusMessage(t('status.exportPng'));
     await exportPngSnapshots(volume, axialSlice, sagittalSlice, coronalSlice, windowCenter, windowWidth);
-    setStatusMessage('PNG export complete');
+    setStatusMessage(t('status.exportPngDone'));
     _post({ action: 'export', feature_attempted: 'png' });
   }, [volume, axialSlice, sagittalSlice, coronalSlice, windowCenter, windowWidth]);
 
   const handleExportDicom = useCallback(async () => {
     if (!volume) return;
-    setStatusMessage('Exporting DICOM data...');
+    setStatusMessage(t('status.exportDicom'));
     await exportDicomZip(volume);
-    setStatusMessage('DICOM export complete');
+    setStatusMessage(t('status.exportDicomDone'));
     _post({ action: 'export', feature_attempted: 'dicom' });
   }, [volume]);
 
@@ -303,7 +305,7 @@ export default function Home() {
                           : 'text-slate-600 hover:bg-slate-100'
                       }`}
                     >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      {t(`viewer.${tab}`)}
                     </button>
                   ))}
                 </div>
@@ -337,7 +339,7 @@ export default function Home() {
                   onClick={() => setShowMobileControls(!showMobileControls)}
                   className="w-full py-2 text-sm font-semibold text-slate-700 bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-xl"
                 >
-                  {showMobileControls ? 'Hide Controls' : 'Show Controls'}
+                  {showMobileControls ? t('mobile.hideControls') : t('mobile.showControls')}
                 </button>
 
                 <AnimatePresence>

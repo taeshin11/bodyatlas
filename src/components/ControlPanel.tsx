@@ -5,6 +5,7 @@ import * as Slider from '@radix-ui/react-slider';
 import { Crosshair, RotateCcw, Compass, Download, ChevronDown } from 'lucide-react';
 import { Point3D } from '@/lib/alignment';
 import { useState } from 'react';
+import { useI18n } from '@/lib/i18n-context';
 
 interface ControlPanelProps {
   acPoint: Point3D | null;
@@ -102,6 +103,7 @@ export default function ControlPanel({
 }: ControlPanelProps) {
   const [showExport, setShowExport] = useState(false);
   const [showWL, setShowWL] = useState(false);
+  const { t } = useI18n();
 
   const canAlign = acPoint !== null && pcPoint !== null;
 
@@ -116,7 +118,7 @@ export default function ControlPanel({
       <section className="space-y-3">
         <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
           <Crosshair className="w-4 h-4 text-indigo-500" />
-          Landmarks
+          {t('controls.landmarks')}
         </h3>
         <div className="space-y-2">
           <button
@@ -130,7 +132,7 @@ export default function ControlPanel({
             }`}
           >
             <span className="inline-block w-2 h-2 rounded-full mr-2 bg-emerald-500" />
-            {acPoint ? `AC: (${acPoint.x}, ${acPoint.y}, ${acPoint.z})` : 'Mark AC Point'}
+            {acPoint ? `AC: (${acPoint.x}, ${acPoint.y}, ${acPoint.z})` : t('controls.markAC')}
           </button>
           <button
             onClick={() => onSetMarkingMode(markingMode === 'pc' ? 'none' : 'pc')}
@@ -143,7 +145,7 @@ export default function ControlPanel({
             }`}
           >
             <span className="inline-block w-2 h-2 rounded-full mr-2 bg-amber-500" />
-            {pcPoint ? `PC: (${pcPoint.x}, ${pcPoint.y}, ${pcPoint.z})` : 'Mark PC Point'}
+            {pcPoint ? `PC: (${pcPoint.x}, ${pcPoint.y}, ${pcPoint.z})` : t('controls.markPC')}
           </button>
         </div>
       </section>
@@ -152,7 +154,7 @@ export default function ControlPanel({
       <section className="space-y-3">
         <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
           <Compass className="w-4 h-4 text-indigo-500" />
-          Alignment
+          {t('controls.alignment')}
         </h3>
         <button
           onClick={onAutoAlign}
@@ -163,10 +165,10 @@ export default function ControlPanel({
               : 'bg-slate-100 text-slate-400 cursor-not-allowed'
           }`}
         >
-          {isAligning ? 'Aligning...' : isAligned ? 'Re-Align to AC-PC' : 'Auto Align to AC-PC'}
+          {isAligning ? t('controls.aligning') : isAligned ? t('controls.reAlign') : t('controls.autoAlign')}
         </button>
         {!canAlign && (
-          <p className="text-xs text-slate-400">Mark both AC and PC points to enable alignment</p>
+          <p className="text-xs text-slate-400">{t('controls.needBoth')}</p>
         )}
       </section>
 
@@ -174,19 +176,19 @@ export default function ControlPanel({
       <section className="space-y-3">
         <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
           <RotateCcw className="w-4 h-4 text-indigo-500" />
-          Manual Rotation
+          {t('controls.rotation')}
         </h3>
         <div className="space-y-3">
-          <SliderControl label="X (Pitch)" value={pitchDeg} onChange={onPitchChange} min={-45} max={45} step={0.1} unit="°" />
-          <SliderControl label="Y (Roll)" value={rollDeg} onChange={onRollChange} min={-45} max={45} step={0.1} unit="°" />
-          <SliderControl label="Z (Yaw)" value={yawDeg} onChange={onYawChange} min={-45} max={45} step={0.1} unit="°" />
+          <SliderControl label={t('controls.pitch')} value={pitchDeg} onChange={onPitchChange} min={-45} max={45} step={0.1} unit="°" />
+          <SliderControl label={t('controls.roll')} value={rollDeg} onChange={onRollChange} min={-45} max={45} step={0.1} unit="°" />
+          <SliderControl label={t('controls.yaw')} value={yawDeg} onChange={onYawChange} min={-45} max={45} step={0.1} unit="°" />
         </div>
         {isAligned && (
           <button
             onClick={onReset}
             className="w-full px-3 py-2 rounded-lg text-sm font-medium bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all duration-200"
           >
-            Reset Alignment
+            {t('controls.reset')}
           </button>
         )}
       </section>
@@ -197,13 +199,13 @@ export default function ControlPanel({
           onClick={() => setShowWL(!showWL)}
           className="flex items-center justify-between w-full text-sm font-semibold text-slate-800"
         >
-          <span>Window / Level</span>
+          <span>{t('controls.windowLevel')}</span>
           <ChevronDown className={`w-4 h-4 transition-transform ${showWL ? 'rotate-180' : ''}`} />
         </button>
         {showWL && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="space-y-3 overflow-hidden">
-            <SliderControl label="Center" value={windowCenter} onChange={onWindowCenterChange} min={-1000} max={3000} step={1} />
-            <SliderControl label="Width" value={windowWidth} onChange={onWindowWidthChange} min={1} max={4000} step={1} />
+            <SliderControl label={t('controls.center')} value={windowCenter} onChange={onWindowCenterChange} min={-1000} max={3000} step={1} />
+            <SliderControl label={t('controls.width')} value={windowWidth} onChange={onWindowWidthChange} min={1} max={4000} step={1} />
           </motion.div>
         )}
       </section>
@@ -216,7 +218,7 @@ export default function ControlPanel({
         >
           <span className="flex items-center gap-1.5">
             <Download className="w-4 h-4" />
-            Export
+            {t('controls.export')}
           </span>
           <ChevronDown className={`w-4 h-4 transition-transform ${showExport ? 'rotate-180' : ''}`} />
         </button>
@@ -226,13 +228,13 @@ export default function ControlPanel({
               onClick={onExportDicom}
               className="w-full px-3 py-2 rounded-lg text-sm font-medium bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all"
             >
-              Download DICOM (ZIP)
+              {t('controls.exportDicom')}
             </button>
             <button
               onClick={onExportPng}
               className="w-full px-3 py-2 rounded-lg text-sm font-medium bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all"
             >
-              Download PNG Snapshots
+              {t('controls.exportPng')}
             </button>
           </motion.div>
         )}

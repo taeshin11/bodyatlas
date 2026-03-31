@@ -3,6 +3,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { DicomVolume, getAxialSlice, getSagittalSlice, getCoronalSlice, applyWindowing } from '@/lib/dicom';
 import { Point3D } from '@/lib/alignment';
+import { useI18n } from '@/lib/i18n-context';
 
 export type ViewType = 'axial' | 'sagittal' | 'coronal';
 
@@ -224,7 +225,8 @@ export default function ViewerPanel({
     onSliceChange(newSlice);
   }, [sliceIndex, getMaxSlice, onSliceChange]);
 
-  const label = viewType.charAt(0).toUpperCase() + viewType.slice(1);
+  const { t } = useI18n();
+  const label = t(`viewer.${viewType}`);
 
   return (
     <div ref={containerRef} className="relative flex flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
@@ -238,7 +240,7 @@ export default function ViewerPanel({
         <div className={`absolute top-2 left-1/2 -translate-x-1/2 z-10 text-xs font-medium px-2 py-0.5 rounded ${
           markingMode === 'ac' ? 'bg-emerald-500/80 text-white' : 'bg-amber-500/80 text-white'
         }`}>
-          Click to mark {markingMode.toUpperCase()}
+          {t('viewer.clickMark', { point: markingMode.toUpperCase() })}
         </div>
       )}
       <canvas

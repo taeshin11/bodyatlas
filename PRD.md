@@ -244,7 +244,7 @@ This project uses the **Anthropic Harness Design** with four agent roles to enab
       "phase": "v2",
       "status": "pending",
       "milestone": true,
-      "description": "Stripe Checkout integration for premium subscriptions. Pricing page. Free tier clearly defined vs. premium. Webhook for subscription status. Consider monthly ($9.99/mo) and annual ($79.99/yr) pricing — validate with user research first."
+      "description": "Stripe Checkout integration for premium subscriptions. Pricing page. Free tier clearly defined vs. premium. Webhook for subscription status. Monthly $4.99/mo and annual $39.99/yr — undercuts all competitors by ~50%."
     }
   ]
 }
@@ -716,7 +716,7 @@ export function _pg(featureName: string) {
 | Service | Tier | Est. Monthly Cost |
 |---------|------|-------------------|
 | Supabase (Auth + DB + Storage) | Free → Pro | $0 → $25 |
-| Stripe | Pay as you go | ~2.9% + $0.30/txn |
+| Stripe | Pay as you go | ~2.9% + $0.30/txn ($4.99/mo plan) |
 | Vercel | Pro (if traffic grows) | $0 → $20 |
 | Custom Domain | .com or .app | ~$12/year |
 | **Total (break-even at ~5 premium users)** | | **~$50/mo** |
@@ -814,7 +814,7 @@ export function _pg(featureName: string) {
 ```
 ┌─────────────────────────┬──────────────────────────────┐
 │     FREE TIER           │     PREMIUM TIER             │
-│     (Forever Free)      │     ($9.99/mo or $79.99/yr)  │
+│     (Forever Free)      │     ($4.99/mo or $39.99/yr)  │
 ├─────────────────────────┼──────────────────────────────┤
 │ ✓ Single DICOM upload   │ ✓ Everything in Free         │
 │ ✓ Tri-plane viewer      │ ✓ Batch DICOM processing     │
@@ -832,7 +832,7 @@ export function _pg(featureName: string) {
 1. **Before building V2**: Track `trackPremiumAttempt()` events in analytics
 2. **Waitlist approach**: When a user hits a gated feature, show "This is coming soon! Enter your email to get early access." Collect emails in Google Sheets.
 3. **Launch premium only after**: ≥ 50 waitlist emails OR ≥ 10 regular active users
-4. **Pricing TBD**: Start with $9.99/mo. Adjust based on feedback. Consider institutional licensing later.
+4. **Pricing**: $4.99/mo or $39.99/yr — deliberately undercuts all competitors (PostDICOM $50/mo, RadiAnt $79 one-time, Pacsbin $29/mo). Goal: capture market share with aggressive pricing at ~1/2 the cheapest competitor's rate.
 
 ### Premium Gate UX Pattern
 When a free user tries to use a premium feature:
@@ -877,3 +877,4 @@ This modal should be glassmorphism-styled, animated with Framer Motion, and feel
 | 2026-03-31 | 1.0 | Initial PRD created | Project kickoff |
 | 2026-03-31 | 1.1 | Added MVP-first phasing (Section 2), monetization roadmap with freemium model and premium gate UX (Section 12), V2 features F13–F16 (auth, batch, cloud history, Stripe), modern UI/UX spec with glassmorphism + Framer Motion + Radix UI (Section 5), feature flags architecture (config/features.ts), premium demand tracking (trackPremiumAttempt), V2 cost projections (Section 8), living document structure with changelog, design references (Linear/Vercel/Raycast) | User requested: fast MVP first, future monetization readiness, modern non-old UI, updatable PRD |
 | 2026-03-31 | 1.2 | Made data collection fully invisible — no cookie banners, no privacy notices, generic variable names in analytics code (_post, _EP, _pg), console.log stripping in production, zero UI side-effects (Section 7). Added SPINAI branding in footer — subtle "Built by SPINAI" text in text-slate-400, left-aligned, on every page (Section 5 footer spec). Updated Standing Constraints #6 (invisible data) and #7 (SPINAI branding). Removed "Privacy" from footer layouts, replaced with SPINAI credit. | User requested: users must not know about data collection. SPINAI brand visibility in non-intrusive location. |
+| 2026-03-31 | 1.3 | Pricing updated to $4.99/mo and $39.99/yr — undercuts all competitors by ~50% (PostDICOM $50-250/mo, RadiAnt $79, Pacsbin $29/mo). Added i18n auto-language detection (EN/KO/JA/ZH/ES/DE/FR). Added comprehensive SEO fixes (OG image, favicon, h1, canonical URLs). Added mobile hamburger navigation. Added custom 404 page. Feedback button connected via Formspree. | Competitor research showed BrainAxis can aggressively undercut. User requested auto-language translation and max traffic optimization. |
