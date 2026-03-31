@@ -3,24 +3,40 @@
 ## Session 1
 - Date: 2026-03-31
 - Session #: 1
-- Phase: mvp
-- Features Worked On: F01, F02, F03, F04, F05, F06, F07, F10, F11
-- Completed: F01, F02, F03, F04, F05, F06, F07, F10, F11
+- Phase: mvp + v1
+- Features Worked On: F01, F02, F03, F04, F05, F06, F07, F08, F09, F10, F11, F12
+- Completed: F01, F02, F03, F04, F05, F06, F07, F08, F09, F10, F11, F12
 - Blockers: none
-- Next Up: F08, F09 (V1 features — UI polish and SEO)
-- Git Commits: feat: initial project scaffold with Next.js + Tailwind + DICOM viewer
+- Next Up: V2 features (F13-F16) when user demand is validated
+- Git Commits:
+  - feat: initial project scaffold with Next.js + Tailwind + DICOM viewer
+  - feat: add SEO pages, error boundary, and UI improvements
+  - feat: add navigation links to header and guide link on upload page
 - Pushed to Remote: yes
 - PRD Updated: no
-- Notes: Full MVP built in single session. All core features implemented:
-  - DICOM parsing with dicomParser, volume reconstruction
+- Notes: Full MVP + V1 built in single session. All features implemented:
+  MVP:
+  - DICOM parsing with dicomParser, volume reconstruction from sorted slices
   - Custom canvas-based tri-plane viewer (axial/sagittal/coronal)
-  - AC-PC landmark marking on any view
-  - Auto-alignment engine with rotation matrix computation + trilinear interpolation
+  - AC-PC landmark marking on any view with colored markers
+  - Auto-alignment engine with rotation matrix + trilinear interpolation reslicing
   - Manual XYZ rotation sliders with real-time preview
-  - PNG and DICOM export
-  - Responsive desktop (3-panel) and mobile (tabbed) layouts
+  - PNG snapshot export (individual + combined report) and DICOM raw data export
+  - Responsive desktop (3-panel + sidebar) and mobile (tabbed + expandable controls)
   - Glassmorphism UI with Framer Motion animations
-  - Feedback button (Formspree ready)
-  - Silent analytics (Google Sheets webhook ready)
-  - Feature flags architecture
+  V1:
+  - /about page with features grid and AC-PC explanation
+  - /how-to-use step-by-step guide with tips
+  - sitemap.xml and robots.txt
+  - JSON-LD structured data (SoftwareApplication schema)
+  - Header navigation links (Guide, About)
+  - Error boundary component
+  - Feedback button (Formspree integration ready — needs NEXT_PUBLIC_FORMSPREE_ID env var)
+  - Silent analytics (Google Sheets webhook ready — needs NEXT_PUBLIC_SHEETS_WEBHOOK_URL env var)
+  - Feature flags architecture (config/features.ts)
+  - SPINAI branding in footer on all pages
   - Deployed to brainaxis.vercel.app
+
+  To activate:
+  - Set NEXT_PUBLIC_FORMSPREE_ID in Vercel env vars for feedback emails
+  - Set NEXT_PUBLIC_SHEETS_WEBHOOK_URL in Vercel env vars for silent analytics
