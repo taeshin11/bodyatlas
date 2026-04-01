@@ -10,6 +10,8 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import AtlasViewer from '@/components/AtlasViewer';
 import StructurePanel from '@/components/StructurePanel';
 import { useI18n } from '@/lib/i18n-context';
+import { useAuth } from '@/lib/auth-context';
+import AuthGate from '@/components/AuthGate';
 
 interface Structure {
   id: number;
@@ -23,7 +25,21 @@ interface Structure {
 
 export default function Home() {
   const { locale } = useI18n();
+  const { markTrialUsed } = useAuth();
   const [selectedStructure, setSelectedStructure] = useState<Structure | null>(null);
+  const [interactionCount, setInteractionCount] = useState(0);
+
+  // Track interactions — after 3 meaningful actions, mark trial as used
+  const handleStructureSelect = (s: Structure | null) => {
+    setSelectedStructure(s);
+    if (s) {
+      const newCount = interactionCount + 1;
+      setInteractionCount(newCount);
+      if (newCount >= 3) {
+        markTrialUsed();
+      }
+    }
+  };
 
   return (
     <ErrorBoundary>
@@ -57,13 +73,13 @@ export default function Home() {
             {/* Desktop Layout */}
             <div className="hidden lg:grid lg:grid-cols-[1fr_280px] gap-4">
               <AtlasViewer
-                onStructureSelect={setSelectedStructure}
+                onStructureSelect={handleStructureSelect}
                 selectedStructure={selectedStructure}
                 locale={locale}
               />
               <StructurePanel
                 selectedStructure={selectedStructure}
-                onStructureSelect={setSelectedStructure}
+                onStructureSelect={handleStructureSelect}
                 locale={locale}
               />
             </div>
@@ -71,13 +87,13 @@ export default function Home() {
             {/* Mobile Layout */}
             <div className="lg:hidden space-y-3">
               <AtlasViewer
-                onStructureSelect={setSelectedStructure}
+                onStructureSelect={handleStructureSelect}
                 selectedStructure={selectedStructure}
                 locale={locale}
               />
               <StructurePanel
                 selectedStructure={selectedStructure}
-                onStructureSelect={setSelectedStructure}
+                onStructureSelect={handleStructureSelect}
                 locale={locale}
               />
             </div>
@@ -87,6 +103,7 @@ export default function Home() {
         <Footer />
         <FeedbackButton />
         <InstallPrompt />
+        <AuthGate />
       </div>
     </ErrorBoundary>
   );

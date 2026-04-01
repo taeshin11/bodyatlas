@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { I18nProvider } from '@/lib/i18n-context';
 import './globals.css';
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
+import { AuthProvider } from '@/lib/auth-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -182,7 +183,9 @@ export default function RootLayout({
           />
         ))}
         <I18nProvider>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </I18nProvider>
         <ServiceWorkerRegister />
       </body>
