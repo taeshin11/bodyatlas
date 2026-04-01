@@ -31,6 +31,24 @@ export default function Home() {
         <Header />
 
         <main className="flex-1">
+          {/* SEO Hero Section */}
+          <section className="bg-gradient-to-b from-indigo-50/80 to-transparent border-b border-slate-100">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                Free Interactive Cross-Sectional Anatomy Atlas
+              </h1>
+              <h2 className="mt-2 text-base sm:text-lg text-slate-600 font-medium">
+                The Best Free Alternative to IMAIOS e-Anatomy &mdash; $0 Forever
+              </h2>
+              <p className="mt-3 text-sm text-slate-500 max-w-3xl leading-relaxed">
+                Browse labeled CT and MRI cross-sections with instant structure search.
+                Built for medical students, radiology residents, and anatomy learners.
+                No subscription, no account, no install required. Works offline as a PWA.
+                Available in 7 languages.
+              </p>
+            </div>
+          </section>
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
