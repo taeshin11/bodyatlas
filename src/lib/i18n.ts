@@ -130,6 +130,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'tags.close': 'Close',
     'tags.deleteAndDownload': 'Delete & Download',
     'tags.exporting': 'Processing...',
+    'install.title': 'Install BrainAxis',
+    'install.desc': 'Add to home screen for quick access — works offline',
+    'install.button': 'Install App',
   },
   ko: {
     'app.tagline': 'AC-PC 정렬 도구',
@@ -256,6 +259,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'tags.close': '닫기',
     'tags.deleteAndDownload': '삭제 후 다운로드',
     'tags.exporting': '처리 중...',
+    'install.title': 'BrainAxis 설치',
+    'install.desc': '홈 화면에 추가하여 빠르게 접근 — 오프라인 사용 가능',
+    'install.button': '앱 설치',
   },
   ja: {
     'app.tagline': 'AC-PC アライメントツール',
@@ -382,6 +388,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'tags.close': '閉じる',
     'tags.deleteAndDownload': '削除してダウンロード',
     'tags.exporting': '処理中...',
+    'install.title': 'BrainAxisをインストール',
+    'install.desc': 'ホーム画面に追加 — オフラインでも使用可能',
+    'install.button': 'アプリをインストール',
   },
   zh: {
     'app.tagline': 'AC-PC 对齐工具',
@@ -508,6 +517,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'tags.close': '关闭',
     'tags.deleteAndDownload': '删除并下载',
     'tags.exporting': '处理中...',
+    'install.title': '安装 BrainAxis',
+    'install.desc': '添加到主屏幕快速访问 — 支持离线使用',
+    'install.button': '安装应用',
   },
   es: {
     'app.tagline': 'Herramienta de Alineación AC-PC',
@@ -634,6 +646,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'tags.close': 'Cerrar',
     'tags.deleteAndDownload': 'Eliminar y descargar',
     'tags.exporting': 'Procesando...',
+    'install.title': 'Instalar BrainAxis',
+    'install.desc': 'Añadir a la pantalla de inicio — funciona sin conexión',
+    'install.button': 'Instalar app',
   },
   de: {
     'app.tagline': 'AC-PC Ausrichtungswerkzeug',
@@ -760,6 +775,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'tags.close': 'Schließen',
     'tags.deleteAndDownload': 'Löschen & Herunterladen',
     'tags.exporting': 'Verarbeitung...',
+    'install.title': 'BrainAxis installieren',
+    'install.desc': 'Zum Startbildschirm hinzufügen — offline verfügbar',
+    'install.button': 'App installieren',
   },
   fr: {
     'app.tagline': 'Outil d\'alignement AC-PC',
@@ -886,6 +904,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'tags.close': 'Fermer',
     'tags.deleteAndDownload': 'Supprimer et télécharger',
     'tags.exporting': 'Traitement...',
+    'install.title': 'Installer BrainAxis',
+    'install.desc': 'Ajouter à l\'écran d\'accueil — fonctionne hors ligne',
+    'install.button': 'Installer l\'app',
   },
 };
 

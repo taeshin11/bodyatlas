@@ -1,17 +1,36 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { I18nProvider } from '@/lib/i18n-context';
 import './globals.css';
+import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 
 const inter = Inter({ subsets: ['latin'] });
+
+export const viewport: Viewport = {
+  themeColor: '#6366F1',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+};
 
 export const metadata: Metadata = {
   title: 'BrainAxis — Free Brain DICOM AC-PC Alignment Tool',
   description: 'Align brain DICOM images to AC-PC in your browser. Free, fast, private. No install required. Upload brain MRI, mark AC-PC landmarks, auto-align, and export. 뇌 DICOM AC-PC 정렬 도구.',
   keywords: 'free brain DICOM viewer, AC-PC alignment tool online, brain image rotation web app, DICOM viewer no install, brain MRI alignment tool, 뇌 DICOM 뷰어, AC-PC 정렬 도구, 무료 DICOM 뷰어, 脳 DICOM ビューア, AC-PC アライメント, 脑 DICOM 查看器',
+  manifest: '/manifest.json',
   icons: {
     icon: '/favicon.svg',
-    apple: '/favicon.svg',
+    apple: '/apple-touch-icon.png',
+    other: [
+      { rel: 'icon', url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { rel: 'icon', url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'BrainAxis',
   },
   alternates: {
     canonical: 'https://brainaxis.vercel.app',
@@ -59,6 +78,7 @@ export default function RootLayout({
         <I18nProvider>
           {children}
         </I18nProvider>
+        <ServiceWorkerRegister />
       </body>
     </html>
   );

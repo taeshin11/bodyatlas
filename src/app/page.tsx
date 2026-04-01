@@ -12,6 +12,7 @@ import { parseDicomFile, buildVolume, DicomVolume } from '@/lib/dicom';
 import { Point3D, computeACPCAlignment, buildRotationMatrix, resliceVolume } from '@/lib/alignment';
 import { exportPngSnapshots, exportDicomZip } from '@/lib/export';
 import DicomTagEditor from '@/components/DicomTagEditor';
+import InstallPrompt from '@/components/InstallPrompt';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { _post } from '@/utils/analytics';
 import { useI18n } from '@/lib/i18n-context';
@@ -399,6 +400,7 @@ export default function Home() {
 
       <Footer />
       <FeedbackButton />
+      <InstallPrompt />
       {showTagEditor && rawBuffers.length > 0 && (
         <DicomTagEditor
           rawBuffers={rawBuffers}
