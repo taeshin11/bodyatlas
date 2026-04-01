@@ -15,9 +15,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'BrainAxis — Free Brain DICOM AC-PC Alignment Tool',
-  description: 'Align brain DICOM images to AC-PC in your browser. Free, fast, private. No install required. Upload brain MRI, mark AC-PC landmarks, auto-align, and export. 뇌 DICOM AC-PC 정렬 도구.',
-  keywords: 'free brain DICOM viewer, AC-PC alignment tool online, brain image rotation web app, DICOM viewer no install, brain MRI alignment tool, 뇌 DICOM 뷰어, AC-PC 정렬 도구, 무료 DICOM 뷰어, 脳 DICOM ビューア, AC-PC アライメント, 脑 DICOM 查看器',
+  title: 'BodyAtlas — Free Brain DICOM Free Interactive Anatomy Atlas',
+  description: 'Free interactive cross-sectional anatomy atlas. Browse CT and MRI with labeled anatomical structures. Search any structure, see it highlighted. Zero install, works offline. 무료 해부학 아틀라스.',
+  keywords: 'free anatomy atlas, cross-sectional anatomy online, CT anatomy atlas, MRI anatomy labels, IMAIOS free alternative, interactive anatomy, 무료 해부학 아틀라스, 단면 해부학, 解剖学アトラス, 解剖学图谱',
   manifest: '/manifest.json',
   icons: {
     icon: '/favicon.svg',
@@ -30,22 +30,22 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'BrainAxis',
+    title: 'BodyAtlas',
   },
   alternates: {
-    canonical: 'https://brainaxis.vercel.app',
+    canonical: 'https://bodyatlas.vercel.app',
   },
   openGraph: {
-    title: 'BrainAxis — Free Brain DICOM AC-PC Alignment Tool',
-    description: 'Align brain DICOM images to AC-PC in your browser. Free, fast, private. No install required.',
-    url: 'https://brainaxis.vercel.app',
-    siteName: 'BrainAxis',
+    title: 'BodyAtlas — Free Brain DICOM Free Interactive Anatomy Atlas',
+    description: 'Free interactive cross-sectional anatomy atlas. Browse CT and MRI with labeled structures. No install required.',
+    url: 'https://bodyatlas.vercel.app',
+    siteName: 'BodyAtlas',
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'BrainAxis — Free Brain DICOM AC-PC Alignment',
-    description: 'Align brain DICOM images to AC-PC in your browser. Free, fast, private.',
+    title: 'BodyAtlas — Free Brain DICOM AC-PC Alignment',
+    description: 'Free interactive anatomy atlas with labeled CT and MRI cross-sections.',
   },
   robots: { index: true, follow: true },
 };
@@ -58,13 +58,13 @@ export default function RootLayout({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'BrainAxis',
+    name: 'BodyAtlas',
     applicationCategory: 'HealthApplication',
     operatingSystem: 'Web Browser',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    description: 'Free web-based brain DICOM AC-PC alignment tool. No install required.',
-    url: 'https://brainaxis.vercel.app',
-    applicationSubCategory: 'Medical Imaging',
+    description: 'Free interactive cross-sectional anatomy atlas for medical professionals.',
+    url: 'https://bodyatlas.vercel.app',
+    applicationSubCategory: 'Anatomy Atlas',
     inLanguage: ['en', 'ko', 'ja', 'zh', 'es', 'de', 'fr'],
   };
 

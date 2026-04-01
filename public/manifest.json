@@ -1,7 +1,7 @@
 {
-  "name": "BrainAxis — Brain DICOM AC-PC Alignment",
-  "short_name": "BrainAxis",
-  "description": "Align brain DICOM images to AC-PC in your browser. Free, fast, private.",
+  "name": "BodyAtlas — Free Interactive Anatomy Atlas",
+  "short_name": "BodyAtlas",
+  "description": "Free interactive cross-sectional anatomy atlas for medical professionals.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F8FAFC",

@@ -1,413 +1,127 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import DicomUploader from '@/components/DicomUploader';
-import ViewerPanel from '@/components/ViewerPanel';
-import ControlPanel from '@/components/ControlPanel';
 import FeedbackButton from '@/components/FeedbackButton';
-import { parseDicomFile, buildVolume, DicomVolume } from '@/lib/dicom';
-import { Point3D, computeACPCAlignment, buildRotationMatrix, resliceVolume } from '@/lib/alignment';
-import { exportPngSnapshots, exportDicomZip } from '@/lib/export';
-import DicomTagEditor from '@/components/DicomTagEditor';
 import InstallPrompt from '@/components/InstallPrompt';
 import ErrorBoundary from '@/components/ErrorBoundary';
-import { _post } from '@/utils/analytics';
 import { useI18n } from '@/lib/i18n-context';
+import { Search, Layers, Globe, Smartphone } from 'lucide-react';
 
 export default function Home() {
   const { t } = useI18n();
-  const [volume, setVolume] = useState<DicomVolume | null>(null);
-  const [originalVolume, setOriginalVolume] = useState<DicomVolume | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
-
-  const [acPoint, setAcPoint] = useState<Point3D | null>(null);
-  const [pcPoint, setPcPoint] = useState<Point3D | null>(null);
-  const [markingMode, setMarkingMode] = useState<'none' | 'ac' | 'pc'>('none');
-
-  const [axialSlice, setAxialSlice] = useState(0);
-  const [sagittalSlice, setSagittalSlice] = useState(0);
-  const [coronalSlice, setCoronalSlice] = useState(0);
-
-  const [windowCenter, setWindowCenter] = useState(400);
-  const [windowWidth, setWindowWidth] = useState(800);
-
-  const [pitchDeg, setPitchDeg] = useState(0);
-  const [rollDeg, setRollDeg] = useState(0);
-  const [yawDeg, setYawDeg] = useState(0);
-
-  const [isAligned, setIsAligned] = useState(false);
-  const [isAligning, setIsAligning] = useState(false);
-
-  const [crosshairPosition, setCrosshairPosition] = useState({ x: 0, y: 0, z: 0 });
-  const [statusMessage, setStatusMessage] = useState('');
-  const [rawBuffers, setRawBuffers] = useState<ArrayBuffer[]>([]);
-  const [showTagEditor, setShowTagEditor] = useState(false);
-
-  // Mobile tab state
-  const [activeTab, setActiveTab] = useState<'axial' | 'sagittal' | 'coronal'>('axial');
-  const [showMobileControls, setShowMobileControls] = useState(false);
-
-  const handleFilesLoaded = useCallback(async (buffers: ArrayBuffer[]) => {
-    setIsLoading(true);
-    setRawBuffers(buffers);
-    setProgress({ current: 0, total: buffers.length });
-
-    try {
-      const slices = [];
-      for (let i = 0; i < buffers.length; i++) {
-        const slice = parseDicomFile(buffers[i]);
-        if (slice) slices.push(slice);
-        setProgress({ current: i + 1, total: buffers.length });
-        // Yield to keep UI responsive
-        if (i % 10 === 0) await new Promise((r) => setTimeout(r, 0));
-      }
-
-      const vol = buildVolume(slices);
-      if (vol) {
-        setVolume(vol);
-        setOriginalVolume(vol);
-        setWindowCenter(vol.windowCenter);
-        setWindowWidth(vol.windowWidth);
-        setAxialSlice(Math.floor(vol.depth / 2));
-        setSagittalSlice(Math.floor(vol.width / 2));
-        setCoronalSlice(Math.floor(vol.height / 2));
-        setCrosshairPosition({
-          x: Math.floor(vol.width / 2),
-          y: Math.floor(vol.height / 2),
-          z: Math.floor(vol.depth / 2),
-        });
-        setStatusMessage(t('status.loaded', { count: slices.length, w: vol.width, h: vol.height, d: vol.depth }));
-        _post({ action: 'upload', dicom_modality: vol.modality, num_slices: slices.length });
-      } else {
-        setStatusMessage(t('status.failed'));
-      }
-    } catch {
-      setStatusMessage(t('status.error'));
-    }
-
-    setIsLoading(false);
-    setProgress(null);
-  }, []);
-
-  const handleMarkPoint = useCallback((point: Point3D) => {
-    if (markingMode === 'ac') {
-      setAcPoint(point);
-      setMarkingMode('none');
-      setStatusMessage(t('status.acMarked', { x: point.x, y: point.y, z: point.z }));
-    } else if (markingMode === 'pc') {
-      setPcPoint(point);
-      setMarkingMode('none');
-      setStatusMessage(t('status.pcMarked', { x: point.x, y: point.y, z: point.z }));
-    }
-  }, [markingMode]);
-
-  const handleAutoAlign = useCallback(() => {
-    if (!acPoint || !pcPoint || !originalVolume) return;
-    setIsAligning(true);
-    setStatusMessage(t('status.aligning'));
-
-    // Use setTimeout to allow UI to update before heavy computation
-    setTimeout(() => {
-      try {
-        const alignment = computeACPCAlignment(acPoint, pcPoint);
-        const center: Point3D = {
-          x: originalVolume.width / 2,
-          y: originalVolume.height / 2,
-          z: originalVolume.depth / 2,
-        };
-        const rotMatrix = buildRotationMatrix(alignment.pitchDeg, alignment.rollDeg, alignment.yawDeg);
-        const aligned = resliceVolume(originalVolume, rotMatrix, center);
-
-        setVolume(aligned);
-        setPitchDeg(alignment.pitchDeg);
-        setRollDeg(alignment.rollDeg);
-        setYawDeg(alignment.yawDeg);
-        setIsAligned(true);
-        setStatusMessage(t('status.aligned', { pitch: alignment.pitchDeg.toFixed(1), roll: alignment.rollDeg.toFixed(1), yaw: alignment.yawDeg.toFixed(1) }));
-        _post({
-          action: 'align',
-          alignment_angles: { x: alignment.pitchDeg, y: alignment.rollDeg, z: alignment.yawDeg },
-        });
-      } catch {
-        setStatusMessage(t('status.alignFailed'));
-      }
-      setIsAligning(false);
-    }, 50);
-  }, [acPoint, pcPoint, originalVolume]);
-
-  const rotationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const handleManualRotation = useCallback((newPitch: number, newRoll: number, newYaw: number) => {
-    if (!originalVolume) return;
-    // Debounce reslicing — heavy computation
-    if (rotationTimerRef.current) clearTimeout(rotationTimerRef.current);
-    rotationTimerRef.current = setTimeout(() => {
-      const center: Point3D = {
-        x: originalVolume.width / 2,
-        y: originalVolume.height / 2,
-        z: originalVolume.depth / 2,
-      };
-      const rotMatrix = buildRotationMatrix(newPitch, newRoll, newYaw);
-      const rotated = resliceVolume(originalVolume, rotMatrix, center);
-      setVolume(rotated);
-      setIsAligned(true);
-    }, 150);
-  }, [originalVolume]);
-
-  const handleReset = useCallback(() => {
-    if (originalVolume) {
-      setVolume(originalVolume);
-      setPitchDeg(0);
-      setRollDeg(0);
-      setYawDeg(0);
-      setIsAligned(false);
-      setAcPoint(null);
-      setPcPoint(null);
-      setStatusMessage(t('status.reset'));
-    }
-  }, [originalVolume]);
-
-  const handleUploadNew = useCallback(() => {
-    setVolume(null);
-    setOriginalVolume(null);
-    setRawBuffers([]);
-    setAcPoint(null);
-    setPcPoint(null);
-    setPitchDeg(0);
-    setRollDeg(0);
-    setYawDeg(0);
-    setIsAligned(false);
-    setStatusMessage('');
-  }, []);
-
-  const handleExportPng = useCallback(async () => {
-    if (!volume) return;
-    setStatusMessage(t('status.exportPng'));
-    await exportPngSnapshots(volume, axialSlice, sagittalSlice, coronalSlice, windowCenter, windowWidth);
-    setStatusMessage(t('status.exportPngDone'));
-    _post({ action: 'export', feature_attempted: 'png' });
-  }, [volume, axialSlice, sagittalSlice, coronalSlice, windowCenter, windowWidth]);
-
-  const handleExportDicom = useCallback(async () => {
-    if (!volume) return;
-    setStatusMessage(t('status.exportDicom'));
-    await exportDicomZip(volume);
-    setStatusMessage(t('status.exportDicomDone'));
-    _post({ action: 'export', feature_attempted: 'dicom' });
-  }, [volume]);
 
   return (
     <ErrorBoundary>
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
-      <Header hasVolume={!!volume} onUploadNew={handleUploadNew} />
+      <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
+        <Header />
 
-      <main className="flex-1">
-        <AnimatePresence mode="wait">
-          {!volume ? (
-            <DicomUploader
-              key="uploader"
-              onFilesLoaded={handleFilesLoaded}
-              isLoading={isLoading}
-              progress={progress}
-            />
-          ) : (
+        <main className="flex-1">
+          {/* Hero Section */}
+          <section className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
             <motion.div
-              key="viewer"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
             >
-              {/* Desktop Layout */}
-              <div className="hidden lg:grid lg:grid-cols-[1fr_280px] gap-4">
-                <div className="space-y-4">
-                  <div className="grid grid-cols-3 gap-3" style={{ minHeight: '45vh' }}>
-                    <ViewerPanel
-                      volume={volume}
-                      viewType="axial"
-                      sliceIndex={axialSlice}
-                      onSliceChange={setAxialSlice}
-                      windowCenter={windowCenter}
-                      windowWidth={windowWidth}
-                      acPoint={acPoint}
-                      pcPoint={pcPoint}
-                      markingMode={markingMode}
-                      onMarkPoint={handleMarkPoint}
-                      crosshairPosition={crosshairPosition}
-                      onCrosshairChange={setCrosshairPosition}
-                      voxelSpacing={volume.voxelSpacing}
-                    />
-                    <ViewerPanel
-                      volume={volume}
-                      viewType="sagittal"
-                      sliceIndex={sagittalSlice}
-                      onSliceChange={setSagittalSlice}
-                      windowCenter={windowCenter}
-                      windowWidth={windowWidth}
-                      acPoint={acPoint}
-                      pcPoint={pcPoint}
-                      markingMode={markingMode}
-                      onMarkPoint={handleMarkPoint}
-                      crosshairPosition={crosshairPosition}
-                      onCrosshairChange={setCrosshairPosition}
-                      voxelSpacing={volume.voxelSpacing}
-                    />
-                    <ViewerPanel
-                      volume={volume}
-                      viewType="coronal"
-                      sliceIndex={coronalSlice}
-                      onSliceChange={setCoronalSlice}
-                      windowCenter={windowCenter}
-                      windowWidth={windowWidth}
-                      acPoint={acPoint}
-                      pcPoint={pcPoint}
-                      markingMode={markingMode}
-                      onMarkPoint={handleMarkPoint}
-                      crosshairPosition={crosshairPosition}
-                      onCrosshairChange={setCrosshairPosition}
-                      voxelSpacing={volume.voxelSpacing}
-                    />
-                  </div>
-                  {statusMessage && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-xl px-4 py-2 text-sm text-slate-600 font-mono"
-                    >
-                      {statusMessage}
-                    </motion.div>
-                  )}
-                </div>
-                <ControlPanel
-                  acPoint={acPoint}
-                  pcPoint={pcPoint}
-                  markingMode={markingMode}
-                  onSetMarkingMode={setMarkingMode}
-                  onAutoAlign={handleAutoAlign}
-                  onReset={handleReset}
-                  pitchDeg={pitchDeg}
-                  rollDeg={rollDeg}
-                  yawDeg={yawDeg}
-                  onPitchChange={(v) => { setPitchDeg(v); handleManualRotation(v, rollDeg, yawDeg); }}
-                  onRollChange={(v) => { setRollDeg(v); handleManualRotation(pitchDeg, v, yawDeg); }}
-                  onYawChange={(v) => { setYawDeg(v); handleManualRotation(pitchDeg, rollDeg, v); }}
-                  onExportDicom={handleExportDicom}
-                  onExportPng={handleExportPng}
-                  onOpenTagEditor={() => setShowTagEditor(true)}
-                  isAligned={isAligned}
-                  isAligning={isAligning}
-                  windowCenter={windowCenter}
-                  windowWidth={windowWidth}
-                  onWindowCenterChange={setWindowCenter}
-                  onWindowWidthChange={setWindowWidth}
-                />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium mb-6">
+                100% Free — No subscription required
               </div>
-
-              {/* Mobile / Tablet Layout */}
-              <div className="lg:hidden space-y-3">
-                {/* Tab bar */}
-                <div className="flex rounded-xl bg-white/70 backdrop-blur-xl border border-slate-200/60 p-1 gap-1">
-                  {(['axial', 'sagittal', 'coronal'] as const).map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
-                        activeTab === tab
-                          ? 'bg-indigo-500 text-white shadow-sm'
-                          : 'text-slate-600 hover:bg-slate-100'
-                      }`}
-                    >
-                      {t(`viewer.${tab}`)}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Active view */}
-                <div style={{ minHeight: '300px' }}>
-                  <ViewerPanel
-                    volume={volume}
-                    viewType={activeTab}
-                    sliceIndex={activeTab === 'axial' ? axialSlice : activeTab === 'sagittal' ? sagittalSlice : coronalSlice}
-                    onSliceChange={activeTab === 'axial' ? setAxialSlice : activeTab === 'sagittal' ? setSagittalSlice : setCoronalSlice}
-                    windowCenter={windowCenter}
-                    windowWidth={windowWidth}
-                    acPoint={acPoint}
-                    pcPoint={pcPoint}
-                    markingMode={markingMode}
-                    onMarkPoint={handleMarkPoint}
-                    crosshairPosition={crosshairPosition}
-                    onCrosshairChange={setCrosshairPosition}
-                    voxelSpacing={volume.voxelSpacing}
-                  />
-                </div>
-
-                {statusMessage && (
-                  <div className="bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-xl px-3 py-2 text-xs text-slate-600 font-mono">
-                    {statusMessage}
-                  </div>
-                )}
-
-                {/* Expandable controls */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight leading-tight">
+                Interactive Anatomy Atlas
+                <br />
+                <span className="text-indigo-500">for Medical Professionals</span>
+              </h1>
+              <p className="mt-6 text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                Browse cross-sectional CT &amp; MRI anatomy with interactive labels.
+                Search any structure, see it highlighted. Free forever.
+              </p>
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                 <button
-                  onClick={() => setShowMobileControls(!showMobileControls)}
-                  className="w-full py-2 text-sm font-semibold text-slate-700 bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-xl"
+                  disabled
+                  className="px-8 py-3 rounded-xl text-base font-semibold bg-indigo-500 text-white shadow-lg shadow-indigo-200 opacity-60 cursor-not-allowed"
                 >
-                  {showMobileControls ? t('mobile.hideControls') : t('mobile.showControls')}
+                  Coming Soon — Atlas Viewer
                 </button>
-
-                <AnimatePresence>
-                  {showMobileControls && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <ControlPanel
-                        acPoint={acPoint}
-                        pcPoint={pcPoint}
-                        markingMode={markingMode}
-                        onSetMarkingMode={setMarkingMode}
-                        onAutoAlign={handleAutoAlign}
-                        onReset={handleReset}
-                        pitchDeg={pitchDeg}
-                        rollDeg={rollDeg}
-                        yawDeg={yawDeg}
-                        onPitchChange={(v) => { setPitchDeg(v); handleManualRotation(v, rollDeg, yawDeg); }}
-                        onRollChange={(v) => { setRollDeg(v); handleManualRotation(pitchDeg, v, yawDeg); }}
-                        onYawChange={(v) => { setYawDeg(v); handleManualRotation(pitchDeg, rollDeg, v); }}
-                        onExportDicom={handleExportDicom}
-                        onExportPng={handleExportPng}
-                  onOpenTagEditor={() => setShowTagEditor(true)}
-                        isAligned={isAligned}
-                        isAligning={isAligning}
-                        windowCenter={windowCenter}
-                        windowWidth={windowWidth}
-                        onWindowCenterChange={setWindowCenter}
-                        onWindowWidthChange={setWindowWidth}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </main>
 
-      <Footer />
-      <FeedbackButton />
-      <InstallPrompt />
-      {showTagEditor && rawBuffers.length > 0 && (
-        <DicomTagEditor
-          rawBuffers={rawBuffers}
-          onClose={() => setShowTagEditor(false)}
-        />
-      )}
-    </div>
+            {/* Feature cards */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-4"
+            >
+              {[
+                { icon: Search, title: 'Search Anatomy', desc: 'Find any structure by name — jump to the exact slice' },
+                { icon: Layers, title: '3-Plane View', desc: 'Axial, Sagittal, Coronal with synchronized crosshair' },
+                { icon: Globe, title: '7 Languages', desc: 'EN, KO, JA, ZH, ES, DE, FR — anatomy in your language' },
+                { icon: Smartphone, title: 'Install as App', desc: 'PWA — add to home screen, works offline' },
+              ].map(({ icon: Icon, title, desc }) => (
+                <div key={title} className="bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-2xl p-5 text-left">
+                  <Icon className="w-8 h-8 text-indigo-500 mb-3" />
+                  <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
+                  <p className="text-xs text-slate-500 mt-1">{desc}</p>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Comparison */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="mt-16 bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-2xl p-6 sm:p-8"
+            >
+              <h2 className="text-xl font-bold text-slate-800 mb-4">Why BodyAtlas?</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200">
+                      <th className="text-left py-2 px-3 text-slate-500 font-medium">Feature</th>
+                      <th className="text-center py-2 px-3 text-slate-500 font-medium">IMAIOS</th>
+                      <th className="text-center py-2 px-3 text-indigo-600 font-semibold">BodyAtlas</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-slate-700">
+                    <tr className="border-b border-slate-100">
+                      <td className="py-2 px-3">Price</td>
+                      <td className="text-center py-2 px-3 text-red-500 font-medium">$22/mo</td>
+                      <td className="text-center py-2 px-3 text-emerald-600 font-bold">Free</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="py-2 px-3">Interactive Labels</td>
+                      <td className="text-center py-2 px-3">Yes</td>
+                      <td className="text-center py-2 px-3 font-medium">Yes</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="py-2 px-3">Structure Search</td>
+                      <td className="text-center py-2 px-3">Yes</td>
+                      <td className="text-center py-2 px-3 font-medium">Yes</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="py-2 px-3">Mobile App</td>
+                      <td className="text-center py-2 px-3">$22/mo</td>
+                      <td className="text-center py-2 px-3 text-emerald-600 font-bold">Free PWA</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 px-3">Languages</td>
+                      <td className="text-center py-2 px-3">Multi</td>
+                      <td className="text-center py-2 px-3 font-medium">7 languages</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          </section>
+        </main>
+
+        <Footer />
+        <FeedbackButton />
+        <InstallPrompt />
+      </div>
     </ErrorBoundary>
   );
 }

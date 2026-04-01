@@ -26,13 +26,13 @@ export default function FeedbackButton() {
           body: JSON.stringify({
             message,
             ...(email ? { email, _replyto: email } : { email: 'not provided' }),
-            _subject: `BrainAxis Feedback: ${message.slice(0, 50)}`,
+            _subject: `BodyAtlas Feedback: ${message.slice(0, 50)}`,
           }),
         });
         if (!res.ok) throw new Error('Failed');
       } else {
         // Fallback: open mailto link
-        const mailto = `mailto:taeshinkim11@gmail.com?subject=${encodeURIComponent('BrainAxis Feedback')}&body=${encodeURIComponent(`${message}\n\nFrom: ${email || 'Anonymous'}`)}`;
+        const mailto = `mailto:taeshinkim11@gmail.com?subject=${encodeURIComponent('BodyAtlas Feedback')}&body=${encodeURIComponent(`${message}\n\nFrom: ${email || 'Anonymous'}`)}`;
         window.location.href = mailto;
       }
       setStatus('sent');

@@ -21,7 +21,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = (key: string, params?: Record<string, string | number>) =>
-    translate(key, locale, params);
+    translate(locale, key, params);
 
   return (
     <I18nContext.Provider value={{ locale, t }}>
