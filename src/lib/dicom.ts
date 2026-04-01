@@ -148,14 +148,34 @@ export function buildVolume(slices: DicomSlice[]): DicomVolume | null {
     if (dz > 0.001) sliceSpacing = dz;
   }
 
+  // Auto-compute window if metadata defaults are used (e.g. PET with no WC/WW)
+  let wc = sorted[0].windowCenter;
+  let ww = sorted[0].windowWidth;
+  const isDefaultWindow = wc === 400 && ww === 800;
+  if (isDefaultWindow) {
+    // Compute from actual data: use percentile-based windowing
+    const sampled: number[] = [];
+    const step = Math.max(1, Math.floor(data.length / 50000));
+    for (let i = 0; i < data.length; i += step) {
+      if (data[i] > 0) sampled.push(data[i]);
+    }
+    if (sampled.length > 0) {
+      sampled.sort((a, b) => a - b);
+      const p5 = sampled[Math.floor(sampled.length * 0.05)];
+      const p95 = sampled[Math.floor(sampled.length * 0.95)];
+      wc = (p5 + p95) / 2;
+      ww = p95 - p5;
+    }
+  }
+
   return {
     data,
     width,
     height,
     depth,
     voxelSpacing: [sorted[0].pixelSpacing[0], sorted[0].pixelSpacing[1], sliceSpacing],
-    windowCenter: sorted[0].windowCenter,
-    windowWidth: sorted[0].windowWidth,
+    windowCenter: wc,
+    windowWidth: ww,
     modality: sorted[0].modality,
     slices: sorted,
   };

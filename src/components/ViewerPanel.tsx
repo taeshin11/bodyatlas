@@ -20,6 +20,7 @@ interface ViewerPanelProps {
   onMarkPoint: (point: Point3D) => void;
   crosshairPosition: { x: number; y: number; z: number };
   onCrosshairChange: (pos: { x: number; y: number; z: number }) => void;
+  voxelSpacing: [number, number, number];
 }
 
 export default function ViewerPanel({
@@ -35,6 +36,7 @@ export default function ViewerPanel({
   onMarkPoint,
   crosshairPosition,
   onCrosshairChange,
+  voxelSpacing,
 }: ViewerPanelProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -169,8 +171,24 @@ export default function ViewerPanel({
     if (acPoint) drawMarker(acPoint, '#10B981', 'AC');
     if (pcPoint) drawMarker(pcPoint, '#F59E0B', 'PC');
 
-    setCanvasSize({ w: sliceW, h: sliceH });
-  }, [volume, viewType, sliceIndex, windowCenter, windowWidth, acPoint, pcPoint, crosshairPosition, getSliceData]);
+    // Compute physical aspect ratio accounting for anisotropic voxel spacing
+    let physW: number, physH: number;
+    switch (viewType) {
+      case 'axial':
+        physW = sliceW * voxelSpacing[0];
+        physH = sliceH * voxelSpacing[1];
+        break;
+      case 'sagittal':
+        physW = sliceW * voxelSpacing[1];
+        physH = sliceH * voxelSpacing[2];
+        break;
+      case 'coronal':
+        physW = sliceW * voxelSpacing[0];
+        physH = sliceH * voxelSpacing[2];
+        break;
+    }
+    setCanvasSize({ w: physW, h: physH });
+  }, [volume, viewType, sliceIndex, windowCenter, windowWidth, acPoint, pcPoint, crosshairPosition, getSliceData, voxelSpacing]);
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;

@@ -63,10 +63,21 @@ export async function exportPngSnapshots(
   const corBlob = await canvasToBlob(corCanvas);
   zip.file('coronal.png', corBlob);
 
-  // Combined report
+  // Combined report — use physical dimensions for correct aspect ratios
+  const sp = volume.voxelSpacing;
+  const axPhysW = volume.width * sp[0], axPhysH = volume.height * sp[1];
+  const sagPhysW = volume.height * sp[1], sagPhysH = volume.depth * sp[2];
+  const corPhysW = volume.width * sp[0], corPhysH = volume.depth * sp[2];
+
+  const panelDisplayW = 300;
+  const axDispH = Math.round(panelDisplayW * axPhysH / axPhysW);
+  const sagDispH = Math.round(panelDisplayW * sagPhysH / sagPhysW);
+  const corDispH = Math.round(panelDisplayW * corPhysH / corPhysW);
+  const maxDispH = Math.max(axDispH, sagDispH, corDispH);
+
   const reportCanvas = document.createElement('canvas');
-  const maxW = Math.max(volume.width, volume.height) * 3 + 40;
-  const maxH = Math.max(volume.height, volume.depth) + 60;
+  const maxW = panelDisplayW * 3 + 40;
+  const maxH = maxDispH + 60;
   reportCanvas.width = maxW;
   reportCanvas.height = maxH;
   const rctx = reportCanvas.getContext('2d')!;
@@ -75,15 +86,14 @@ export async function exportPngSnapshots(
   rctx.font = 'bold 14px Inter, sans-serif';
   rctx.fillStyle = '#94A3B8';
 
-  const panelW = Math.floor((maxW - 40) / 3);
   rctx.fillText('Axial', 10, 18);
-  rctx.drawImage(axialCanvas, 10, 28, panelW, panelW);
+  rctx.drawImage(axialCanvas, 10, 28, panelDisplayW, axDispH);
 
-  rctx.fillText('Sagittal', panelW + 20, 18);
-  rctx.drawImage(sagCanvas, panelW + 20, 28, panelW, panelW);
+  rctx.fillText('Sagittal', panelDisplayW + 20, 18);
+  rctx.drawImage(sagCanvas, panelDisplayW + 20, 28, panelDisplayW, sagDispH);
 
-  rctx.fillText('Coronal', panelW * 2 + 30, 18);
-  rctx.drawImage(corCanvas, panelW * 2 + 30, 28, panelW, panelW);
+  rctx.fillText('Coronal', panelDisplayW * 2 + 30, 18);
+  rctx.drawImage(corCanvas, panelDisplayW * 2 + 30, 28, panelDisplayW, corDispH);
 
   const reportBlob = await canvasToBlob(reportCanvas);
   zip.file('report_combined.png', reportBlob);

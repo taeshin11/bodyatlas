@@ -232,6 +232,7 @@ export default function Home() {
                       onMarkPoint={handleMarkPoint}
                       crosshairPosition={crosshairPosition}
                       onCrosshairChange={setCrosshairPosition}
+                      voxelSpacing={volume.voxelSpacing}
                     />
                     <ViewerPanel
                       volume={volume}
@@ -246,6 +247,7 @@ export default function Home() {
                       onMarkPoint={handleMarkPoint}
                       crosshairPosition={crosshairPosition}
                       onCrosshairChange={setCrosshairPosition}
+                      voxelSpacing={volume.voxelSpacing}
                     />
                     <ViewerPanel
                       volume={volume}
@@ -260,6 +262,7 @@ export default function Home() {
                       onMarkPoint={handleMarkPoint}
                       crosshairPosition={crosshairPosition}
                       onCrosshairChange={setCrosshairPosition}
+                      voxelSpacing={volume.voxelSpacing}
                     />
                   </div>
                   {statusMessage && (
@@ -330,6 +333,7 @@ export default function Home() {
                     onMarkPoint={handleMarkPoint}
                     crosshairPosition={crosshairPosition}
                     onCrosshairChange={setCrosshairPosition}
+                    voxelSpacing={volume.voxelSpacing}
                   />
                 </div>
 
