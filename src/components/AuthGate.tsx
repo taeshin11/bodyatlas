@@ -6,9 +6,10 @@ import { X, Mail, Check } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 
 export default function AuthGate() {
-  const { needsAuth, signInWithGoogle, signInWithEmail } = useAuth();
+  const { needsAuth, signInWithGoogle, signInWithEmail, signInWithPassword } = useAuth();
   const [showEmailInput, setShowEmailInput] = useState(false);
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState('');
   const [sending, setSending] = useState(false);
@@ -22,12 +23,20 @@ export default function AuthGate() {
     }
     setSending(true);
     setError('');
-    const result = await signInWithEmail(email);
-    setSending(false);
-    if (result.error) {
-      setError(result.error);
+
+    // If password provided, use password login; otherwise magic link
+    if (password) {
+      const result = await signInWithPassword(email, password);
+      setSending(false);
+      if (result.error) setError(result.error);
     } else {
-      setEmailSent(true);
+      const result = await signInWithEmail(email);
+      setSending(false);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setEmailSent(true);
+      }
     }
   };
 
@@ -91,26 +100,30 @@ export default function AuthGate() {
                 </button>
               ) : (
                 <div className="space-y-2">
-                  <div className="flex gap-2">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleEmailSubmit()}
-                      placeholder="your@email.com"
-                      className="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-indigo-400"
-                      autoFocus
-                    />
-                    <button
-                      onClick={handleEmailSubmit}
-                      disabled={sending}
-                      className="px-4 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white hover:bg-indigo-600 transition-all disabled:opacity-50"
-                    >
-                      {sending ? '...' : <Mail className="w-4 h-4" />}
-                    </button>
-                  </div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-indigo-400"
+                    autoFocus
+                  />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleEmailSubmit()}
+                    placeholder="Password (optional — leave blank for magic link)"
+                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-indigo-400"
+                  />
+                  <button
+                    onClick={handleEmailSubmit}
+                    disabled={sending}
+                    className="w-full px-4 py-2.5 rounded-lg text-sm font-medium bg-indigo-500 text-white hover:bg-indigo-600 transition-all disabled:opacity-50"
+                  >
+                    {sending ? 'Signing in...' : password ? 'Sign In' : 'Send Magic Link'}
+                  </button>
                   {error && <p className="text-xs text-red-500">{error}</p>}
-                  <p className="text-[11px] text-slate-400">No password needed — we'll send a magic link</p>
                 </div>
               )}
             </>

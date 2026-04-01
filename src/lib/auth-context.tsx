@@ -12,6 +12,7 @@ interface AuthContextType {
   needsAuth: boolean;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string) => Promise<{ error: string | null }>;
+  signInWithPassword: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -23,6 +24,7 @@ const AuthContext = createContext<AuthContextType>({
   needsAuth: false,
   signInWithGoogle: async () => {},
   signInWithEmail: async () => ({ error: null }),
+  signInWithPassword: async () => ({ error: null }),
   signOut: async () => {},
 });
 
@@ -78,6 +80,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message ?? null };
   };
 
+  const signInWithPassword = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    return { error: error?.message ?? null };
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -86,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider value={{
       user, loading, trialUsed, markTrialUsed, needsAuth,
-      signInWithGoogle, signInWithEmail, signOut,
+      signInWithGoogle, signInWithEmail, signInWithPassword, signOut,
     }}>
       {children}
     </AuthContext.Provider>
