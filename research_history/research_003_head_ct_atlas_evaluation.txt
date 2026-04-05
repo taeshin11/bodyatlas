@@ -1,0 +1,165 @@
+================================================================================
+RESEARCH LOG #003 - Head CT Atlas Evaluation & Open-Source Alternatives
+================================================================================
+Date: 2026-04-06
+Session: 3 (continued)
+Feature: Head & Neck CT Atlas quality assessment + open-source data survey
+
+================================================================================
+TRIGGER
+================================================================================
+User question: "머리 ct도 바꿔야할지도? atlas가 좀 오픈소스는 없나?"
+→ Evaluate current head-ct data quality
+→ Survey open-source head CT atlas datasets
+
+================================================================================
+CURRENT HEAD-CT STATE ANALYSIS
+================================================================================
+
+Data location: public/data/head-ct/
+
+  Structures:  96 total
+               vessel(13), bone(20), organ(20), cavity(10),
+               other(27), muscle(2), gland(4)
+  Axial:       262 PNG + 262 label JSONs (label density avg ~14 per slice)
+  Sagittal:    225 PNGs
+  Coronal:     160 PNGs
+  Voxel size:  1.5mm isotropic
+
+  Window:      center=40, width=80 (soft tissue window)
+               → brain parenchyma looks good
+               → skull/facial bones may be overexposed (bone window needs c≈400, w≈2000)
+
+  Structure list (notable gaps vs ideal):
+    PRESENT:  brain_gray_matter, brain_white_matter, brain_cerebellum, brain_brainstem,
+              brain_csf, brain_deep_gray_matter, skull, mandible, eye_left/right,
+              optic_nerve, sinus_frontal/maxillary, C1-C7 vertebrae, carotid arteries,
+              jugular veins, parotid/submandibular glands, thyroid, trachea, teeth, etc.
+    MISSING:  temporal bone, ethmoid sinus, sphenoid sinus, pituitary gland,
+              orbit/orbital fat, cranial nerves (II-XII individually), cerebral
+              cortex subdivisions (frontal/parietal/temporal/occipital lobes),
+              cerebral vasculature (MCA/ACA/PCA), hippocampus, amygdala
+
+BUG FOUND: info.json had slices: 203 but actual axial files = 262
+  → Viewer slider was cutting off slices 203-261 (59 slices inaccessible!)
+  → FIXED: info.json axial.slices updated 203 → 262
+
+================================================================================
+OPEN-SOURCE HEAD CT ATLAS DATASET SURVEY
+================================================================================
+
+1. CADS (Comprehensive Anatomy Dataset for Segmentation)
+   URL:       https://github.com/murong-xu/CADS
+   License:   CC BY 4.0
+   Format:    NIfTI
+   Structures: 167 anatomical structures (full body, head-neck included)
+   Scale:     22,022 CT scans from 100+ imaging centers, 16 countries
+   Head coverage: comprehensive (skull, brain regions, sinuses, vessels, glands)
+   Verdict:   BEST OPTION — most structures, best license, largest scale
+   To use:    Download reference CT + seg from HuggingFace, run pipeline
+
+2. TotalSegmentator v2
+   URL:       https://github.com/wasserth/TotalSegmentator
+   License:   Apache 2.0 (tool), CC BY 4.0 (dataset)
+   Format:    NIfTI
+   Structures: 117 total, with dedicated head tasks:
+               - brain_structures (subcortical regions)
+               - head_glands_cavities (sinuses, orbits, glands)
+               - headneck_bones_vessels (detailed skull, vessels)
+               - craniofacial_structures (facial bones)
+   Scale:     1,228 CT images (training/val/test splits)
+   Note:      CURRENT DATA IS FROM TotalSegmentator v1 (96 structs)
+   Verdict:   UPGRADE PATH — run TotalSegmentator v2 with all head tasks
+              on same or better reference CT → get 117+ head structures
+
+3. HaN-Seg (Head and Neck Segmentation)
+   URL:       https://zenodo.org/records/7442914
+   License:   CC BY-NC-ND 4.0 (NON-COMMERCIAL, no derivatives)
+   Format:    NIfTI binary masks
+   Structures: 30 organs-at-risk (radiotherapy planning specific)
+               brain, brainstem, eyes, optic nerves, chiasm, cochlea,
+               parotid, submandibular, thyroid, larynx, pharynx, spinal cord
+   Scale:     42 patients (CT + MR)
+   Verdict:   PASS — license too restrictive for a free atlas service
+
+4. CT-ORG (TCIA)
+   URL:       https://www.cancerimagingarchive.net/collection/ct-org/
+   License:   TCIA non-commercial
+   Structures: 6 only (liver, lungs, bladder, kidney, bones, brain)
+   Verdict:   PASS — too few structures
+
+5. SAROS
+   URL:       https://github.com/UMEssen/saros-dataset
+   License:   CC BY 4.0
+   Structures: 13 body regions (sparse, only every 5th slice labeled)
+   Verdict:   PASS — too sparse for atlas use
+
+6. SPL Head and Neck Atlas (Open Anatomy Project)
+   URL:       https://www.openanatomy.org/atlas-pages/atlas-spl-head-and-neck.html
+   License:   3D Slicer license (liberal open source)
+   Format:    NRRD/VTK/STL/OBJ (no paired CT images)
+   Coverage:  skull, mandible, spine, neck muscles, vessels, glands
+   Verdict:   LIMITED — no paired CT images, model-based not image-based
+
+================================================================================
+VERDICT — SHOULD HEAD-CT BE REPLACED?
+================================================================================
+
+Current data quality: ACCEPTABLE but improvable
+  + 96 structures, 262 slices, real labels, no empty slices
+  + TotalSegmentator v1 quality (well-established pipeline)
+  - Missing ~20+ head-specific structures vs TotalSegmentator v2
+  - Window setting (soft tissue only) — can't see skull detail well
+  - info.json bug (now fixed)
+
+RECOMMENDATION: Replace with TotalSegmentator v2 output (2 options)
+
+  OPTION A — TotalSegmentator v2 upgrade (HIGH VALUE, needs GPU time ~30min)
+    1. Download a clean head CT from TCIA (e.g., HNSCC-3D-CT, CT-HEAD-NECK)
+    2. Install: pip install TotalSegmentator (CUDA available → fast)
+    3. Run all head tasks: totalsegmentator -i head.nii.gz -o seg/ --task total_mr
+       + task head_glands_cavities
+       + task headneck_bones_vessels
+       + task craniofacial_structures
+    4. Merge seg masks → run existing data_pipeline → 117+ structures
+    Expected improvement: +21 head structures, better label coverage
+
+  OPTION B — CADS reference CT (HIGHEST VALUE, more work)
+    1. Download from HuggingFace: mrmrx/CADS-dataset
+    2. Pick representative head-neck CT case
+    3. 167 structures including fine-grained brain/head regions
+    Blocker: Need to verify individual case CT quality and coverage
+
+  OPTION C — Keep current, only fix the bug (DONE)
+    - info.json bug fixed (203→262)
+    - Current 96 structures are usable
+    - Defer atlas replacement to next sprint
+
+IMMEDIATE ACTION TAKEN: Fixed info.json bug (Option C)
+NEXT SPRINT: Option A (TotalSegmentator v2 upgrade) — needs ~2hr setup + run time
+
+================================================================================
+ENVIRONMENT CHECK
+================================================================================
+
+CUDA available: YES (torch.cuda.is_available() = True)
+TotalSegmentator: NOT installed
+Python: available
+
+To install TotalSegmentator:
+  pip install TotalSegmentator
+  totalsegmentator --help
+
+Estimated GPU time for 1 head CT volume: ~5-10 minutes with GPU
+Estimated pipeline time (NIfTI → PNG slices + JSON labels): ~20 min
+
+================================================================================
+FILES CHANGED THIS LOG
+================================================================================
+
+FIXED:
+  public/data/head-ct/info.json — axial.slices: 203 → 262 (bug fix)
+
+NO NEW FILES (research/planning only)
+
+================================================================================
