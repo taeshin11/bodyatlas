@@ -5,6 +5,7 @@ export const SUPPORTED_LOCALES: Locale[] = ['en', 'ko', 'ja', 'zh', 'es', 'de', 
 const translations: Record<Locale, Record<string, string>> = {
   en: {
     'header.about': 'About',
+    'header.download': 'Download',
     'footer.builtBy': 'Built by SPINAI',
     'feedback.title': 'Send Feedback',
     'feedback.placeholder': 'How can we improve BodyAtlas?',
@@ -24,6 +25,7 @@ const translations: Record<Locale, Record<string, string>> = {
   },
   ko: {
     'header.about': '소개',
+    'header.download': '다운로드',
     'footer.builtBy': 'SPINAI 제작',
     'feedback.title': '피드백 보내기',
     'feedback.placeholder': 'BodyAtlas를 어떻게 개선할 수 있을까요?',
@@ -43,6 +45,7 @@ const translations: Record<Locale, Record<string, string>> = {
   },
   ja: {
     'header.about': '概要',
+    'header.download': 'ダウンロード',
     'footer.builtBy': 'SPINAI制作',
     'feedback.title': 'フィードバック送信',
     'feedback.placeholder': 'BodyAtlasをどのように改善できますか？',
@@ -62,6 +65,7 @@ const translations: Record<Locale, Record<string, string>> = {
   },
   zh: {
     'header.about': '关于',
+    'header.download': '下载',
     'footer.builtBy': 'SPINAI 制作',
     'feedback.title': '发送反馈',
     'feedback.placeholder': '如何改进 BodyAtlas？',
@@ -81,6 +85,7 @@ const translations: Record<Locale, Record<string, string>> = {
   },
   es: {
     'header.about': 'Acerca de',
+    'header.download': 'Descargar',
     'footer.builtBy': 'Hecho por SPINAI',
     'feedback.title': 'Enviar comentarios',
     'feedback.placeholder': '¿Cómo podemos mejorar BodyAtlas?',
@@ -100,6 +105,7 @@ const translations: Record<Locale, Record<string, string>> = {
   },
   de: {
     'header.about': 'Über uns',
+    'header.download': 'Herunterladen',
     'footer.builtBy': 'Erstellt von SPINAI',
     'feedback.title': 'Feedback senden',
     'feedback.placeholder': 'Wie können wir BodyAtlas verbessern?',
@@ -119,6 +125,7 @@ const translations: Record<Locale, Record<string, string>> = {
   },
   fr: {
     'header.about': 'À propos',
+    'header.download': 'Télécharger',
     'footer.builtBy': 'Créé par SPINAI',
     'feedback.title': 'Envoyer un commentaire',
     'feedback.placeholder': 'Comment améliorer BodyAtlas ?',

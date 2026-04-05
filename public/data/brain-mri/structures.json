@@ -1,0 +1,2673 @@
+{
+  "totalStructures": 92,
+  "structures": [
+    {
+      "id": 0,
+      "name": "brain_brainstem",
+      "displayName": {
+        "en": "Brainstem",
+        "ko": "뇌간"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 41,
+        "sagittal": 86,
+        "coronal": 94
+      },
+      "sliceRange": {
+        "axial": [
+          10,
+          70
+        ],
+        "sagittal": [
+          74,
+          129
+        ],
+        "coronal": [
+          76,
+          113
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "name": "brain_cerebellum",
+      "displayName": {
+        "en": "Cerebellum",
+        "ko": "소뇌"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 39,
+        "sagittal": 103,
+        "coronal": 71
+      },
+      "sliceRange": {
+        "axial": [
+          11,
+          71
+        ],
+        "sagittal": [
+          35,
+          145
+        ],
+        "coronal": [
+          34,
+          105
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "brain_csf",
+      "displayName": {
+        "en": "Cerebrospinal Fluid (CSF)",
+        "ko": "뇌척수액"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 77,
+        "sagittal": 89,
+        "coronal": 114
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          156
+        ],
+        "sagittal": [
+          1,
+          165
+        ],
+        "coronal": [
+          16,
+          217
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "brain_deep_gray_matter",
+      "displayName": {
+        "en": "Deep Gray Matter",
+        "ko": "심부회백질"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 69,
+        "sagittal": 78,
+        "coronal": 107
+      },
+      "sliceRange": {
+        "axial": [
+          47,
+          125
+        ],
+        "sagittal": [
+          33,
+          144
+        ],
+        "coronal": [
+          90,
+          193
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "brain_gray_matter",
+      "displayName": {
+        "en": "Gray Matter",
+        "ko": "회백질"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 53,
+        "sagittal": 87,
+        "coronal": 99
+      },
+      "sliceRange": {
+        "axial": [
+          15,
+          152
+        ],
+        "sagittal": [
+          19,
+          159
+        ],
+        "coronal": [
+          21,
+          198
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "name": "brain_white_matter",
+      "displayName": {
+        "en": "White Matter",
+        "ko": "백질"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 99,
+        "sagittal": 69,
+        "coronal": 123
+      },
+      "sliceRange": {
+        "axial": [
+          12,
+          150
+        ],
+        "sagittal": [
+          21,
+          157
+        ],
+        "coronal": [
+          22,
+          196
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "name": "brainstem",
+      "displayName": {
+        "en": "Brainstem",
+        "ko": "Brainstem"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 44,
+        "sagittal": 94,
+        "coronal": 99
+      },
+      "sliceRange": {
+        "axial": [
+          14,
+          72
+        ],
+        "sagittal": [
+          75,
+          105
+        ],
+        "coronal": [
+          79,
+          113
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "name": "csf",
+      "displayName": {
+        "en": "Csf",
+        "ko": "Csf"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 86,
+        "sagittal": 89,
+        "coronal": 99
+      },
+      "sliceRange": {
+        "axial": [
+          72,
+          89
+        ],
+        "sagittal": [
+          84,
+          95
+        ],
+        "coronal": [
+          96,
+          115
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "name": "fourth_ventricle",
+      "displayName": {
+        "en": "Fourth Ventricle",
+        "ko": "Fourth Ventricle"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 40,
+        "sagittal": 91,
+        "coronal": 81
+      },
+      "sliceRange": {
+        "axial": [
+          16,
+          56
+        ],
+        "sagittal": [
+          82,
+          98
+        ],
+        "coronal": [
+          74,
+          89
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "name": "l_caudal_anterior_cingulate",
+      "displayName": {
+        "en": "L Caudal Anterior Cingulate",
+        "ko": "L Caudal Anterior Cingulate"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 111,
+        "sagittal": 93,
+        "coronal": 152
+      },
+      "sliceRange": {
+        "axial": [
+          86,
+          123
+        ],
+        "sagittal": [
+          90,
+          103
+        ],
+        "coronal": [
+          129,
+          164
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "name": "l_caudal_middle_frontal",
+      "displayName": {
+        "en": "L Caudal Middle Frontal",
+        "ko": "L Caudal Middle Frontal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 122,
+        "sagittal": 125,
+        "coronal": 135
+      },
+      "sliceRange": {
+        "axial": [
+          98,
+          137
+        ],
+        "sagittal": [
+          111,
+          144
+        ],
+        "coronal": [
+          117,
+          157
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "name": "l_cuneus",
+      "displayName": {
+        "en": "L Cuneus",
+        "ko": "L Cuneus"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 89,
+        "sagittal": 91,
+        "coronal": 46
+      },
+      "sliceRange": {
+        "axial": [
+          67,
+          115
+        ],
+        "sagittal": [
+          88,
+          112
+        ],
+        "coronal": [
+          25,
+          66
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "name": "l_entorhinal",
+      "displayName": {
+        "en": "L Entorhinal",
+        "ko": "L Entorhinal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 39,
+        "sagittal": 108,
+        "coronal": 120
+      },
+      "sliceRange": {
+        "axial": [
+          29,
+          47
+        ],
+        "sagittal": [
+          104,
+          122
+        ],
+        "coronal": [
+          108,
+          133
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "name": "l_fusiform",
+      "displayName": {
+        "en": "L Fusiform",
+        "ko": "L Fusiform"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 54,
+        "sagittal": 131,
+        "coronal": 67
+      },
+      "sliceRange": {
+        "axial": [
+          27,
+          68
+        ],
+        "sagittal": [
+          109,
+          142
+        ],
+        "coronal": [
+          42,
+          121
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "name": "l_inferior_parietal",
+      "displayName": {
+        "en": "L Inferior Parietal",
+        "ko": "L Inferior Parietal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 94,
+        "sagittal": 130,
+        "coronal": 59
+      },
+      "sliceRange": {
+        "axial": [
+          81,
+          130
+        ],
+        "sagittal": [
+          113,
+          149
+        ],
+        "coronal": [
+          33,
+          77
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "name": "l_inferior_temporal",
+      "displayName": {
+        "en": "L Inferior Temporal",
+        "ko": "L Inferior Temporal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 46,
+        "sagittal": 137,
+        "coronal": 120
+      },
+      "sliceRange": {
+        "axial": [
+          23,
+          74
+        ],
+        "sagittal": [
+          109,
+          157
+        ],
+        "coronal": [
+          57,
+          140
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "name": "l_insula",
+      "displayName": {
+        "en": "L Insula",
+        "ko": "L Insula"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 68,
+        "sagittal": 127,
+        "coronal": 140
+      },
+      "sliceRange": {
+        "axial": [
+          53,
+          92
+        ],
+        "sagittal": [
+          115,
+          135
+        ],
+        "coronal": [
+          96,
+          154
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "name": "l_isthmus_cingulate",
+      "displayName": {
+        "en": "L Isthmus Cingulate",
+        "ko": "L Isthmus Cingulate"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 105,
+        "sagittal": 93,
+        "coronal": 76
+      },
+      "sliceRange": {
+        "axial": [
+          68,
+          109
+        ],
+        "sagittal": [
+          90,
+          110
+        ],
+        "coronal": [
+          69,
+          94
+        ]
+      }
+    },
+    {
+      "id": 18,
+      "name": "l_lateral_occipital",
+      "displayName": {
+        "en": "L Lateral Occipital",
+        "ko": "L Lateral Occipital"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 74,
+        "sagittal": 136,
+        "coronal": 32
+      },
+      "sliceRange": {
+        "axial": [
+          51,
+          104
+        ],
+        "sagittal": [
+          94,
+          144
+        ],
+        "coronal": [
+          21,
+          64
+        ]
+      }
+    },
+    {
+      "id": 19,
+      "name": "l_lateral_orbitofrontal",
+      "displayName": {
+        "en": "L Lateral Orbitofrontal",
+        "ko": "L Lateral Orbitofrontal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 55,
+        "sagittal": 111,
+        "coronal": 158
+      },
+      "sliceRange": {
+        "axial": [
+          43,
+          70
+        ],
+        "sagittal": [
+          94,
+          135
+        ],
+        "coronal": [
+          130,
+          195
+        ]
+      }
+    },
+    {
+      "id": 20,
+      "name": "l_lingual",
+      "displayName": {
+        "en": "L Lingual",
+        "ko": "L Lingual"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 67,
+        "sagittal": 91,
+        "coronal": 63
+      },
+      "sliceRange": {
+        "axial": [
+          53,
+          82
+        ],
+        "sagittal": [
+          88,
+          121
+        ],
+        "coronal": [
+          27,
+          84
+        ]
+      }
+    },
+    {
+      "id": 21,
+      "name": "l_medial_orbitofrontal",
+      "displayName": {
+        "en": "L Medial Orbitofrontal",
+        "ko": "L Medial Orbitofrontal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 52,
+        "sagittal": 93,
+        "coronal": 179
+      },
+      "sliceRange": {
+        "axial": [
+          41,
+          75
+        ],
+        "sagittal": [
+          91,
+          105
+        ],
+        "coronal": [
+          130,
+          195
+        ]
+      }
+    },
+    {
+      "id": 22,
+      "name": "l_middle_temporal",
+      "displayName": {
+        "en": "L Middle Temporal",
+        "ko": "L Middle Temporal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 61,
+        "sagittal": 156,
+        "coronal": 75
+      },
+      "sliceRange": {
+        "axial": [
+          27,
+          89
+        ],
+        "sagittal": [
+          123,
+          161
+        ],
+        "coronal": [
+          55,
+          143
+        ]
+      }
+    },
+    {
+      "id": 23,
+      "name": "l_paracentral",
+      "displayName": {
+        "en": "L Paracentral",
+        "ko": "L Paracentral"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 119,
+        "sagittal": 93,
+        "coronal": 84
+      },
+      "sliceRange": {
+        "axial": [
+          111,
+          150
+        ],
+        "sagittal": [
+          90,
+          108
+        ],
+        "coronal": [
+          80,
+          123
+        ]
+      }
+    },
+    {
+      "id": 24,
+      "name": "l_parahippocampal",
+      "displayName": {
+        "en": "L Parahippocampal",
+        "ko": "L Parahippocampal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 56,
+        "sagittal": 112,
+        "coronal": 87
+      },
+      "sliceRange": {
+        "axial": [
+          38,
+          68
+        ],
+        "sagittal": [
+          100,
+          124
+        ],
+        "coronal": [
+          81,
+          109
+        ]
+      }
+    },
+    {
+      "id": 25,
+      "name": "l_pars_opercularis",
+      "displayName": {
+        "en": "L Pars Opercularis",
+        "ko": "L Pars Opercularis"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 96,
+        "sagittal": 146,
+        "coronal": 138
+      },
+      "sliceRange": {
+        "axial": [
+          67,
+          102
+        ],
+        "sagittal": [
+          121,
+          150
+        ],
+        "coronal": [
+          131,
+          153
+        ]
+      }
+    },
+    {
+      "id": 26,
+      "name": "l_pars_orbitalis",
+      "displayName": {
+        "en": "L Pars Orbitalis",
+        "ko": "L Pars Orbitalis"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 56,
+        "sagittal": 138,
+        "coronal": 155
+      },
+      "sliceRange": {
+        "axial": [
+          51,
+          77
+        ],
+        "sagittal": [
+          117,
+          144
+        ],
+        "coronal": [
+          145,
+          173
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "name": "l_pars_triangularis",
+      "displayName": {
+        "en": "L Pars Triangularis",
+        "ko": "L Pars Triangularis"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 80,
+        "sagittal": 140,
+        "coronal": 159
+      },
+      "sliceRange": {
+        "axial": [
+          63,
+          96
+        ],
+        "sagittal": [
+          119,
+          148
+        ],
+        "coronal": [
+          146,
+          175
+        ]
+      }
+    },
+    {
+      "id": 28,
+      "name": "l_pericalcarine",
+      "displayName": {
+        "en": "L Pericalcarine",
+        "ko": "L Pericalcarine"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 79,
+        "sagittal": 98,
+        "coronal": 52
+      },
+      "sliceRange": {
+        "axial": [
+          65,
+          87
+        ],
+        "sagittal": [
+          92,
+          112
+        ],
+        "coronal": [
+          29,
+          63
+        ]
+      }
+    },
+    {
+      "id": 29,
+      "name": "l_postcentral",
+      "displayName": {
+        "en": "L Postcentral",
+        "ko": "L Postcentral"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 89,
+        "sagittal": 134,
+        "coronal": 110
+      },
+      "sliceRange": {
+        "axial": [
+          78,
+          152
+        ],
+        "sagittal": [
+          94,
+          159
+        ],
+        "coronal": [
+          69,
+          122
+        ]
+      }
+    },
+    {
+      "id": 30,
+      "name": "l_posterior_cingulate",
+      "displayName": {
+        "en": "L Posterior Cingulate",
+        "ko": "L Posterior Cingulate"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 113,
+        "sagittal": 92,
+        "coronal": 95
+      },
+      "sliceRange": {
+        "axial": [
+          99,
+          127
+        ],
+        "sagittal": [
+          90,
+          106
+        ],
+        "coronal": [
+          86,
+          130
+        ]
+      }
+    },
+    {
+      "id": 31,
+      "name": "l_precentral",
+      "displayName": {
+        "en": "L Precentral",
+        "ko": "L Precentral"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 125,
+        "sagittal": 130,
+        "coronal": 124
+      },
+      "sliceRange": {
+        "axial": [
+          69,
+          150
+        ],
+        "sagittal": [
+          94,
+          155
+        ],
+        "coronal": [
+          90,
+          138
+        ]
+      }
+    },
+    {
+      "id": 32,
+      "name": "l_precuneus",
+      "displayName": {
+        "en": "L Precuneus",
+        "ko": "L Precuneus"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 109,
+        "sagittal": 93,
+        "coronal": 69
+      },
+      "sliceRange": {
+        "axial": [
+          75,
+          149
+        ],
+        "sagittal": [
+          89,
+          116
+        ],
+        "coronal": [
+          44,
+          88
+        ]
+      }
+    },
+    {
+      "id": 33,
+      "name": "l_rostral_anterior_cingulate",
+      "displayName": {
+        "en": "L Rostral Anterior Cingulate",
+        "ko": "L Rostral Anterior Cingulate"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 76,
+        "sagittal": 93,
+        "coronal": 172
+      },
+      "sliceRange": {
+        "axial": [
+          59,
+          109
+        ],
+        "sagittal": [
+          90,
+          105
+        ],
+        "coronal": [
+          142,
+          183
+        ]
+      }
+    },
+    {
+      "id": 34,
+      "name": "l_rostral_middle_frontal",
+      "displayName": {
+        "en": "L Rostral Middle Frontal",
+        "ko": "L Rostral Middle Frontal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 107,
+        "sagittal": 127,
+        "coronal": 178
+      },
+      "sliceRange": {
+        "axial": [
+          55,
+          123
+        ],
+        "sagittal": [
+          109,
+          144
+        ],
+        "coronal": [
+          142,
+          191
+        ]
+      }
+    },
+    {
+      "id": 35,
+      "name": "l_superior_frontal",
+      "displayName": {
+        "en": "L Superior Frontal",
+        "ko": "L Superior Frontal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 140,
+        "sagittal": 93,
+        "coronal": 194
+      },
+      "sliceRange": {
+        "axial": [
+          60,
+          150
+        ],
+        "sagittal": [
+          90,
+          120
+        ],
+        "coronal": [
+          110,
+          199
+        ]
+      }
+    },
+    {
+      "id": 36,
+      "name": "l_superior_parietal",
+      "displayName": {
+        "en": "L Superior Parietal",
+        "ko": "L Superior Parietal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 134,
+        "sagittal": 113,
+        "coronal": 68
+      },
+      "sliceRange": {
+        "axial": [
+          88,
+          145
+        ],
+        "sagittal": [
+          95,
+          132
+        ],
+        "coronal": [
+          32,
+          89
+        ]
+      }
+    },
+    {
+      "id": 37,
+      "name": "l_superior_temporal",
+      "displayName": {
+        "en": "L Superior Temporal",
+        "ko": "L Superior Temporal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 68,
+        "sagittal": 138,
+        "coronal": 141
+      },
+      "sliceRange": {
+        "axial": [
+          27,
+          96
+        ],
+        "sagittal": [
+          108,
+          159
+        ],
+        "coronal": [
+          68,
+          151
+        ]
+      }
+    },
+    {
+      "id": 38,
+      "name": "l_supramarginal",
+      "displayName": {
+        "en": "L Supramarginal",
+        "ko": "L Supramarginal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 96,
+        "sagittal": 152,
+        "coronal": 87
+      },
+      "sliceRange": {
+        "axial": [
+          85,
+          132
+        ],
+        "sagittal": [
+          122,
+          159
+        ],
+        "coronal": [
+          66,
+          110
+        ]
+      }
+    },
+    {
+      "id": 39,
+      "name": "l_transverse_temporal",
+      "displayName": {
+        "en": "L Transverse Temporal",
+        "ko": "L Transverse Temporal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 79,
+        "sagittal": 132,
+        "coronal": 100
+      },
+      "sliceRange": {
+        "axial": [
+          74,
+          88
+        ],
+        "sagittal": [
+          122,
+          146
+        ],
+        "coronal": [
+          94,
+          114
+        ]
+      }
+    },
+    {
+      "id": 40,
+      "name": "left_amygdala",
+      "displayName": {
+        "en": "Left Amygdala",
+        "ko": "Left Amygdala"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 54,
+        "sagittal": 111,
+        "coronal": 120
+      },
+      "sliceRange": {
+        "axial": [
+          46,
+          61
+        ],
+        "sagittal": [
+          103,
+          118
+        ],
+        "coronal": [
+          115,
+          125
+        ]
+      }
+    },
+    {
+      "id": 41,
+      "name": "left_caudate",
+      "displayName": {
+        "en": "Left Caudate",
+        "ko": "Left Caudate"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 85,
+        "sagittal": 103,
+        "coronal": 139
+      },
+      "sliceRange": {
+        "axial": [
+          67,
+          98
+        ],
+        "sagittal": [
+          95,
+          108
+        ],
+        "coronal": [
+          106,
+          150
+        ]
+      }
+    },
+    {
+      "id": 42,
+      "name": "left_cerebellum_exterior",
+      "displayName": {
+        "en": "Left Cerebellum Exterior",
+        "ko": "Left Cerebellum Exterior"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 46,
+        "sagittal": 100,
+        "coronal": 69
+      },
+      "sliceRange": {
+        "axial": [
+          12,
+          66
+        ],
+        "sagittal": [
+          87,
+          144
+        ],
+        "coronal": [
+          35,
+          96
+        ]
+      }
+    },
+    {
+      "id": 43,
+      "name": "left_cerebellum_white_matter",
+      "displayName": {
+        "en": "Left Cerebellum White Matter",
+        "ko": "Left Cerebellum White Matter"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 37,
+        "sagittal": 103,
+        "coronal": 71
+      },
+      "sliceRange": {
+        "axial": [
+          15,
+          58
+        ],
+        "sagittal": [
+          91,
+          130
+        ],
+        "coronal": [
+          51,
+          102
+        ]
+      }
+    },
+    {
+      "id": 44,
+      "name": "left_hippocampus",
+      "displayName": {
+        "en": "Left Hippocampus",
+        "ko": "Left Hippocampus"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 56,
+        "sagittal": 114,
+        "coronal": 113
+      },
+      "sliceRange": {
+        "axial": [
+          44,
+          77
+        ],
+        "sagittal": [
+          103,
+          125
+        ],
+        "coronal": [
+          84,
+          120
+        ]
+      }
+    },
+    {
+      "id": 45,
+      "name": "left_lateral_ventricle",
+      "displayName": {
+        "en": "Left Lateral Ventricle",
+        "ko": "Left Lateral Ventricle"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 92,
+        "sagittal": 95,
+        "coronal": 85
+      },
+      "sliceRange": {
+        "axial": [
+          70,
+          100
+        ],
+        "sagittal": [
+          89,
+          121
+        ],
+        "coronal": [
+          70,
+          152
+        ]
+      }
+    },
+    {
+      "id": 46,
+      "name": "left_pallidum",
+      "displayName": {
+        "en": "Left Pallidum",
+        "ko": "Left Pallidum"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 70,
+        "sagittal": 109,
+        "coronal": 124
+      },
+      "sliceRange": {
+        "axial": [
+          65,
+          79
+        ],
+        "sagittal": [
+          101,
+          116
+        ],
+        "coronal": [
+          111,
+          132
+        ]
+      }
+    },
+    {
+      "id": 47,
+      "name": "left_putamen",
+      "displayName": {
+        "en": "Left Putamen",
+        "ko": "Left Putamen"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 69,
+        "sagittal": 117,
+        "coronal": 133
+      },
+      "sliceRange": {
+        "axial": [
+          61,
+          86
+        ],
+        "sagittal": [
+          103,
+          121
+        ],
+        "coronal": [
+          106,
+          144
+        ]
+      }
+    },
+    {
+      "id": 48,
+      "name": "left_thalamus",
+      "displayName": {
+        "en": "Left Thalamus",
+        "ko": "Left Thalamus"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 76,
+        "sagittal": 102,
+        "coronal": 106
+      },
+      "sliceRange": {
+        "axial": [
+          67,
+          92
+        ],
+        "sagittal": [
+          89,
+          114
+        ],
+        "coronal": [
+          89,
+          124
+        ]
+      }
+    },
+    {
+      "id": 49,
+      "name": "left_ventral_dc",
+      "displayName": {
+        "en": "Left Ventral Dc",
+        "ko": "Left Ventral Dc"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 63,
+        "sagittal": 94,
+        "coronal": 107
+      },
+      "sliceRange": {
+        "axial": [
+          14,
+          73
+        ],
+        "sagittal": [
+          87,
+          116
+        ],
+        "coronal": [
+          84,
+          128
+        ]
+      }
+    },
+    {
+      "id": 50,
+      "name": "r_caudal_anterior_cingulate",
+      "displayName": {
+        "en": "R Caudal Anterior Cingulate",
+        "ko": "R Caudal Anterior Cingulate"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 98,
+        "sagittal": 87,
+        "coronal": 152
+      },
+      "sliceRange": {
+        "axial": [
+          84,
+          114
+        ],
+        "sagittal": [
+          77,
+          90
+        ],
+        "coronal": [
+          128,
+          165
+        ]
+      }
+    },
+    {
+      "id": 51,
+      "name": "r_caudal_middle_frontal",
+      "displayName": {
+        "en": "R Caudal Middle Frontal",
+        "ko": "R Caudal Middle Frontal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 123,
+        "sagittal": 52,
+        "coronal": 139
+      },
+      "sliceRange": {
+        "axial": [
+          98,
+          137
+        ],
+        "sagittal": [
+          36,
+          68
+        ],
+        "coronal": [
+          120,
+          157
+        ]
+      }
+    },
+    {
+      "id": 52,
+      "name": "r_cuneus",
+      "displayName": {
+        "en": "R Cuneus",
+        "ko": "R Cuneus"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 91,
+        "sagittal": 87,
+        "coronal": 47
+      },
+      "sliceRange": {
+        "axial": [
+          72,
+          117
+        ],
+        "sagittal": [
+          67,
+          89
+        ],
+        "coronal": [
+          25,
+          67
+        ]
+      }
+    },
+    {
+      "id": 53,
+      "name": "r_entorhinal",
+      "displayName": {
+        "en": "R Entorhinal",
+        "ko": "R Entorhinal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 39,
+        "sagittal": 72,
+        "coronal": 117
+      },
+      "sliceRange": {
+        "axial": [
+          31,
+          47
+        ],
+        "sagittal": [
+          57,
+          76
+        ],
+        "coronal": [
+          109,
+          135
+        ]
+      }
+    },
+    {
+      "id": 54,
+      "name": "r_fusiform",
+      "displayName": {
+        "en": "R Fusiform",
+        "ko": "R Fusiform"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 54,
+        "sagittal": 60,
+        "coronal": 82
+      },
+      "sliceRange": {
+        "axial": [
+          26,
+          68
+        ],
+        "sagittal": [
+          38,
+          69
+        ],
+        "coronal": [
+          43,
+          124
+        ]
+      }
+    },
+    {
+      "id": 55,
+      "name": "r_inferior_parietal",
+      "displayName": {
+        "en": "R Inferior Parietal",
+        "ko": "R Inferior Parietal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 95,
+        "sagittal": 44,
+        "coronal": 68
+      },
+      "sliceRange": {
+        "axial": [
+          79,
+          130
+        ],
+        "sagittal": [
+          23,
+          65
+        ],
+        "coronal": [
+          38,
+          83
+        ]
+      }
+    },
+    {
+      "id": 56,
+      "name": "r_inferior_temporal",
+      "displayName": {
+        "en": "R Inferior Temporal",
+        "ko": "R Inferior Temporal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 28,
+        "sagittal": 34,
+        "coronal": 122
+      },
+      "sliceRange": {
+        "axial": [
+          23,
+          70
+        ],
+        "sagittal": [
+          23,
+          71
+        ],
+        "coronal": [
+          59,
+          142
+        ]
+      }
+    },
+    {
+      "id": 57,
+      "name": "r_insula",
+      "displayName": {
+        "en": "R Insula",
+        "ko": "R Insula"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 72,
+        "sagittal": 52,
+        "coronal": 142
+      },
+      "sliceRange": {
+        "axial": [
+          54,
+          94
+        ],
+        "sagittal": [
+          45,
+          63
+        ],
+        "coronal": [
+          99,
+          155
+        ]
+      }
+    },
+    {
+      "id": 58,
+      "name": "r_isthmus_cingulate",
+      "displayName": {
+        "en": "R Isthmus Cingulate",
+        "ko": "R Isthmus Cingulate"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 104,
+        "sagittal": 87,
+        "coronal": 80
+      },
+      "sliceRange": {
+        "axial": [
+          68,
+          108
+        ],
+        "sagittal": [
+          70,
+          89
+        ],
+        "coronal": [
+          72,
+          94
+        ]
+      }
+    },
+    {
+      "id": 59,
+      "name": "r_lateral_occipital",
+      "displayName": {
+        "en": "R Lateral Occipital",
+        "ko": "R Lateral Occipital"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 77,
+        "sagittal": 43,
+        "coronal": 38
+      },
+      "sliceRange": {
+        "axial": [
+          51,
+          109
+        ],
+        "sagittal": [
+          32,
+          82
+        ],
+        "coronal": [
+          21,
+          66
+        ]
+      }
+    },
+    {
+      "id": 60,
+      "name": "r_lateral_orbitofrontal",
+      "displayName": {
+        "en": "R Lateral Orbitofrontal",
+        "ko": "R Lateral Orbitofrontal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 55,
+        "sagittal": 77,
+        "coronal": 158
+      },
+      "sliceRange": {
+        "axial": [
+          43,
+          67
+        ],
+        "sagittal": [
+          46,
+          86
+        ],
+        "coronal": [
+          132,
+          194
+        ]
+      }
+    },
+    {
+      "id": 61,
+      "name": "r_lingual",
+      "displayName": {
+        "en": "R Lingual",
+        "ko": "R Lingual"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 66,
+        "sagittal": 87,
+        "coronal": 48
+      },
+      "sliceRange": {
+        "axial": [
+          53,
+          85
+        ],
+        "sagittal": [
+          57,
+          89
+        ],
+        "coronal": [
+          30,
+          87
+        ]
+      }
+    },
+    {
+      "id": 62,
+      "name": "r_medial_orbitofrontal",
+      "displayName": {
+        "en": "R Medial Orbitofrontal",
+        "ko": "R Medial Orbitofrontal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 55,
+        "sagittal": 87,
+        "coronal": 142
+      },
+      "sliceRange": {
+        "axial": [
+          41,
+          72
+        ],
+        "sagittal": [
+          78,
+          90
+        ],
+        "coronal": [
+          132,
+          195
+        ]
+      }
+    },
+    {
+      "id": 63,
+      "name": "r_middle_temporal",
+      "displayName": {
+        "en": "R Middle Temporal",
+        "ko": "R Middle Temporal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 64,
+        "sagittal": 25,
+        "coronal": 85
+      },
+      "sliceRange": {
+        "axial": [
+          26,
+          88
+        ],
+        "sagittal": [
+          19,
+          58
+        ],
+        "coronal": [
+          63,
+          146
+        ]
+      }
+    },
+    {
+      "id": 64,
+      "name": "r_paracentral",
+      "displayName": {
+        "en": "R Paracentral",
+        "ko": "R Paracentral"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 120,
+        "sagittal": 86,
+        "coronal": 86
+      },
+      "sliceRange": {
+        "axial": [
+          110,
+          150
+        ],
+        "sagittal": [
+          71,
+          89
+        ],
+        "coronal": [
+          83,
+          117
+        ]
+      }
+    },
+    {
+      "id": 65,
+      "name": "r_parahippocampal",
+      "displayName": {
+        "en": "R Parahippocampal",
+        "ko": "R Parahippocampal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 58,
+        "sagittal": 70,
+        "coronal": 100
+      },
+      "sliceRange": {
+        "axial": [
+          38,
+          67
+        ],
+        "sagittal": [
+          53,
+          77
+        ],
+        "coronal": [
+          84,
+          113
+        ]
+      }
+    },
+    {
+      "id": 66,
+      "name": "r_pars_opercularis",
+      "displayName": {
+        "en": "R Pars Opercularis",
+        "ko": "R Pars Opercularis"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 96,
+        "sagittal": 32,
+        "coronal": 139
+      },
+      "sliceRange": {
+        "axial": [
+          67,
+          101
+        ],
+        "sagittal": [
+          29,
+          59
+        ],
+        "coronal": [
+          131,
+          152
+        ]
+      }
+    },
+    {
+      "id": 67,
+      "name": "r_pars_orbitalis",
+      "displayName": {
+        "en": "R Pars Orbitalis",
+        "ko": "R Pars Orbitalis"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 56,
+        "sagittal": 43,
+        "coronal": 155
+      },
+      "sliceRange": {
+        "axial": [
+          51,
+          75
+        ],
+        "sagittal": [
+          36,
+          61
+        ],
+        "coronal": [
+          147,
+          177
+        ]
+      }
+    },
+    {
+      "id": 68,
+      "name": "r_pars_triangularis",
+      "displayName": {
+        "en": "R Pars Triangularis",
+        "ko": "R Pars Triangularis"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 74,
+        "sagittal": 36,
+        "coronal": 151
+      },
+      "sliceRange": {
+        "axial": [
+          60,
+          94
+        ],
+        "sagittal": [
+          31,
+          59
+        ],
+        "coronal": [
+          147,
+          175
+        ]
+      }
+    },
+    {
+      "id": 69,
+      "name": "r_pericalcarine",
+      "displayName": {
+        "en": "R Pericalcarine",
+        "ko": "R Pericalcarine"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 82,
+        "sagittal": 76,
+        "coronal": 53
+      },
+      "sliceRange": {
+        "axial": [
+          66,
+          89
+        ],
+        "sagittal": [
+          68,
+          87
+        ],
+        "coronal": [
+          29,
+          65
+        ]
+      }
+    },
+    {
+      "id": 70,
+      "name": "r_postcentral",
+      "displayName": {
+        "en": "R Postcentral",
+        "ko": "R Postcentral"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 89,
+        "sagittal": 24,
+        "coronal": 113
+      },
+      "sliceRange": {
+        "axial": [
+          80,
+          153
+        ],
+        "sagittal": [
+          21,
+          85
+        ],
+        "coronal": [
+          72,
+          125
+        ]
+      }
+    },
+    {
+      "id": 71,
+      "name": "r_posterior_cingulate",
+      "displayName": {
+        "en": "R Posterior Cingulate",
+        "ko": "R Posterior Cingulate"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 114,
+        "sagittal": 87,
+        "coronal": 95
+      },
+      "sliceRange": {
+        "axial": [
+          99,
+          121
+        ],
+        "sagittal": [
+          73,
+          90
+        ],
+        "coronal": [
+          87,
+          132
+        ]
+      }
+    },
+    {
+      "id": 72,
+      "name": "r_precentral",
+      "displayName": {
+        "en": "R Precentral",
+        "ko": "R Precentral"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 136,
+        "sagittal": 47,
+        "coronal": 115
+      },
+      "sliceRange": {
+        "axial": [
+          71,
+          152
+        ],
+        "sagittal": [
+          23,
+          85
+        ],
+        "coronal": [
+          92,
+          140
+        ]
+      }
+    },
+    {
+      "id": 73,
+      "name": "r_precuneus",
+      "displayName": {
+        "en": "R Precuneus",
+        "ko": "R Precuneus"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 109,
+        "sagittal": 86,
+        "coronal": 72
+      },
+      "sliceRange": {
+        "axial": [
+          77,
+          147
+        ],
+        "sagittal": [
+          62,
+          89
+        ],
+        "coronal": [
+          46,
+          90
+        ]
+      }
+    },
+    {
+      "id": 74,
+      "name": "r_rostral_anterior_cingulate",
+      "displayName": {
+        "en": "R Rostral Anterior Cingulate",
+        "ko": "R Rostral Anterior Cingulate"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 82,
+        "sagittal": 87,
+        "coronal": 167
+      },
+      "sliceRange": {
+        "axial": [
+          62,
+          94
+        ],
+        "sagittal": [
+          75,
+          90
+        ],
+        "coronal": [
+          145,
+          174
+        ]
+      }
+    },
+    {
+      "id": 75,
+      "name": "r_rostral_middle_frontal",
+      "displayName": {
+        "en": "R Rostral Middle Frontal",
+        "ko": "R Rostral Middle Frontal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 111,
+        "sagittal": 51,
+        "coronal": 177
+      },
+      "sliceRange": {
+        "axial": [
+          56,
+          124
+        ],
+        "sagittal": [
+          34,
+          67
+        ],
+        "coronal": [
+          142,
+          192
+        ]
+      }
+    },
+    {
+      "id": 76,
+      "name": "r_superior_frontal",
+      "displayName": {
+        "en": "R Superior Frontal",
+        "ko": "R Superior Frontal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 120,
+        "sagittal": 86,
+        "coronal": 194
+      },
+      "sliceRange": {
+        "axial": [
+          57,
+          149
+        ],
+        "sagittal": [
+          57,
+          88
+        ],
+        "coronal": [
+          114,
+          199
+        ]
+      }
+    },
+    {
+      "id": 77,
+      "name": "r_superior_parietal",
+      "displayName": {
+        "en": "R Superior Parietal",
+        "ko": "R Superior Parietal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 134,
+        "sagittal": 59,
+        "coronal": 72
+      },
+      "sliceRange": {
+        "axial": [
+          90,
+          149
+        ],
+        "sagittal": [
+          45,
+          84
+        ],
+        "coronal": [
+          33,
+          94
+        ]
+      }
+    },
+    {
+      "id": 78,
+      "name": "r_superior_temporal",
+      "displayName": {
+        "en": "R Superior Temporal",
+        "ko": "R Superior Temporal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 72,
+        "sagittal": 42,
+        "coronal": 141
+      },
+      "sliceRange": {
+        "axial": [
+          27,
+          92
+        ],
+        "sagittal": [
+          19,
+          73
+        ],
+        "coronal": [
+          80,
+          153
+        ]
+      }
+    },
+    {
+      "id": 79,
+      "name": "r_supramarginal",
+      "displayName": {
+        "en": "R Supramarginal",
+        "ko": "R Supramarginal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 111,
+        "sagittal": 24,
+        "coronal": 98
+      },
+      "sliceRange": {
+        "axial": [
+          87,
+          130
+        ],
+        "sagittal": [
+          21,
+          57
+        ],
+        "coronal": [
+          76,
+          113
+        ]
+      }
+    },
+    {
+      "id": 80,
+      "name": "r_transverse_temporal",
+      "displayName": {
+        "en": "R Transverse Temporal",
+        "ko": "R Transverse Temporal"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 83,
+        "sagittal": 47,
+        "coronal": 105
+      },
+      "sliceRange": {
+        "axial": [
+          72,
+          88
+        ],
+        "sagittal": [
+          32,
+          56
+        ],
+        "coronal": [
+          95,
+          121
+        ]
+      }
+    },
+    {
+      "id": 81,
+      "name": "right_amygdala",
+      "displayName": {
+        "en": "Right Amygdala",
+        "ko": "Right Amygdala"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 54,
+        "sagittal": 69,
+        "coronal": 121
+      },
+      "sliceRange": {
+        "axial": [
+          45,
+          61
+        ],
+        "sagittal": [
+          60,
+          76
+        ],
+        "coronal": [
+          115,
+          125
+        ]
+      }
+    },
+    {
+      "id": 82,
+      "name": "right_caudate",
+      "displayName": {
+        "en": "Right Caudate",
+        "ko": "Right Caudate"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 87,
+        "sagittal": 75,
+        "coronal": 140
+      },
+      "sliceRange": {
+        "axial": [
+          67,
+          98
+        ],
+        "sagittal": [
+          71,
+          85
+        ],
+        "coronal": [
+          108,
+          151
+        ]
+      }
+    },
+    {
+      "id": 83,
+      "name": "right_cerebellum_exterior",
+      "displayName": {
+        "en": "Right Cerebellum Exterior",
+        "ko": "Right Cerebellum Exterior"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 46,
+        "sagittal": 79,
+        "coronal": 69
+      },
+      "sliceRange": {
+        "axial": [
+          13,
+          66
+        ],
+        "sagittal": [
+          35,
+          90
+        ],
+        "coronal": [
+          35,
+          96
+        ]
+      }
+    },
+    {
+      "id": 84,
+      "name": "right_cerebellum_white_matter",
+      "displayName": {
+        "en": "Right Cerebellum White Matter",
+        "ko": "Right Cerebellum White Matter"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 37,
+        "sagittal": 76,
+        "coronal": 70
+      },
+      "sliceRange": {
+        "axial": [
+          26,
+          58
+        ],
+        "sagittal": [
+          50,
+          90
+        ],
+        "coronal": [
+          50,
+          104
+        ]
+      }
+    },
+    {
+      "id": 85,
+      "name": "right_hippocampus",
+      "displayName": {
+        "en": "Right Hippocampus",
+        "ko": "Right Hippocampus"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 55,
+        "sagittal": 63,
+        "coronal": 115
+      },
+      "sliceRange": {
+        "axial": [
+          45,
+          80
+        ],
+        "sagittal": [
+          54,
+          77
+        ],
+        "coronal": [
+          86,
+          121
+        ]
+      }
+    },
+    {
+      "id": 86,
+      "name": "right_lateral_ventricle",
+      "displayName": {
+        "en": "Right Lateral Ventricle",
+        "ko": "Right Lateral Ventricle"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 92,
+        "sagittal": 84,
+        "coronal": 86
+      },
+      "sliceRange": {
+        "axial": [
+          69,
+          100
+        ],
+        "sagittal": [
+          57,
+          90
+        ],
+        "coronal": [
+          73,
+          151
+        ]
+      }
+    },
+    {
+      "id": 87,
+      "name": "right_pallidum",
+      "displayName": {
+        "en": "Right Pallidum",
+        "ko": "Right Pallidum"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 70,
+        "sagittal": 69,
+        "coronal": 123
+      },
+      "sliceRange": {
+        "axial": [
+          66,
+          79
+        ],
+        "sagittal": [
+          63,
+          77
+        ],
+        "coronal": [
+          111,
+          133
+        ]
+      }
+    },
+    {
+      "id": 88,
+      "name": "right_putamen",
+      "displayName": {
+        "en": "Right Putamen",
+        "ko": "Right Putamen"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 70,
+        "sagittal": 62,
+        "coronal": 133
+      },
+      "sliceRange": {
+        "axial": [
+          61,
+          86
+        ],
+        "sagittal": [
+          57,
+          77
+        ],
+        "coronal": [
+          108,
+          145
+        ]
+      }
+    },
+    {
+      "id": 89,
+      "name": "right_thalamus",
+      "displayName": {
+        "en": "Right Thalamus",
+        "ko": "Right Thalamus"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 77,
+        "sagittal": 78,
+        "coronal": 106
+      },
+      "sliceRange": {
+        "axial": [
+          67,
+          92
+        ],
+        "sagittal": [
+          65,
+          89
+        ],
+        "coronal": [
+          91,
+          125
+        ]
+      }
+    },
+    {
+      "id": 90,
+      "name": "right_ventral_dc",
+      "displayName": {
+        "en": "Right Ventral Dc",
+        "ko": "Right Ventral Dc"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 62,
+        "sagittal": 86,
+        "coronal": 105
+      },
+      "sliceRange": {
+        "axial": [
+          51,
+          73
+        ],
+        "sagittal": [
+          63,
+          90
+        ],
+        "coronal": [
+          99,
+          128
+        ]
+      }
+    },
+    {
+      "id": 91,
+      "name": "third_ventricle",
+      "displayName": {
+        "en": "Third Ventricle",
+        "ko": "Third Ventricle"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 71,
+        "sagittal": 90,
+        "coronal": 124
+      },
+      "sliceRange": {
+        "axial": [
+          56,
+          78
+        ],
+        "sagittal": [
+          87,
+          91
+        ],
+        "coronal": [
+          100,
+          128
+        ]
+      }
+    }
+  ]
+}

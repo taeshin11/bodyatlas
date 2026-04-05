@@ -16,7 +16,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://bodyatlas.vercel.app'),
+  metadataBase: new URL('https://bodyatlas-ten.vercel.app'),
   title: 'BodyAtlas — Free Interactive Cross-Sectional Anatomy Atlas | IMAIOS Alternative',
   description: 'Free interactive cross-sectional anatomy atlas — the best free alternative to IMAIOS e-Anatomy. Browse CT and MRI scans with labeled anatomical structures. Search any structure, see it highlighted instantly. Zero cost, zero install, works offline. Perfect for medical students, radiologists, and anatomy learners.',
   keywords: 'free anatomy atlas, cross-sectional anatomy online free, CT anatomy atlas, MRI anatomy labels, IMAIOS free alternative, IMAIOS alternative free, interactive anatomy atlas, free alternative to IMAIOS e-anatomy, cross-sectional anatomy atlas online free, anatomy atlas for medical students, radiology anatomy tool, brain anatomy atlas free, free medical imaging atlas, 무료 해부학 아틀라스, 단면 해부학, 解剖学アトラス, 解剖学图谱, atlas anatomía gratis, anatomie atlas kostenlos, atlas anatomie gratuit',
@@ -35,17 +35,17 @@ export const metadata: Metadata = {
     title: 'BodyAtlas',
   },
   alternates: {
-    canonical: 'https://bodyatlas.vercel.app',
+    canonical: 'https://bodyatlas-ten.vercel.app',
   },
   openGraph: {
     title: 'BodyAtlas — Free Interactive Anatomy Atlas | IMAIOS Alternative ($0 vs $22/mo)',
     description: 'Free interactive cross-sectional anatomy atlas. Browse CT and MRI with labeled structures. The best free alternative to IMAIOS e-Anatomy for medical students and professionals.',
-    url: 'https://bodyatlas.vercel.app',
+    url: 'https://bodyatlas-ten.vercel.app',
     siteName: 'BodyAtlas',
     type: 'website',
     images: [
       {
-        url: 'https://bodyatlas.vercel.app/opengraph-image',
+        url: 'https://bodyatlas-ten.vercel.app/opengraph-image',
         width: 1200,
         height: 630,
         alt: 'BodyAtlas — Free Interactive Cross-Sectional Anatomy Atlas',
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'BodyAtlas — Free Interactive Anatomy Atlas | IMAIOS Alternative',
     description: 'Free interactive anatomy atlas with labeled CT and MRI cross-sections. $0 forever — no subscription needed.',
-    images: ['https://bodyatlas.vercel.app/opengraph-image'],
+    images: ['https://bodyatlas-ten.vercel.app/opengraph-image'],
   },
   robots: { index: true, follow: true },
   other: {
@@ -78,7 +78,7 @@ export default function RootLayout({
       operatingSystem: 'Web Browser',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
       description: 'Free interactive cross-sectional anatomy atlas. The best free alternative to IMAIOS e-Anatomy for medical students, radiologists, and anatomy learners. Browse CT and MRI with labeled anatomical structures.',
-      url: 'https://bodyatlas.vercel.app',
+      url: 'https://bodyatlas-ten.vercel.app',
       applicationSubCategory: 'Anatomy Atlas',
       inLanguage: ['en', 'ko', 'ja', 'zh', 'es', 'de', 'fr'],
       aggregateRating: {
@@ -88,7 +88,7 @@ export default function RootLayout({
         bestRating: '5',
       },
       featureList: 'Cross-sectional anatomy viewer, CT/MRI labeled structures, Structure search, Offline support, Multi-language support, Free forever',
-      screenshot: 'https://bodyatlas.vercel.app/opengraph-image',
+      screenshot: 'https://bodyatlas-ten.vercel.app/opengraph-image',
       author: { '@type': 'Organization', name: 'SPINAI' },
     },
     {

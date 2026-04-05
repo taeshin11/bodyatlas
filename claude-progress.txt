@@ -50,3 +50,37 @@
 
   Deployed to: brainaxis.vercel.app
   GitHub repo: github.com/taeshin11/brainaxis
+
+## Session 2
+- Date: 2026-04-06
+- Session #: 2
+- Phase: pivot cleanup + multi-computer handover setup
+- Features Worked On: feature flags re-org, i18n, atlas viewer UI, label data regen
+- Completed: WIP changes committed + GitHub repo renamed + HANDOVER.md created
+- Blockers: none
+- Next Up: verify WIP changes work end-to-end, continue BodyAtlas pivot cleanup
+- Git Commits:
+  - chore: rename repo to bodyatlas + add HANDOVER.md + commit WIP
+- Pushed to Remote: yes
+- PRD Updated: modified (details TBD on next read)
+- Notes:
+  Repo housekeeping:
+  - Renamed GitHub repo: brainaxis → bodyatlas (via GitHub settings)
+  - Updated local remote URL to https://github.com/taeshin11/bodyatlas.git
+  - Created HANDOVER.md as single-source-of-truth entry point for future sessions
+
+  WIP changes committed:
+  - src/config/features.ts: removed DICOM-era flags (triPlaneViewer, acpcAlignment, etc),
+    replaced with BodyAtlas-era flags (atlasViewer, labelOverlay, structureSearch,
+    multiLanguage, pwaOffline, quizMode, dicomUpload, aiAutoLabel, premiumTier)
+  - src/lib/i18n.ts: added 'header.download' key across all 7 locales
+  - src/components/{AtlasViewer,StructurePanel,AuthGate,Header}.tsx: UI updates
+  - src/app/page.tsx, layout.tsx: page/layout tweaks
+  - public/data/chest-ct/labels/axial/*.json: regenerated 856 label files
+  - PRD.md: updated
+
+  Handover system:
+  - HANDOVER.md = "지금 바로 할 일" snapshot, overwritten each session
+  - claude-progress.txt = append-only session log (this file)
+  - Env vars (.env.local) stay local — HANDOVER.md lists keys needed, values must
+    be copied manually between computers or re-fetched from Vercel dashboard

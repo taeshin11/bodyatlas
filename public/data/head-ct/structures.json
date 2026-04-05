@@ -1,0 +1,2789 @@
+{
+  "totalStructures": 96,
+  "structures": [
+    {
+      "id": 0,
+      "name": "aorta",
+      "displayName": {
+        "en": "Aorta",
+        "ko": "Aorta"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 9,
+        "sagittal": 100,
+        "coronal": 64
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          24
+        ],
+        "sagittal": [
+          86,
+          145
+        ],
+        "coronal": [
+          2,
+          80
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "name": "auditory_canal_left",
+      "displayName": {
+        "en": "Left Auditory Canal",
+        "ko": "왼쪽 외이도"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 145,
+        "sagittal": 65,
+        "coronal": 83
+      },
+      "sliceRange": {
+        "axial": [
+          139,
+          151
+        ],
+        "sagittal": [
+          61,
+          81
+        ],
+        "coronal": [
+          81,
+          89
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "auditory_canal_right",
+      "displayName": {
+        "en": "Right Auditory Canal",
+        "ko": "오른쪽 외이도"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 147,
+        "sagittal": 163,
+        "coronal": 83
+      },
+      "sliceRange": {
+        "axial": [
+          142,
+          152
+        ],
+        "sagittal": [
+          148,
+          167
+        ],
+        "coronal": [
+          80,
+          89
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "autochthon_left",
+      "displayName": {
+        "en": "Autochthon Left",
+        "ko": "Autochthon Left"
+      },
+      "category": "muscle",
+      "color": "#D97706",
+      "bestSlice": {
+        "axial": 66,
+        "sagittal": 104,
+        "coronal": 0
+      },
+      "sliceRange": {
+        "axial": [
+          28,
+          81
+        ],
+        "sagittal": [
+          91,
+          115
+        ],
+        "coronal": [
+          0,
+          52
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "autochthon_right",
+      "displayName": {
+        "en": "Autochthon Right",
+        "ko": "Autochthon Right"
+      },
+      "category": "muscle",
+      "color": "#D97706",
+      "bestSlice": {
+        "axial": 66,
+        "sagittal": 131,
+        "coronal": 4
+      },
+      "sliceRange": {
+        "axial": [
+          30,
+          82
+        ],
+        "sagittal": [
+          121,
+          144
+        ],
+        "coronal": [
+          0,
+          56
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "name": "brachiocephalic_trunk",
+      "displayName": {
+        "en": "Brachiocephalic Trunk",
+        "ko": "Brachiocephalic Trunk"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 27,
+        "sagittal": 116,
+        "coronal": 74
+      },
+      "sliceRange": {
+        "axial": [
+          21,
+          33
+        ],
+        "sagittal": [
+          109,
+          133
+        ],
+        "coronal": [
+          66,
+          78
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "name": "brachiocephalic_vein_left",
+      "displayName": {
+        "en": "Brachiocephalic Vein Left",
+        "ko": "Brachiocephalic Vein Left"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 11,
+        "sagittal": 97,
+        "coronal": 80
+      },
+      "sliceRange": {
+        "axial": [
+          3,
+          28
+        ],
+        "sagittal": [
+          88,
+          141
+        ],
+        "coronal": [
+          68,
+          84
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "name": "brachiocephalic_vein_right",
+      "displayName": {
+        "en": "Brachiocephalic Vein Right",
+        "ko": "Brachiocephalic Vein Right"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 17,
+        "sagittal": 142,
+        "coronal": 74
+      },
+      "sliceRange": {
+        "axial": [
+          13,
+          31
+        ],
+        "sagittal": [
+          136,
+          148
+        ],
+        "coronal": [
+          65,
+          80
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "name": "brain",
+      "displayName": {
+        "en": "Brain",
+        "ko": "뇌"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 186,
+        "sagittal": 107,
+        "coronal": 64
+      },
+      "sliceRange": {
+        "axial": [
+          135,
+          202
+        ],
+        "sagittal": [
+          67,
+          156
+        ],
+        "coronal": [
+          25,
+          136
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "name": "brain_brainstem",
+      "displayName": {
+        "en": "Brainstem",
+        "ko": "뇌간"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 170,
+        "sagittal": 76,
+        "coronal": 63
+      },
+      "sliceRange": {
+        "axial": [
+          158,
+          194
+        ],
+        "sagittal": [
+          73,
+          149
+        ],
+        "coronal": [
+          23,
+          129
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "name": "brain_cerebellum",
+      "displayName": {
+        "en": "Cerebellum",
+        "ko": "소뇌"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 165,
+        "sagittal": 83,
+        "coronal": 53
+      },
+      "sliceRange": {
+        "axial": [
+          157,
+          192
+        ],
+        "sagittal": [
+          60,
+          163
+        ],
+        "coronal": [
+          7,
+          124
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "name": "brain_csf",
+      "displayName": {
+        "en": "Cerebrospinal Fluid (CSF)",
+        "ko": "뇌척수액"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 180,
+        "sagittal": 109,
+        "coronal": 30
+      },
+      "sliceRange": {
+        "axial": [
+          154,
+          202
+        ],
+        "sagittal": [
+          38,
+          179
+        ],
+        "coronal": [
+          0,
+          155
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "name": "brain_deep_gray_matter",
+      "displayName": {
+        "en": "Deep Gray Matter",
+        "ko": "심부회백질"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 174,
+        "sagittal": 145,
+        "coronal": 69
+      },
+      "sliceRange": {
+        "axial": [
+          168,
+          184
+        ],
+        "sagittal": [
+          75,
+          147
+        ],
+        "coronal": [
+          41,
+          117
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "name": "brain_gray_matter",
+      "displayName": {
+        "en": "Gray Matter",
+        "ko": "회백질"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 174,
+        "sagittal": 92,
+        "coronal": 63
+      },
+      "sliceRange": {
+        "axial": [
+          162,
+          196
+        ],
+        "sagittal": [
+          75,
+          152
+        ],
+        "coronal": [
+          31,
+          127
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "name": "brain_white_matter",
+      "displayName": {
+        "en": "White Matter",
+        "ko": "백질"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 183,
+        "sagittal": 103,
+        "coronal": 49
+      },
+      "sliceRange": {
+        "axial": [
+          163,
+          196
+        ],
+        "sagittal": [
+          73,
+          152
+        ],
+        "coronal": [
+          30,
+          130
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "name": "clavicula_left",
+      "displayName": {
+        "en": "Clavicula Left",
+        "ko": "Clavicula Left"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 74,
+        "sagittal": 94,
+        "coronal": 88
+      },
+      "sliceRange": {
+        "axial": [
+          10,
+          84
+        ],
+        "sagittal": [
+          12,
+          103
+        ],
+        "coronal": [
+          63,
+          99
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "name": "clavicula_right",
+      "displayName": {
+        "en": "Clavicula Right",
+        "ko": "Clavicula Right"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 72,
+        "sagittal": 137,
+        "coronal": 87
+      },
+      "sliceRange": {
+        "axial": [
+          13,
+          83
+        ],
+        "sagittal": [
+          128,
+          215
+        ],
+        "coronal": [
+          57,
+          98
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "name": "common_carotid_artery_left",
+      "displayName": {
+        "en": "Common Carotid Artery Left",
+        "ko": "Common Carotid Artery Left"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 25,
+        "sagittal": 100,
+        "coronal": 66
+      },
+      "sliceRange": {
+        "axial": [
+          22,
+          81
+        ],
+        "sagittal": [
+          94,
+          110
+        ],
+        "coronal": [
+          61,
+          92
+        ]
+      }
+    },
+    {
+      "id": 18,
+      "name": "common_carotid_artery_right",
+      "displayName": {
+        "en": "Common Carotid Artery Right",
+        "ko": "Common Carotid Artery Right"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 30,
+        "sagittal": 134,
+        "coronal": 87
+      },
+      "sliceRange": {
+        "axial": [
+          27,
+          81
+        ],
+        "sagittal": [
+          128,
+          137
+        ],
+        "coronal": [
+          71,
+          90
+        ]
+      }
+    },
+    {
+      "id": 19,
+      "name": "costal_cartilages",
+      "displayName": {
+        "en": "Costal Cartilages",
+        "ko": "Costal Cartilages"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 10,
+        "sagittal": 141,
+        "coronal": 89
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          19
+        ],
+        "sagittal": [
+          77,
+          153
+        ],
+        "coronal": [
+          81,
+          96
+        ]
+      }
+    },
+    {
+      "id": 20,
+      "name": "cricoid_cartilage",
+      "displayName": {
+        "en": "Cricoid Cartilage",
+        "ko": "윤상연골"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 59,
+        "sagittal": 108,
+        "coronal": 90
+      },
+      "sliceRange": {
+        "axial": [
+          53,
+          70
+        ],
+        "sagittal": [
+          105,
+          125
+        ],
+        "coronal": [
+          85,
+          101
+        ]
+      }
+    },
+    {
+      "id": 21,
+      "name": "esophagus",
+      "displayName": {
+        "en": "Esophagus",
+        "ko": "Esophagus"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 12,
+        "sagittal": 111,
+        "coronal": 43
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          55
+        ],
+        "sagittal": [
+          104,
+          121
+        ],
+        "coronal": [
+          27,
+          84
+        ]
+      }
+    },
+    {
+      "id": 22,
+      "name": "eye_left",
+      "displayName": {
+        "en": "Left Eye",
+        "ko": "왼쪽 눈"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 170,
+        "sagittal": 90,
+        "coronal": 137
+      },
+      "sliceRange": {
+        "axial": [
+          158,
+          176
+        ],
+        "sagittal": [
+          83,
+          98
+        ],
+        "coronal": [
+          130,
+          143
+        ]
+      }
+    },
+    {
+      "id": 23,
+      "name": "eye_right",
+      "displayName": {
+        "en": "Right Eye",
+        "ko": "오른쪽 눈"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 172,
+        "sagittal": 137,
+        "coronal": 136
+      },
+      "sliceRange": {
+        "axial": [
+          161,
+          178
+        ],
+        "sagittal": [
+          130,
+          145
+        ],
+        "coronal": [
+          129,
+          143
+        ]
+      }
+    },
+    {
+      "id": 24,
+      "name": "hard_palate",
+      "displayName": {
+        "en": "Hard Palate",
+        "ko": "경구개"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 137,
+        "sagittal": 114,
+        "coronal": 130
+      },
+      "sliceRange": {
+        "axial": [
+          133,
+          139
+        ],
+        "sagittal": [
+          105,
+          124
+        ],
+        "coronal": [
+          116,
+          140
+        ]
+      }
+    },
+    {
+      "id": 25,
+      "name": "head",
+      "displayName": {
+        "en": "Head (soft tissue)",
+        "ko": "머리 (연조직)"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 132,
+        "sagittal": 110,
+        "coronal": 93
+      },
+      "sliceRange": {
+        "axial": [
+          78,
+          202
+        ],
+        "sagittal": [
+          51,
+          173
+        ],
+        "coronal": [
+          13,
+          159
+        ]
+      }
+    },
+    {
+      "id": 26,
+      "name": "heart",
+      "displayName": {
+        "en": "Heart",
+        "ko": "Heart"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 0,
+        "sagittal": 101,
+        "coronal": 54
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          3
+        ],
+        "sagittal": [
+          82,
+          144
+        ],
+        "coronal": [
+          27,
+          67
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "name": "humerus_left",
+      "displayName": {
+        "en": "Humerus Left",
+        "ko": "Humerus Left"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 52,
+        "sagittal": 0,
+        "coronal": 69
+      },
+      "sliceRange": {
+        "axial": [
+          30,
+          70
+        ],
+        "sagittal": [
+          0,
+          12
+        ],
+        "coronal": [
+          51,
+          85
+        ]
+      }
+    },
+    {
+      "id": 28,
+      "name": "humerus_right",
+      "displayName": {
+        "en": "Humerus Right",
+        "ko": "Humerus Right"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 54,
+        "sagittal": 224,
+        "coronal": 64
+      },
+      "sliceRange": {
+        "axial": [
+          41,
+          68
+        ],
+        "sagittal": [
+          218,
+          224
+        ],
+        "coronal": [
+          51,
+          76
+        ]
+      }
+    },
+    {
+      "id": 29,
+      "name": "hyoid",
+      "displayName": {
+        "en": "Hyoid Bone",
+        "ko": "설골"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 90,
+        "sagittal": 108,
+        "coronal": 111
+      },
+      "sliceRange": {
+        "axial": [
+          84,
+          99
+        ],
+        "sagittal": [
+          100,
+          129
+        ],
+        "coronal": [
+          92,
+          112
+        ]
+      }
+    },
+    {
+      "id": 30,
+      "name": "hypopharynx",
+      "displayName": {
+        "en": "Hypopharynx",
+        "ko": "하인두"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 91,
+        "sagittal": 115,
+        "coronal": 94
+      },
+      "sliceRange": {
+        "axial": [
+          70,
+          100
+        ],
+        "sagittal": [
+          106,
+          124
+        ],
+        "coronal": [
+          87,
+          97
+        ]
+      }
+    },
+    {
+      "id": 31,
+      "name": "internal_carotid_artery_left",
+      "displayName": {
+        "en": "Left Internal Carotid",
+        "ko": "왼쪽 내경동맥"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 100,
+        "sagittal": 94,
+        "coronal": 90
+      },
+      "sliceRange": {
+        "axial": [
+          91,
+          146
+        ],
+        "sagittal": [
+          85,
+          97
+        ],
+        "coronal": [
+          76,
+          93
+        ]
+      }
+    },
+    {
+      "id": 32,
+      "name": "internal_carotid_artery_right",
+      "displayName": {
+        "en": "Right Internal Carotid",
+        "ko": "오른쪽 내경동맥"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 97,
+        "sagittal": 136,
+        "coronal": 91
+      },
+      "sliceRange": {
+        "axial": [
+          81,
+          145
+        ],
+        "sagittal": [
+          129,
+          140
+        ],
+        "coronal": [
+          79,
+          93
+        ]
+      }
+    },
+    {
+      "id": 33,
+      "name": "internal_jugular_vein_left",
+      "displayName": {
+        "en": "Left Internal Jugular",
+        "ko": "왼쪽 내경정맥"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 53,
+        "sagittal": 92,
+        "coronal": 86
+      },
+      "sliceRange": {
+        "axial": [
+          27,
+          143
+        ],
+        "sagittal": [
+          83,
+          100
+        ],
+        "coronal": [
+          74,
+          92
+        ]
+      }
+    },
+    {
+      "id": 34,
+      "name": "internal_jugular_vein_right",
+      "displayName": {
+        "en": "Right Internal Jugular",
+        "ko": "오른쪽 내경정맥"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 37,
+        "sagittal": 141,
+        "coronal": 85
+      },
+      "sliceRange": {
+        "axial": [
+          31,
+          145
+        ],
+        "sagittal": [
+          134,
+          146
+        ],
+        "coronal": [
+          76,
+          91
+        ]
+      }
+    },
+    {
+      "id": 35,
+      "name": "larynx_air",
+      "displayName": {
+        "en": "Larynx (airway)",
+        "ko": "후두 (기도)"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 56,
+        "sagittal": 114,
+        "coronal": 98
+      },
+      "sliceRange": {
+        "axial": [
+          53,
+          90
+        ],
+        "sagittal": [
+          109,
+          122
+        ],
+        "coronal": [
+          86,
+          109
+        ]
+      }
+    },
+    {
+      "id": 36,
+      "name": "lung_lower_lobe_left",
+      "displayName": {
+        "en": "Lung Lower Lobe Left",
+        "ko": "Lung Lower Lobe Left"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 0,
+        "sagittal": 87,
+        "coronal": 0
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          23
+        ],
+        "sagittal": [
+          59,
+          101
+        ],
+        "coronal": [
+          0,
+          13
+        ]
+      }
+    },
+    {
+      "id": 37,
+      "name": "lung_lower_lobe_right",
+      "displayName": {
+        "en": "Lung Lower Lobe Right",
+        "ko": "Lung Lower Lobe Right"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 0,
+        "sagittal": 143,
+        "coronal": 1
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          12
+        ],
+        "sagittal": [
+          131,
+          189
+        ],
+        "coronal": [
+          0,
+          27
+        ]
+      }
+    },
+    {
+      "id": 38,
+      "name": "lung_upper_lobe_left",
+      "displayName": {
+        "en": "Lung Upper Lobe Left",
+        "ko": "Lung Upper Lobe Left"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 24,
+        "sagittal": 76,
+        "coronal": 37
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          52
+        ],
+        "sagittal": [
+          32,
+          106
+        ],
+        "coronal": [
+          0,
+          88
+        ]
+      }
+    },
+    {
+      "id": 39,
+      "name": "lung_upper_lobe_right",
+      "displayName": {
+        "en": "Lung Upper Lobe Right",
+        "ko": "Lung Upper Lobe Right"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 15,
+        "sagittal": 156,
+        "coronal": 43
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          55
+        ],
+        "sagittal": [
+          119,
+          202
+        ],
+        "coronal": [
+          0,
+          94
+        ]
+      }
+    },
+    {
+      "id": 40,
+      "name": "mandible",
+      "displayName": {
+        "en": "Mandible",
+        "ko": "하악골"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 101,
+        "sagittal": 147,
+        "coronal": 140
+      },
+      "sliceRange": {
+        "axial": [
+          85,
+          152
+        ],
+        "sagittal": [
+          73,
+          155
+        ],
+        "coronal": [
+          88,
+          150
+        ]
+      }
+    },
+    {
+      "id": 41,
+      "name": "nasal_cavity_left",
+      "displayName": {
+        "en": "Left Nasal Cavity",
+        "ko": "왼쪽 비강"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 145,
+        "sagittal": 111,
+        "coronal": 112
+      },
+      "sliceRange": {
+        "axial": [
+          137,
+          171
+        ],
+        "sagittal": [
+          105,
+          114
+        ],
+        "coronal": [
+          105,
+          159
+        ]
+      }
+    },
+    {
+      "id": 42,
+      "name": "nasal_cavity_right",
+      "displayName": {
+        "en": "Right Nasal Cavity",
+        "ko": "오른쪽 비강"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 147,
+        "sagittal": 117,
+        "coronal": 134
+      },
+      "sliceRange": {
+        "axial": [
+          137,
+          172
+        ],
+        "sagittal": [
+          112,
+          124
+        ],
+        "coronal": [
+          106,
+          159
+        ]
+      }
+    },
+    {
+      "id": 43,
+      "name": "nasopharynx",
+      "displayName": {
+        "en": "Nasopharynx",
+        "ko": "비인두"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 141,
+        "sagittal": 114,
+        "coronal": 104
+      },
+      "sliceRange": {
+        "axial": [
+          138,
+          149
+        ],
+        "sagittal": [
+          104,
+          126
+        ],
+        "coronal": [
+          94,
+          111
+        ]
+      }
+    },
+    {
+      "id": 44,
+      "name": "optic_nerve_left",
+      "displayName": {
+        "en": "Left Optic Nerve",
+        "ko": "왼쪽 시신경"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 169,
+        "sagittal": 94,
+        "coronal": 129
+      },
+      "sliceRange": {
+        "axial": [
+          166,
+          171
+        ],
+        "sagittal": [
+          91,
+          100
+        ],
+        "coronal": [
+          114,
+          130
+        ]
+      }
+    },
+    {
+      "id": 45,
+      "name": "optic_nerve_right",
+      "displayName": {
+        "en": "Right Optic Nerve",
+        "ko": "오른쪽 시신경"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 169,
+        "sagittal": 133,
+        "coronal": 128
+      },
+      "sliceRange": {
+        "axial": [
+          167,
+          172
+        ],
+        "sagittal": [
+          127,
+          136
+        ],
+        "coronal": [
+          114,
+          129
+        ]
+      }
+    },
+    {
+      "id": 46,
+      "name": "oropharynx",
+      "displayName": {
+        "en": "Oropharynx",
+        "ko": "구인두"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 137,
+        "sagittal": 112,
+        "coronal": 98
+      },
+      "sliceRange": {
+        "axial": [
+          88,
+          138
+        ],
+        "sagittal": [
+          104,
+          125
+        ],
+        "coronal": [
+          92,
+          112
+        ]
+      }
+    },
+    {
+      "id": 47,
+      "name": "parotid_gland_left",
+      "displayName": {
+        "en": "Left Parotid Gland",
+        "ko": "왼쪽 이하선"
+      },
+      "category": "gland",
+      "color": "#10B981",
+      "bestSlice": {
+        "axial": 129,
+        "sagittal": 67,
+        "coronal": 90
+      },
+      "sliceRange": {
+        "axial": [
+          99,
+          139
+        ],
+        "sagittal": [
+          59,
+          76
+        ],
+        "coronal": [
+          79,
+          110
+        ]
+      }
+    },
+    {
+      "id": 48,
+      "name": "parotid_gland_right",
+      "displayName": {
+        "en": "Right Parotid Gland",
+        "ko": "오른쪽 이하선"
+      },
+      "category": "gland",
+      "color": "#10B981",
+      "bestSlice": {
+        "axial": 129,
+        "sagittal": 162,
+        "coronal": 87
+      },
+      "sliceRange": {
+        "axial": [
+          107,
+          141
+        ],
+        "sagittal": [
+          153,
+          170
+        ],
+        "coronal": [
+          77,
+          104
+        ]
+      }
+    },
+    {
+      "id": 49,
+      "name": "rib_left_1",
+      "displayName": {
+        "en": "Rib Left 1",
+        "ko": "Rib Left 1"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 19,
+        "sagittal": 75,
+        "coronal": 57
+      },
+      "sliceRange": {
+        "axial": [
+          1,
+          61
+        ],
+        "sagittal": [
+          62,
+          87
+        ],
+        "coronal": [
+          50,
+          91
+        ]
+      }
+    },
+    {
+      "id": 50,
+      "name": "rib_left_2",
+      "displayName": {
+        "en": "Rib Left 2",
+        "ko": "Rib Left 2"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 55,
+        "sagittal": 50,
+        "coronal": 39
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          60
+        ],
+        "sagittal": [
+          43,
+          90
+        ],
+        "coronal": [
+          32,
+          86
+        ]
+      }
+    },
+    {
+      "id": 51,
+      "name": "rib_left_3",
+      "displayName": {
+        "en": "Rib Left 3",
+        "ko": "Rib Left 3"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 48,
+        "sagittal": 39,
+        "coronal": 21
+      },
+      "sliceRange": {
+        "axial": [
+          1,
+          53
+        ],
+        "sagittal": [
+          33,
+          90
+        ],
+        "coronal": [
+          15,
+          72
+        ]
+      }
+    },
+    {
+      "id": 52,
+      "name": "rib_left_4",
+      "displayName": {
+        "en": "Rib Left 4",
+        "ko": "Rib Left 4"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 38,
+        "sagittal": 34,
+        "coronal": 8
+      },
+      "sliceRange": {
+        "axial": [
+          2,
+          44
+        ],
+        "sagittal": [
+          28,
+          89
+        ],
+        "coronal": [
+          2,
+          55
+        ]
+      }
+    },
+    {
+      "id": 53,
+      "name": "rib_left_5",
+      "displayName": {
+        "en": "Rib Left 5",
+        "ko": "Rib Left 5"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 23,
+        "sagittal": 36,
+        "coronal": 0
+      },
+      "sliceRange": {
+        "axial": [
+          2,
+          31
+        ],
+        "sagittal": [
+          31,
+          91
+        ],
+        "coronal": [
+          0,
+          38
+        ]
+      }
+    },
+    {
+      "id": 54,
+      "name": "rib_left_6",
+      "displayName": {
+        "en": "Rib Left 6",
+        "ko": "Rib Left 6"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 1,
+        "sagittal": 47,
+        "coronal": 0
+      },
+      "sliceRange": {
+        "axial": [
+          1,
+          10
+        ],
+        "sagittal": [
+          37,
+          55
+        ],
+        "coronal": [
+          0,
+          17
+        ]
+      }
+    },
+    {
+      "id": 55,
+      "name": "rib_right_1",
+      "displayName": {
+        "en": "Rib Right 1",
+        "ko": "Rib Right 1"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 54,
+        "sagittal": 156,
+        "coronal": 58
+      },
+      "sliceRange": {
+        "axial": [
+          6,
+          64
+        ],
+        "sagittal": [
+          140,
+          169
+        ],
+        "coronal": [
+          51,
+          95
+        ]
+      }
+    },
+    {
+      "id": 56,
+      "name": "rib_right_2",
+      "displayName": {
+        "en": "Rib Right 2",
+        "ko": "Rib Right 2"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 58,
+        "sagittal": 181,
+        "coronal": 44
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          62
+        ],
+        "sagittal": [
+          142,
+          188
+        ],
+        "coronal": [
+          38,
+          95
+        ]
+      }
+    },
+    {
+      "id": 57,
+      "name": "rib_right_3",
+      "displayName": {
+        "en": "Rib Right 3",
+        "ko": "Rib Right 3"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 52,
+        "sagittal": 193,
+        "coronal": 25
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          57
+        ],
+        "sagittal": [
+          144,
+          199
+        ],
+        "coronal": [
+          21,
+          81
+        ]
+      }
+    },
+    {
+      "id": 58,
+      "name": "rib_right_4",
+      "displayName": {
+        "en": "Rib Right 4",
+        "ko": "Rib Right 4"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 43,
+        "sagittal": 202,
+        "coronal": 13
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          48
+        ],
+        "sagittal": [
+          147,
+          207
+        ],
+        "coronal": [
+          8,
+          64
+        ]
+      }
+    },
+    {
+      "id": 59,
+      "name": "rib_right_5",
+      "displayName": {
+        "en": "Rib Right 5",
+        "ko": "Rib Right 5"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 28,
+        "sagittal": 205,
+        "coronal": 1
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          35
+        ],
+        "sagittal": [
+          147,
+          210
+        ],
+        "coronal": [
+          0,
+          48
+        ]
+      }
+    },
+    {
+      "id": 60,
+      "name": "rib_right_6",
+      "displayName": {
+        "en": "Rib Right 6",
+        "ko": "Rib Right 6"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 5,
+        "sagittal": 200,
+        "coronal": 2
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          17
+        ],
+        "sagittal": [
+          184,
+          207
+        ],
+        "coronal": [
+          0,
+          25
+        ]
+      }
+    },
+    {
+      "id": 61,
+      "name": "scapula_left",
+      "displayName": {
+        "en": "Scapula Left",
+        "ko": "Scapula Left"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 61,
+        "sagittal": 22,
+        "coronal": 43
+      },
+      "sliceRange": {
+        "axial": [
+          2,
+          82
+        ],
+        "sagittal": [
+          0,
+          72
+        ],
+        "coronal": [
+          0,
+          85
+        ]
+      }
+    },
+    {
+      "id": 62,
+      "name": "scapula_right",
+      "displayName": {
+        "en": "Scapula Right",
+        "ko": "Scapula Right"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 59,
+        "sagittal": 216,
+        "coronal": 11
+      },
+      "sliceRange": {
+        "axial": [
+          4,
+          84
+        ],
+        "sagittal": [
+          165,
+          224
+        ],
+        "coronal": [
+          0,
+          80
+        ]
+      }
+    },
+    {
+      "id": 63,
+      "name": "sinus_frontal",
+      "displayName": {
+        "en": "Frontal Sinus",
+        "ko": "전두동"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 184,
+        "sagittal": 109,
+        "coronal": 143
+      },
+      "sliceRange": {
+        "axial": [
+          176,
+          196
+        ],
+        "sagittal": [
+          91,
+          131
+        ],
+        "coronal": [
+          136,
+          149
+        ]
+      }
+    },
+    {
+      "id": 64,
+      "name": "sinus_maxillary",
+      "displayName": {
+        "en": "Maxillary Sinus",
+        "ko": "상악동"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 151,
+        "sagittal": 100,
+        "coronal": 128
+      },
+      "sliceRange": {
+        "axial": [
+          128,
+          162
+        ],
+        "sagittal": [
+          84,
+          144
+        ],
+        "coronal": [
+          114,
+          144
+        ]
+      }
+    },
+    {
+      "id": 65,
+      "name": "skull",
+      "displayName": {
+        "en": "Skull",
+        "ko": "두개골"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 151,
+        "sagittal": 157,
+        "coronal": 139
+      },
+      "sliceRange": {
+        "axial": [
+          124,
+          202
+        ],
+        "sagittal": [
+          62,
+          163
+        ],
+        "coronal": [
+          17,
+          159
+        ]
+      }
+    },
+    {
+      "id": 66,
+      "name": "soft_palate",
+      "displayName": {
+        "en": "Soft Palate",
+        "ko": "연구개"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 134,
+        "sagittal": 116,
+        "coronal": 109
+      },
+      "sliceRange": {
+        "axial": [
+          117,
+          136
+        ],
+        "sagittal": [
+          108,
+          122
+        ],
+        "coronal": [
+          99,
+          117
+        ]
+      }
+    },
+    {
+      "id": 67,
+      "name": "spinal_cord",
+      "displayName": {
+        "en": "Spinal Cord",
+        "ko": "Spinal Cord"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 128,
+        "sagittal": 117,
+        "coronal": 74
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          137
+        ],
+        "sagittal": [
+          104,
+          127
+        ],
+        "coronal": [
+          0,
+          80
+        ]
+      }
+    },
+    {
+      "id": 68,
+      "name": "sternum",
+      "displayName": {
+        "en": "Sternum",
+        "ko": "Sternum"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 5,
+        "sagittal": 106,
+        "coronal": 94
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          15
+        ],
+        "sagittal": [
+          94,
+          137
+        ],
+        "coronal": [
+          86,
+          102
+        ]
+      }
+    },
+    {
+      "id": 69,
+      "name": "styloid_process_left",
+      "displayName": {
+        "en": "Left Styloid Process",
+        "ko": "왼쪽 경상돌기"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 134,
+        "sagittal": 85,
+        "coronal": 86
+      },
+      "sliceRange": {
+        "axial": [
+          132,
+          140
+        ],
+        "sagittal": [
+          83,
+          88
+        ],
+        "coronal": [
+          83,
+          89
+        ]
+      }
+    },
+    {
+      "id": 70,
+      "name": "styloid_process_right",
+      "displayName": {
+        "en": "Right Styloid Process",
+        "ko": "오른쪽 경상돌기"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 137,
+        "sagittal": 144,
+        "coronal": 86
+      },
+      "sliceRange": {
+        "axial": [
+          131,
+          140
+        ],
+        "sagittal": [
+          139,
+          146
+        ],
+        "coronal": [
+          83,
+          91
+        ]
+      }
+    },
+    {
+      "id": 71,
+      "name": "subclavian_artery_left",
+      "displayName": {
+        "en": "Subclavian Artery Left",
+        "ko": "Subclavian Artery Left"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 38,
+        "sagittal": 99,
+        "coronal": 72
+      },
+      "sliceRange": {
+        "axial": [
+          23,
+          45
+        ],
+        "sagittal": [
+          47,
+          107
+        ],
+        "coronal": [
+          46,
+          75
+        ]
+      }
+    },
+    {
+      "id": 72,
+      "name": "subclavian_artery_right",
+      "displayName": {
+        "en": "Subclavian Artery Right",
+        "ko": "Subclavian Artery Right"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 39,
+        "sagittal": 138,
+        "coronal": 76
+      },
+      "sliceRange": {
+        "axial": [
+          21,
+          44
+        ],
+        "sagittal": [
+          130,
+          191
+        ],
+        "coronal": [
+          58,
+          80
+        ]
+      }
+    },
+    {
+      "id": 73,
+      "name": "submandibular_gland_left",
+      "displayName": {
+        "en": "Left Submandibular Gland",
+        "ko": "왼쪽 악하선"
+      },
+      "category": "gland",
+      "color": "#10B981",
+      "bestSlice": {
+        "axial": 87,
+        "sagittal": 92,
+        "coronal": 103
+      },
+      "sliceRange": {
+        "axial": [
+          81,
+          106
+        ],
+        "sagittal": [
+          86,
+          101
+        ],
+        "coronal": [
+          99,
+          112
+        ]
+      }
+    },
+    {
+      "id": 74,
+      "name": "submandibular_gland_right",
+      "displayName": {
+        "en": "Right Submandibular Gland",
+        "ko": "오른쪽 악하선"
+      },
+      "category": "gland",
+      "color": "#10B981",
+      "bestSlice": {
+        "axial": 92,
+        "sagittal": 138,
+        "coronal": 102
+      },
+      "sliceRange": {
+        "axial": [
+          84,
+          110
+        ],
+        "sagittal": [
+          130,
+          148
+        ],
+        "coronal": [
+          96,
+          109
+        ]
+      }
+    },
+    {
+      "id": 75,
+      "name": "superior_vena_cava",
+      "displayName": {
+        "en": "Superior Vena Cava",
+        "ko": "Superior Vena Cava"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 8,
+        "sagittal": 145,
+        "coronal": 56
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          17
+        ],
+        "sagittal": [
+          137,
+          155
+        ],
+        "coronal": [
+          44,
+          74
+        ]
+      }
+    },
+    {
+      "id": 76,
+      "name": "teeth_lower",
+      "displayName": {
+        "en": "Lower Teeth",
+        "ko": "아랫니"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 114,
+        "sagittal": 100,
+        "coronal": 144
+      },
+      "sliceRange": {
+        "axial": [
+          99,
+          120
+        ],
+        "sagittal": [
+          92,
+          142
+        ],
+        "coronal": [
+          111,
+          149
+        ]
+      }
+    },
+    {
+      "id": 77,
+      "name": "teeth_upper",
+      "displayName": {
+        "en": "Upper Teeth",
+        "ko": "윗니"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 123,
+        "sagittal": 127,
+        "coronal": 145
+      },
+      "sliceRange": {
+        "axial": [
+          118,
+          135
+        ],
+        "sagittal": [
+          97,
+          136
+        ],
+        "coronal": [
+          122,
+          151
+        ]
+      }
+    },
+    {
+      "id": 78,
+      "name": "thyroid_cartilage",
+      "displayName": {
+        "en": "Thyroid Cartilage",
+        "ko": "갑상연골"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 65,
+        "sagittal": 104,
+        "coronal": 92
+      },
+      "sliceRange": {
+        "axial": [
+          59,
+          95
+        ],
+        "sagittal": [
+          101,
+          129
+        ],
+        "coronal": [
+          86,
+          112
+        ]
+      }
+    },
+    {
+      "id": 79,
+      "name": "thyroid_gland",
+      "displayName": {
+        "en": "Thyroid Gland",
+        "ko": "Thyroid Gland"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 50,
+        "sagittal": 130,
+        "coronal": 91
+      },
+      "sliceRange": {
+        "axial": [
+          32,
+          77
+        ],
+        "sagittal": [
+          95,
+          136
+        ],
+        "coronal": [
+          78,
+          98
+        ]
+      }
+    },
+    {
+      "id": 80,
+      "name": "trachea",
+      "displayName": {
+        "en": "Trachea",
+        "ko": "Trachea"
+      },
+      "category": "organ",
+      "color": "#EF4444",
+      "bestSlice": {
+        "axial": 40,
+        "sagittal": 119,
+        "coronal": 50
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          53
+        ],
+        "sagittal": [
+          106,
+          149
+        ],
+        "coronal": [
+          28,
+          99
+        ]
+      }
+    },
+    {
+      "id": 81,
+      "name": "vertebrae_C1",
+      "displayName": {
+        "en": "Vertebrae C1",
+        "ko": "Vertebrae C1"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 128,
+        "sagittal": 124,
+        "coronal": 86
+      },
+      "sliceRange": {
+        "axial": [
+          124,
+          137
+        ],
+        "sagittal": [
+          86,
+          140
+        ],
+        "coronal": [
+          59,
+          95
+        ]
+      }
+    },
+    {
+      "id": 82,
+      "name": "vertebrae_C2",
+      "displayName": {
+        "en": "Vertebrae C2",
+        "ko": "Vertebrae C2"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 116,
+        "sagittal": 113,
+        "coronal": 85
+      },
+      "sliceRange": {
+        "axial": [
+          108,
+          137
+        ],
+        "sagittal": [
+          93,
+          132
+        ],
+        "coronal": [
+          55,
+          92
+        ]
+      }
+    },
+    {
+      "id": 83,
+      "name": "vertebrae_C3",
+      "displayName": {
+        "en": "Vertebrae C3",
+        "ko": "Vertebrae C3"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 104,
+        "sagittal": 113,
+        "coronal": 80
+      },
+      "sliceRange": {
+        "axial": [
+          96,
+          113
+        ],
+        "sagittal": [
+          93,
+          132
+        ],
+        "coronal": [
+          58,
+          91
+        ]
+      }
+    },
+    {
+      "id": 84,
+      "name": "vertebrae_C4",
+      "displayName": {
+        "en": "Vertebrae C4",
+        "ko": "Vertebrae C4"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 92,
+        "sagittal": 113,
+        "coronal": 80
+      },
+      "sliceRange": {
+        "axial": [
+          83,
+          100
+        ],
+        "sagittal": [
+          93,
+          134
+        ],
+        "coronal": [
+          55,
+          90
+        ]
+      }
+    },
+    {
+      "id": 85,
+      "name": "vertebrae_C5",
+      "displayName": {
+        "en": "Vertebrae C5",
+        "ko": "Vertebrae C5"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 82,
+        "sagittal": 111,
+        "coronal": 78
+      },
+      "sliceRange": {
+        "axial": [
+          71,
+          88
+        ],
+        "sagittal": [
+          94,
+          133
+        ],
+        "coronal": [
+          53,
+          87
+        ]
+      }
+    },
+    {
+      "id": 86,
+      "name": "vertebrae_C6",
+      "displayName": {
+        "en": "Vertebrae C6",
+        "ko": "Vertebrae C6"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 72,
+        "sagittal": 112,
+        "coronal": 75
+      },
+      "sliceRange": {
+        "axial": [
+          59,
+          81
+        ],
+        "sagittal": [
+          91,
+          135
+        ],
+        "coronal": [
+          50,
+          83
+        ]
+      }
+    },
+    {
+      "id": 87,
+      "name": "vertebrae_C7",
+      "displayName": {
+        "en": "Vertebrae C7",
+        "ko": "Vertebrae C7"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 68,
+        "sagittal": 114,
+        "coronal": 65
+      },
+      "sliceRange": {
+        "axial": [
+          48,
+          82
+        ],
+        "sagittal": [
+          90,
+          138
+        ],
+        "coronal": [
+          35,
+          75
+        ]
+      }
+    },
+    {
+      "id": 88,
+      "name": "vertebrae_T1",
+      "displayName": {
+        "en": "Vertebrae T1",
+        "ko": "Vertebrae T1"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 62,
+        "sagittal": 117,
+        "coronal": 53
+      },
+      "sliceRange": {
+        "axial": [
+          40,
+          75
+        ],
+        "sagittal": [
+          87,
+          143
+        ],
+        "coronal": [
+          22,
+          63
+        ]
+      }
+    },
+    {
+      "id": 89,
+      "name": "vertebrae_T2",
+      "displayName": {
+        "en": "Vertebrae T2",
+        "ko": "Vertebrae T2"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 55,
+        "sagittal": 116,
+        "coronal": 39
+      },
+      "sliceRange": {
+        "axial": [
+          30,
+          64
+        ],
+        "sagittal": [
+          91,
+          141
+        ],
+        "coronal": [
+          6,
+          51
+        ]
+      }
+    },
+    {
+      "id": 90,
+      "name": "vertebrae_T3",
+      "displayName": {
+        "en": "Vertebrae T3",
+        "ko": "Vertebrae T3"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 45,
+        "sagittal": 118,
+        "coronal": 27
+      },
+      "sliceRange": {
+        "axial": [
+          19,
+          56
+        ],
+        "sagittal": [
+          94,
+          140
+        ],
+        "coronal": [
+          0,
+          42
+        ]
+      }
+    },
+    {
+      "id": 91,
+      "name": "vertebrae_T4",
+      "displayName": {
+        "en": "Vertebrae T4",
+        "ko": "Vertebrae T4"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 34,
+        "sagittal": 126,
+        "coronal": 8
+      },
+      "sliceRange": {
+        "axial": [
+          8,
+          45
+        ],
+        "sagittal": [
+          96,
+          142
+        ],
+        "coronal": [
+          0,
+          35
+        ]
+      }
+    },
+    {
+      "id": 92,
+      "name": "vertebrae_T5",
+      "displayName": {
+        "en": "Vertebrae T5",
+        "ko": "Vertebrae T5"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 8,
+        "sagittal": 128,
+        "coronal": 9
+      },
+      "sliceRange": {
+        "axial": [
+          2,
+          28
+        ],
+        "sagittal": [
+          102,
+          140
+        ],
+        "coronal": [
+          0,
+          29
+        ]
+      }
+    },
+    {
+      "id": 93,
+      "name": "vertebrae_T6",
+      "displayName": {
+        "en": "Vertebrae T6",
+        "ko": "Vertebrae T6"
+      },
+      "category": "other",
+      "color": "#6B7280",
+      "bestSlice": {
+        "axial": 0,
+        "sagittal": 130,
+        "coronal": 6
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          14
+        ],
+        "sagittal": [
+          111,
+          133
+        ],
+        "coronal": [
+          0,
+          26
+        ]
+      }
+    },
+    {
+      "id": 94,
+      "name": "zygomatic_arch_left",
+      "displayName": {
+        "en": "Left Zygomatic Arch",
+        "ko": "왼쪽 관골굁"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 150,
+        "sagittal": 68,
+        "coronal": 99
+      },
+      "sliceRange": {
+        "axial": [
+          148,
+          152
+        ],
+        "sagittal": [
+          66,
+          72
+        ],
+        "coronal": [
+          95,
+          112
+        ]
+      }
+    },
+    {
+      "id": 95,
+      "name": "zygomatic_arch_right",
+      "displayName": {
+        "en": "Right Zygomatic Arch",
+        "ko": "오른쪽 관골굁"
+      },
+      "category": "bone",
+      "color": "#E2E8F0",
+      "bestSlice": {
+        "axial": 152,
+        "sagittal": 159,
+        "coronal": 100
+      },
+      "sliceRange": {
+        "axial": [
+          150,
+          152
+        ],
+        "sagittal": [
+          155,
+          162
+        ],
+        "coronal": [
+          96,
+          112
+        ]
+      }
+    }
+  ]
+}

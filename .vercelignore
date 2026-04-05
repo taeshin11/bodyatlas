@@ -1,0 +1,5 @@
+data_pipeline/
+aaa/
+*.nii
+*.nii.gz
+*.dcm

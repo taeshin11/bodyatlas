@@ -17,6 +17,8 @@ interface StructurePanelProps {
   selectedStructure: Structure | null;
   onStructureSelect: (s: Structure | null) => void;
   locale: string;
+  dataPath?: string;
+  regionAxialRange?: [number, number];
 }
 
 const CATEGORY_LABELS: Record<string, Record<string, string>> = {
@@ -24,28 +26,48 @@ const CATEGORY_LABELS: Record<string, Record<string, string>> = {
   bone: { en: 'Bones', ko: '뼈' },
   vessel: { en: 'Vessels', ko: '혈관' },
   muscle: { en: 'Muscles', ko: '근육' },
+  cavity: { en: 'Cavities', ko: '공동' },
+  gland: { en: 'Glands', ko: '분비선' },
   other: { en: 'Other', ko: '기타' },
 };
 
-export default function StructurePanel({ selectedStructure, onStructureSelect, locale }: StructurePanelProps) {
+export default function StructurePanel({ selectedStructure, onStructureSelect, locale, dataPath = '/data/chest-ct', regionAxialRange }: StructurePanelProps) {
   const [structures, setStructures] = useState<Structure[]>([]);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch('/data/chest-ct/structures.json')
+    fetch(`${dataPath}/structures.json`)
       .then(r => r.json())
       .then(d => setStructures(d.structures));
-  }, []);
+  }, [dataPath]);
+
+  // Filter structures by region first
+  const regionStructures = useMemo(() => {
+    if (!regionAxialRange) return structures;
+    const [rMin, rMax] = regionAxialRange;
+    return structures.filter(s => {
+      const range = s.sliceRange?.axial;
+      if (!range) return false;
+      // Structure overlaps with region if its range intersects
+      return range[0] <= rMax && range[1] >= rMin;
+    });
+  }, [structures, regionAxialRange]);
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return structures;
+    if (!search.trim()) return regionStructures;
     const q = search.toLowerCase();
-    return structures.filter(s =>
-      s.name.replace(/_/g, ' ').toLowerCase().includes(q) ||
-      (s.displayName.en || '').toLowerCase().includes(q) ||
-      (s.displayName.ko || '').toLowerCase().includes(q)
-    );
-  }, [structures, search]);
+    const tokens = q.split(/\s+/).filter(Boolean);
+
+    return regionStructures.filter(s => {
+      const targets = [
+        s.name.replace(/_/g, ' ').toLowerCase(),
+        ...Object.values(s.displayName).map(v => (v || '').toLowerCase()),
+      ];
+      return tokens.every(token =>
+        targets.some(t => t.includes(token))
+      );
+    });
+  }, [regionStructures, search]);
 
   const grouped = useMemo(() => {
     const groups: Record<string, Structure[]> = {};
@@ -57,8 +79,11 @@ export default function StructurePanel({ selectedStructure, onStructureSelect, l
     return groups;
   }, [filtered]);
 
-  const getDisplayName = (s: Structure) =>
-    s.displayName[locale] || s.displayName.en || s.name.replace(/_/g, ' ');
+  const getEnName = (s: Structure) =>
+    s.displayName.en || s.name.replace(/_/g, ' ');
+
+  const getLocalName = (s: Structure) =>
+    locale !== 'en' && s.displayName[locale] ? s.displayName[locale] : null;
 
   return (
     <div className="bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-2xl shadow-lg shadow-slate-200/50 flex flex-col overflow-hidden" style={{ maxHeight: '80vh' }}>
@@ -81,18 +106,25 @@ export default function StructurePanel({ selectedStructure, onStructureSelect, l
         <div className="p-3 border-b border-slate-200/60 bg-indigo-50/50">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: selectedStructure.color }} />
-            <span className="text-sm font-semibold text-slate-800 truncate">
-              {getDisplayName(selectedStructure)}
-            </span>
+            <div className="flex-1 min-w-0">
+              <span className="text-sm font-semibold text-slate-800 block truncate">
+                {getEnName(selectedStructure)}
+              </span>
+              {getLocalName(selectedStructure) && (
+                <span className="text-xs text-slate-500 block truncate">
+                  {getLocalName(selectedStructure)}
+                </span>
+              )}
+            </div>
             <button
               onClick={() => onStructureSelect(null)}
-              className="ml-auto text-xs text-slate-400 hover:text-slate-600"
+              className="ml-auto text-xs text-slate-400 hover:text-slate-600 flex-shrink-0"
             >
               ✕
             </button>
           </div>
-          <div className="mt-1 text-xs text-slate-500">
-            {selectedStructure.category} · {selectedStructure.name.replace(/_/g, ' ')}
+          <div className="mt-1 text-xs text-slate-400">
+            {selectedStructure.category}
           </div>
         </div>
       )}
@@ -115,7 +147,12 @@ export default function StructurePanel({ selectedStructure, onStructureSelect, l
                 }`}
               >
                 <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: s.color }} />
-                <span className="truncate">{getDisplayName(s)}</span>
+                <div className="min-w-0 flex-1">
+                  <span className="block truncate">{getEnName(s)}</span>
+                  {getLocalName(s) && (
+                    <span className="block truncate text-[10px] text-slate-400">{getLocalName(s)}</span>
+                  )}
+                </div>
               </button>
             ))}
           </div>

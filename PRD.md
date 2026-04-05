@@ -12,7 +12,7 @@
 
 **Product Name:** BodyAtlas  
 **Tagline:** "The free anatomy atlas for medical professionals — interactive, web-based, zero cost."  
-**Domain Target:** `bodyatlas.vercel.app`
+**Domain Target:** `bodyatlas-ten.vercel.app` (bodyatlas.vercel.app was taken)
 
 ### Problem Statement
 Medical students, residents, and radiologists frequently need to reference cross-sectional anatomy (CT/MRI) to identify anatomical structures. The market leader, IMAIOS e-Anatomy, charges **$22/month ($132/year)** — a significant cost for students and trainees in smaller hospitals. There is no free, high-quality, interactive cross-sectional anatomy atlas available on the web.
@@ -229,7 +229,7 @@ The following BrainAxis features are **removed** as they're not relevant:
       "id": "F01",
       "name": "Data Pipeline — Reference CT + Labels",
       "phase": "mvp",
-      "status": "pending",
+      "status": "done",
       "milestone": true,
       "description": "Download Visible Human CT or TotalSegmentator sample. Run TotalSegmentator on CPU to generate 104 structure masks. Convert CT to windowed PNG slices (axial, sagittal, coronal). Convert masks to JSON polygon contours per slice. Organize as static /data/ directory. Target: chest region (300-500 slices)."
     },
@@ -237,7 +237,7 @@ The following BrainAxis features are **removed** as they're not relevant:
       "id": "F02",
       "name": "Atlas Viewer — 3-Plane Browse + Scroll",
       "phase": "mvp",
-      "status": "pending",
+      "status": "done",
       "milestone": false,
       "description": "Refactor BrainAxis tri-plane viewer to load pre-rendered PNG images instead of DICOM volumes. Scroll through slices (mouse wheel, touch swipe). Synchronized crosshair across planes. Lazy loading — only fetch current slice + 5 neighbors. Dark viewer panels."
     },
@@ -245,7 +245,7 @@ The following BrainAxis features are **removed** as they're not relevant:
       "id": "F03",
       "name": "Label Overlay Engine — Hover/Click to Identify",
       "phase": "mvp",
-      "status": "pending",
+      "status": "done",
       "milestone": true,
       "description": "Render anatomy label overlays on canvas (semi-transparent colored polygons). On hover: highlight structure + show tooltip with name. On click: select structure, show info panel with name (multi-language), category, description. Toggle overlay visibility on/off. Color-coded by category (organs=red, bones=white, vessels=blue, muscles=brown)."
     },
@@ -253,7 +253,7 @@ The following BrainAxis features are **removed** as they're not relevant:
       "id": "F04",
       "name": "Structure Search",
       "phase": "mvp",
-      "status": "pending",
+      "status": "done",
       "milestone": false,
       "description": "Search bar to find any anatomical structure by name. Autocomplete with fuzzy matching. On select: jump to best representative slice in all 3 planes, highlight the structure. Search works in all 7 languages."
     },
@@ -261,7 +261,7 @@ The following BrainAxis features are **removed** as they're not relevant:
       "id": "F05",
       "name": "MVP Deploy + Landing Page",
       "phase": "mvp",
-      "status": "pending",
+      "status": "done",
       "milestone": true,
       "description": "SEO-optimized landing page: 'Free Anatomy Atlas — IMAIOS alternative'. Hero section with demo screenshot. Deploy to bodyatlas.vercel.app. Meta tags, OG tags, sitemap, robots.txt. New GitHub repo via gh CLI."
     },
@@ -442,6 +442,7 @@ Nerves:     #10B981 (emerald-500) with 30% opacity overlay
 8. **PWA**: Installable, offline-capable.
 9. **Open Data Only**: Only use datasets with permissive licenses (public domain, CC BY, Apache 2.0).
 10. **PRD Is Living Document**: Update after any significant decision.
+11. **Milestone Logging**: Record important milestones as txt files in `research_history/` folder.
 
 ---
 
@@ -532,3 +533,4 @@ Pricing vs. competitor: IMAIOS $22/mo → BodyAtlas $4.99/mo (**77% cheaper**), 
 |------|---------|--------|--------|
 | 2026-03-31 | 1.0–1.3 | BrainAxis: Brain DICOM AC-PC alignment tool MVP through V1 | Original product |
 | 2026-04-01 | 2.0 | **FULL PIVOT to BodyAtlas** — Free interactive cross-sectional anatomy atlas. Dropped: AC-PC alignment, DICOM upload/parsing, rotation controls, tag editor. Kept: tri-plane viewer infrastructure, i18n, PWA, UI design system. Reason: User feedback from radiologist (류정률) revealed AC-PC alignment already exists in hospital software; real demand is for free IMAIOS alternative (anatomy atlas with interactive labels). IMAIOS costs $22/mo — we go free. | User validation feedback, market opportunity |
+| 2026-04-02 | 2.1 | **MVP COMPLETE (F01-F05 all done).** Deployed to bodyatlas-ten.vercel.app. Changes: removed auth gate (MVP = 100% free, no signup), cleaned up BrainAxis feature flags, fixed SW cache name, added fuzzy search, added 7-language translations for all 108 anatomical structures (en/ko/ja/zh/es/de/fr), updated all URLs to new domain, added .vercelignore for data_pipeline (24GB). | MVP completion, domain change (bodyatlas.vercel.app was taken) |

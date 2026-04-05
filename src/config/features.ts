@@ -1,14 +1,13 @@
 export const FEATURES = {
-  singleSeriesUpload: true,
-  triPlaneViewer: true,
-  acpcAlignment: true,
-  manualRotation: true,
-  exportDicom: true,
-  exportPng: true,
-  batchProcessing: false,
-  cloudSessionHistory: false,
-  customPresets: false,
-  prioritySupport: false,
+  atlasViewer: true,
+  labelOverlay: true,
+  structureSearch: true,
+  multiLanguage: true,
+  pwaOffline: true,
+  quizMode: false,
+  dicomUpload: false,
+  aiAutoLabel: false,
+  premiumTier: false,
 } as const;
 
 export type FeatureKey = keyof typeof FEATURES;

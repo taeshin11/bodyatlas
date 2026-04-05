@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -9,9 +9,10 @@ import InstallPrompt from '@/components/InstallPrompt';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import AtlasViewer from '@/components/AtlasViewer';
 import StructurePanel from '@/components/StructurePanel';
+import RegionSelector, { BODY_REGIONS, type BodyRegion } from '@/components/RegionSelector';
+import AuthGate from '@/components/AuthGate';
 import { useI18n } from '@/lib/i18n-context';
 import { useAuth } from '@/lib/auth-context';
-import AuthGate from '@/components/AuthGate';
 
 interface Structure {
   id: number;
@@ -25,21 +26,35 @@ interface Structure {
 
 export default function Home() {
   const { locale } = useI18n();
-  const { markTrialUsed } = useAuth();
+  const { user } = useAuth();
   const [selectedStructure, setSelectedStructure] = useState<Structure | null>(null);
-  const [interactionCount, setInteractionCount] = useState(0);
+  const [activeRegion, setActiveRegion] = useState<BodyRegion>('chest');
+  const [showAuth, setShowAuth] = useState(false);
+  const [forceAxial, setForceAxial] = useState(0);
 
-  // Track interactions — after 3 meaningful actions, mark trial as used
-  const handleStructureSelect = (s: Structure | null) => {
+  const isAuthenticated = !!user;
+
+  const handleStructureSelect = useCallback((s: Structure | null) => {
     setSelectedStructure(s);
-    if (s) {
-      const newCount = interactionCount + 1;
-      setInteractionCount(newCount);
-      if (newCount >= 3) {
-        markTrialUsed();
-      }
+  }, []);
+
+  const handleRegionSelect = useCallback((region: BodyRegion) => {
+    const regionConfig = BODY_REGIONS.find(r => r.id === region);
+    if (regionConfig && !regionConfig.free && !isAuthenticated) {
+      setShowAuth(true);
+      return;
     }
-  };
+    setActiveRegion(region);
+    setSelectedStructure(null);
+    setForceAxial(prev => prev + 1);
+  }, [isAuthenticated]);
+
+  const handleAuthDismiss = useCallback(() => {
+    setShowAuth(false);
+  }, []);
+
+  const currentRegion = BODY_REGIONS.find(r => r.id === activeRegion)!;
+  const dataPath = currentRegion.dataPath;
 
   return (
     <ErrorBoundary>
@@ -47,20 +62,15 @@ export default function Home() {
         <Header />
 
         <main className="flex-1">
-          {/* SEO Hero Section */}
+          {/* SEO Hero */}
           <section className="bg-gradient-to-b from-indigo-50/80 to-transparent border-b border-slate-100">
-            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+              <h1 className="text-lg sm:text-2xl font-bold text-slate-900 tracking-tight">
                 Free Interactive Cross-Sectional Anatomy Atlas
               </h1>
-              <h2 className="mt-2 text-base sm:text-lg text-slate-600 font-medium">
-                The Best Free Alternative to IMAIOS e-Anatomy &mdash; $0 Forever
-              </h2>
-              <p className="mt-3 text-sm text-slate-500 max-w-3xl leading-relaxed">
-                Browse labeled CT and MRI cross-sections with instant structure search.
-                Built for medical students, radiology residents, and anatomy learners.
-                No subscription, no account, no install required. Works offline as a PWA.
-                Available in 7 languages.
+              <p className="mt-1 text-xs sm:text-sm text-slate-500 max-w-3xl">
+                Browse labeled CT cross-sections with instant structure search.
+                Built for medical students, radiology residents, and anatomy learners. 100% free, works offline.
               </p>
             </div>
           </section>
@@ -68,33 +78,53 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-4"
+            className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-4 space-y-3"
           >
+            {/* Body Region Selector */}
+            <RegionSelector
+              activeRegion={activeRegion}
+              onRegionSelect={handleRegionSelect}
+              locale={locale}
+              isAuthenticated={isAuthenticated}
+            />
+
             {/* Desktop Layout */}
             <div className="hidden lg:grid lg:grid-cols-[1fr_280px] gap-4">
               <AtlasViewer
                 onStructureSelect={handleStructureSelect}
                 selectedStructure={selectedStructure}
                 locale={locale}
+                dataPath={dataPath}
+                regionAxialRange={currentRegion.axialRange}
+                regionDefaultSlice={currentRegion.defaultSlice}
+                forceAxial={forceAxial}
               />
               <StructurePanel
                 selectedStructure={selectedStructure}
                 onStructureSelect={handleStructureSelect}
                 locale={locale}
+                dataPath={dataPath}
+                regionAxialRange={currentRegion.axialRange}
               />
             </div>
 
-            {/* Mobile Layout */}
+            {/* Mobile Layout — viewer on top, search below */}
             <div className="lg:hidden space-y-3">
               <AtlasViewer
                 onStructureSelect={handleStructureSelect}
                 selectedStructure={selectedStructure}
                 locale={locale}
+                dataPath={dataPath}
+                regionAxialRange={currentRegion.axialRange}
+                regionDefaultSlice={currentRegion.defaultSlice}
+                forceAxial={forceAxial}
               />
               <StructurePanel
                 selectedStructure={selectedStructure}
                 onStructureSelect={handleStructureSelect}
                 locale={locale}
+                dataPath={dataPath}
+                regionAxialRange={currentRegion.axialRange}
               />
             </div>
           </motion.div>
@@ -103,7 +133,7 @@ export default function Home() {
         <Footer />
         <FeedbackButton />
         <InstallPrompt />
-        <AuthGate />
+        {showAuth && <AuthGate onDismiss={handleAuthDismiss} />}
       </div>
     </ErrorBoundary>
   );

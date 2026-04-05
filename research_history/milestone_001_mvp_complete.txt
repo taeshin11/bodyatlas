@@ -1,0 +1,29 @@
+BodyAtlas Development Milestone #001
+Date: 2026-04-02
+Milestone: MVP Complete (F01-F05)
+
+Summary:
+- Pivoted from BrainAxis (DICOM AC-PC alignment tool) to BodyAtlas (free anatomy atlas)
+- Reason: Radiologist feedback — AC-PC alignment already exists in hospital PACS; real need is free IMAIOS alternative
+- Deployed to: https://bodyatlas-ten.vercel.app (bodyatlas.vercel.app was already taken)
+- Deleted old brainaxis.vercel.app deployment
+
+Features Completed:
+- F01: Data Pipeline — TotalSegmentator + reference CT → 109 structures, 431 axial / 311 sagittal / 311 coronal slices
+- F02: Atlas Viewer — 3-plane browse with scroll, lazy loading
+- F03: Label Overlay — hover/click identification, color-coded polygons, toggle on/off
+- F04: Structure Search — multi-token fuzzy search across 7 languages
+- F05: Landing Page + Deploy — SEO optimized, PWA, Vercel free tier
+
+Technical Details:
+- Auth gate removed for MVP (100% free, no signup required)
+- BrainAxis feature flags cleaned up
+- Service worker cache renamed brainaxis-v1 → bodyatlas-v1
+- 108 anatomical structures translated to 7 languages (en/ko/ja/zh/es/de/fr)
+- .vercelignore added to exclude 24GB data_pipeline from deployment
+- Structure names display: English first, local translation below
+
+Data Source:
+- CT: TotalSegmentator dataset sample (public domain, 1.5mm isotropic)
+- Labels: TotalSegmentator v2 segmentation (Apache 2.0)
+- IMPORTANT: aaa folder CT data must NEVER be deployed (private patient data)

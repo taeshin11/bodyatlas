@@ -1,9 +1,8 @@
-const CACHE_NAME = 'brainaxis-v1';
+const CACHE_NAME = 'bodyatlas-v1';
 
 const PRECACHE_URLS = [
   '/',
   '/about',
-  '/how-to-use',
   '/manifest.json',
   '/favicon.svg',
   '/icon-192x192.png',

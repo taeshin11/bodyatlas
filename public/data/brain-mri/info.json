@@ -1,0 +1,22 @@
+{
+  "planes": {
+    "axial": {
+      "slices": 182
+    },
+    "sagittal": {
+      "slices": 182
+    },
+    "coronal": {
+      "slices": 218
+    }
+  },
+  "window": {
+    "center": 5000,
+    "width": 8000
+  },
+  "voxelSpacing": [
+    1.0,
+    1.0,
+    1.0
+  ]
+}
