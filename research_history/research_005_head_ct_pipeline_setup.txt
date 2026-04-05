@@ -1,0 +1,135 @@
+================================================================================
+RESEARCH LOG #005 - Head CT TotalSegmentator v2 파이프라인 구축
+================================================================================
+Date: 2026-04-06
+Session: 3 (continued)
+Feature: Head CT Atlas 업그레이드 (TotalSegmentator v2, 96→117+ structures)
+
+================================================================================
+ENVIRONMENT SETUP
+================================================================================
+
+GPU: NVIDIA RTX 4090 (24GB VRAM)
+  - VRAM during this session: ~23GB occupied (X-ray UNet training job running)
+  - Available when training finishes: ~24GB
+  - Required for TotalSegmentator: ~4GB per task
+
+Python: Anaconda Python (C:\Users\taesh\Anaconda3\python.exe)
+  - TotalSegmentator: 2.13.0 (installed)
+  - nibabel: available (Anaconda env)
+  - scikit-image: 0.23.2 (available)
+  - Pillow: available
+
+TotalSegmentator head tasks confirmed:
+  - total (104 structures — head/neck subset)
+  - head_glands_cavities (19): eyes, lenses, optic nerves, sinuses, orbital fat
+  - headneck_bones_vessels (12): larynx, thyroid cartilage, hyoid, neck vessels
+  - brain_structures (16): brainstem, subarachnoid space, venous sinuses, cerebellum, etc.
+  - craniofacial_structures (7): mandible, skull, sinuses, teeth
+  → Expected combined structures: 117+ (minus duplicates)
+
+================================================================================
+DATA SOURCE
+================================================================================
+
+Source: TotalSegmentator Zenodo small dataset
+  URL: https://zenodo.org/records/10047263
+  File: Totalsegmentator_dataset_small_v201.zip (3.1GB)
+  License: CC BY 4.0
+  Content: 102 full-body CTs (head-to-pelvis, 1.5mm isotropic)
+  Same dataset used for existing chest-ct/head-ct/brain-mri atlases
+
+Download: Started in background → data_pipeline/totalseg_small.zip
+  Progress: ~462MB / 3094MB at time of writing (~15%)
+  Estimated completion: ~40 minutes from start
+
+Why this source:
+  - Same data used for existing atlases (consistent quality/style)
+  - CC BY 4.0 (commercial use OK)
+  - Full-body CT includes head — no need for separate head CT
+  - Case s0001 confirmed to have head region
+
+Other options evaluated:
+  - HaN-Seg (Zenodo 7442914): CC BY-NC-ND — REJECTED (ND clause, can't make derivatives)
+  - TCIA HNSCC/Head-Neck: tcia_utils getSeries returned no results (auth issue)
+  - TotalSegmentator test CT (GitHub): only 30 slices at 3mm — too low-res
+
+================================================================================
+PIPELINE SCRIPT
+================================================================================
+
+File: scripts/gen_head_ct_atlas.py
+
+Usage flow:
+  1. python scripts/gen_head_ct_atlas.py --extract-only
+     → Extracts s0001/ct.nii.gz from totalseg_small.zip
+     → Saves to data_pipeline/head_ct_case/ct.nii.gz
+
+  2. python scripts/gen_head_ct_atlas.py
+     → Checks VRAM (warns if <4GB free)
+     → Runs TotalSegmentator tasks: total + head_glands_cavities +
+       headneck_bones_vessels + brain_structures + craniofacial_structures
+     → Merges all segmentation masks
+     → Crops to head region (top HEAD_CROP_VOXELS=320 voxels ≈ 480mm)
+     → Generates PNG slices (axial/sagittal/coronal) with CT windowing
+     → Generates label JSONs with polygon contours (skimage.measure.find_contours)
+     → Writes info.json + structures.json
+     → Output: public/data/head-ct/ (replaces existing)
+
+Window settings:
+  - center=40, width=80 (soft tissue — shows brain well)
+  - Note: For bone detail, a dual-window approach would be better (future)
+
+Head crop logic:
+  - Full-body CT is head-to-pelvis (top of Z = skull apex)
+  - Crop top HEAD_CROP_VOXELS=320 slices at 1.5mm = 480mm coverage
+  - Covers: skull to upper chest (includes neck, C-spine, skull base)
+
+================================================================================
+BLOCKERS AT TIME OF WRITING
+================================================================================
+
+1. VRAM occupied: Training job (X-ray UNet) using ~23GB of 24GB
+   → Resolution: Wait for training to finish, then run pipeline
+   → ETA: Unknown (check task completion)
+
+2. Download in progress: 462MB / 3094MB
+   → Resolution: Wait ~40 more minutes
+   → Monitor: ls -lh data_pipeline/totalseg_small.zip
+
+3. scikit-image: confirmed installed in Anaconda env (skimage 0.23.2 ✓)
+
+================================================================================
+EXECUTION PLAN (when unblocked)
+================================================================================
+
+Step 1: Verify download complete
+  ls -lh C:/NoAddsMakingApps/BodyAtlas/data_pipeline/totalseg_small.zip
+  # Should be ~3094MB
+
+Step 2: Check VRAM
+  nvidia-smi --query-gpu=memory.free --format=csv,noheader
+  # Need >4GB (4096MB) free
+
+Step 3: Extract CT
+  cd C:/NoAddsMakingApps/BodyAtlas
+  Anaconda3/python.exe scripts/gen_head_ct_atlas.py --extract-only
+
+Step 4: Run pipeline
+  Anaconda3/python.exe scripts/gen_head_ct_atlas.py
+
+Step 5: Verify + commit
+  # Check public/data/head-ct/ has new structures
+  # npm run build (verify no TS errors)
+  # git add + commit + push
+
+================================================================================
+FILES CREATED THIS LOG
+================================================================================
+
+NEW:
+  scripts/gen_head_ct_atlas.py — full pipeline script
+  data_pipeline/totalseg_small.zip — downloading (3.1GB)
+  data_pipeline/example_ct_sm.nii.gz — test CT (30 slices, 3mm, too small for atlas)
+
+================================================================================
