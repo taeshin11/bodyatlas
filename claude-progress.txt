@@ -48,7 +48,7 @@
   - NEXT_PUBLIC_FORMSPREE_ID — for feedback emails
   - NEXT_PUBLIC_SHEETS_WEBHOOK_URL — for silent analytics
 
-  Deployed to: bodyatlas.vercel.app
+  Deployed to: bodyatlas-ten.vercel.app
   GitHub repo: github.com/taeshin11/bodyatlas
 
 ## Session 2

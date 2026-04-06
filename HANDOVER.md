@@ -75,7 +75,7 @@ npm run dev
 
 ## 🌐 배포
 
-- 프로덕션: bodyatlas.vercel.app (Vercel 프로젝트명 변경 필요)
+- 프로덕션: https://bodyatlas-ten.vercel.app
 - GitHub: github.com/taeshin11/bodyatlas
 
 ---
