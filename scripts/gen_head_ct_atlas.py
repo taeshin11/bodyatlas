@@ -195,18 +195,64 @@ def ct_to_png_slice(ct_slice: np.ndarray, window_center: int, window_width: int)
 
 
 def mask_to_contours(mask_2d: np.ndarray) -> list:
-    """Convert binary mask slice → list of contour point arrays."""
+    """Convert binary mask slice → smoothed contour point arrays.
+
+    Pipeline:
+    1. Morphological fill + closing  → remove holes and small spurs
+    2. find_contours                 → raw polygon points
+    3. Spline smoothing              → smooth curves, fewer points
+    """
     try:
         from skimage import measure
-        contours = measure.find_contours(mask_2d, 0.5)
-        # Convert to [x, y] list (skimage returns [row, col] = [y, x])
-        return [[[round(float(pt[1]), 1), round(float(pt[0]), 1)] for pt in c] for c in contours if len(c) >= 3]
+        from scipy.ndimage import binary_fill_holes, binary_closing
+
+        # -- 1. Clean mask ---------------------------------------------------
+        binary = mask_2d > 0.5
+        binary = binary_fill_holes(binary)
+        binary = binary_closing(binary, iterations=2)
+
+        contours = measure.find_contours(binary.astype(np.float32), 0.5)
+        result = []
+
+        for c in contours:
+            if len(c) < 6:
+                continue
+
+            pts_x = c[:, 1]   # col → x
+            pts_y = c[:, 0]   # row → y
+
+            # -- 3. Spline smoothing -----------------------------------------
+            if len(c) >= 10:
+                try:
+                    from scipy.interpolate import splprep, splev
+                    # Close the contour for periodic spline
+                    cx = np.append(pts_x, pts_x[0])
+                    cy = np.append(pts_y, pts_y[0])
+                    n = len(cx)
+                    # s controls smoothness (larger = smoother)
+                    tck, _ = splprep([cx, cy], s=n * 2.0, per=True, k=3)
+                    n_out = max(16, n // 4)
+                    u_new = np.linspace(0, 1, n_out, endpoint=False)
+                    xn, yn = splev(u_new, tck)
+                    result.append([[round(float(x), 1), round(float(y), 1)]
+                                   for x, y in zip(xn, yn)])
+                    continue
+                except Exception:
+                    pass  # fall through to raw points
+
+            result.append([[round(float(x), 1), round(float(y), 1)]
+                           for x, y in zip(pts_x, pts_y)])
+
+        return result
+
     except ImportError:
-        # Fallback: simple bbox contour if skimage not available
+        # Fallback: simple bbox contour if skimage/scipy not available
         rows, cols = np.where(mask_2d > 0)
-        if len(rows) == 0: return []
+        if len(rows) == 0:
+            return []
         r0, r1, c0, c1 = rows.min(), rows.max(), cols.min(), cols.max()
-        return [[[float(c0),float(r0)],[float(c1),float(r0)],[float(c1),float(r1)],[float(c0),float(r1)]]]
+        return [[[float(c0), float(r0)], [float(c1), float(r0)],
+                 [float(c1), float(r1)], [float(c0), float(r1)]]]
 
 
 def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
