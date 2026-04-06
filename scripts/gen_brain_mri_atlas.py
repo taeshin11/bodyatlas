@@ -27,8 +27,8 @@ T1_NII    = PROJECT_ROOT / "data_pipeline/openmap_output/t1/original/t1.nii"
 LABEL_CSV = PROJECT_ROOT / "data_pipeline/openmap_t1/level/OpenMAP-T1_multilevel_lookup_table_dictionary.csv"
 OUT_DIR   = PROJECT_ROOT / "public/data/brain-mri"
 
-WINDOW_CENTER = 50
-WINDOW_WIDTH  = 100    # tight brain window (white/grey contrast)
+WINDOW_CENTER = 160
+WINDOW_WIDTH  = 200    # T1 MRI: values 0-255, p5≈107 p95≈225 → range 60-260
 
 CATEGORY_COLORS = {
     "frontal":   "#EF4444",
@@ -194,7 +194,9 @@ def build_atlas(parc_path: Path, t1_path: Path, label_map: dict, out_dir: Path):
             elif axis == 1: t1_sl = t1_data[:, si, :]; parc_sl = parc_data[:, si, :]
             else:           t1_sl = t1_data[:, :, si]; parc_sl = parc_data[:, :, si]
 
-            t1_to_png_slice(t1_sl, WINDOW_CENTER, WINDOW_WIDTH).save(
+            # Standard display: transpose + flipud (RAS: axial→anterior@top, sagittal/coronal→superior@top)
+            t1_disp = np.flipud(t1_sl.T)
+            t1_to_png_slice(t1_disp, WINDOW_CENTER, WINDOW_WIDTH).save(
                 img_dir / f"{si:04d}.png"
             )
 
@@ -205,11 +207,7 @@ def build_atlas(parc_path: Path, t1_path: Path, label_map: dict, out_dir: Path):
             for roi_idx in present_in_slice:
                 if roi_idx not in struct_by_id:
                     continue
-                mask = (parc_sl == roi_idx)
-
-                if axis == 0:   mask = np.fliplr(mask)
-                elif axis == 1: mask = np.flipud(mask)
-
+                mask = np.flipud((parc_sl == roi_idx).T)
                 contours = mask_to_contours(mask.astype(np.float32))
                 if not contours:
                     continue

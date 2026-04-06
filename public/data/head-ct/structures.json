@@ -1,74 +1,6 @@
 {
-  "totalStructures": 89,
+  "totalStructures": 66,
   "structures": [
-    {
-      "id": 0,
-      "name": "adrenal_gland_left",
-      "displayName": {
-        "en": "Adrenal Gland Left",
-        "ko": "Adrenal Gland Left",
-        "ja": "Adrenal Gland Left",
-        "zh": "Adrenal Gland Left",
-        "es": "Adrenal Gland Left",
-        "de": "Adrenal Gland Left",
-        "fr": "Adrenal Gland Left"
-      },
-      "category": "gland",
-      "color": "#F97316",
-      "bestSlice": {
-        "axial": 7,
-        "sagittal": 133,
-        "coronal": 135
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          14
-        ],
-        "sagittal": [
-          128,
-          138
-        ],
-        "coronal": [
-          126,
-          144
-        ]
-      }
-    },
-    {
-      "id": 1,
-      "name": "adrenal_gland_right",
-      "displayName": {
-        "en": "Adrenal Gland Right",
-        "ko": "Adrenal Gland Right",
-        "ja": "Adrenal Gland Right",
-        "zh": "Adrenal Gland Right",
-        "es": "Adrenal Gland Right",
-        "de": "Adrenal Gland Right",
-        "fr": "Adrenal Gland Right"
-      },
-      "category": "gland",
-      "color": "#F97316",
-      "bestSlice": {
-        "axial": 3,
-        "sagittal": 175,
-        "coronal": 131
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          6
-        ],
-        "sagittal": [
-          173,
-          178
-        ],
-        "coronal": [
-          124,
-          139
-        ]
-      }
-    },
     {
       "id": 3,
       "name": "aorta",
@@ -84,14 +16,14 @@
       "category": "vessel",
       "color": "#3B82F6",
       "bestSlice": {
-        "axial": 76,
+        "axial": 41,
         "sagittal": 152,
         "coronal": 146
       },
       "sliceRange": {
         "axial": [
           0,
-          152
+          82
         ],
         "sagittal": [
           133,
@@ -118,14 +50,14 @@
       "category": "other",
       "color": "#94A3B8",
       "bestSlice": {
-        "axial": 103,
+        "axial": 33,
         "sagittal": 134,
         "coronal": 156
       },
       "sliceRange": {
         "axial": [
-          95,
-          112
+          25,
+          42
         ],
         "sagittal": [
           126,
@@ -152,21 +84,21 @@
       "category": "muscle",
       "color": "#10B981",
       "bestSlice": {
-        "axial": 99,
-        "sagittal": 123,
+        "axial": 64,
+        "sagittal": 135,
         "coronal": 92
       },
       "sliceRange": {
         "axial": [
           0,
-          199
+          129
         ],
         "sagittal": [
-          96,
+          120,
           150
         ],
         "coronal": [
-          65,
+          66,
           119
         ]
       }
@@ -186,21 +118,21 @@
       "category": "muscle",
       "color": "#10B981",
       "bestSlice": {
-        "axial": 99,
-        "sagittal": 181,
-        "coronal": 89
+        "axial": 64,
+        "sagittal": 169,
+        "coronal": 90
       },
       "sliceRange": {
         "axial": [
           0,
-          199
+          129
         ],
         "sagittal": [
           151,
-          211
+          188
         ],
         "coronal": [
-          62,
+          64,
           117
         ]
       }
@@ -220,14 +152,14 @@
       "category": "vessel",
       "color": "#3B82F6",
       "bestSlice": {
-        "axial": 164,
+        "axial": 94,
         "sagittal": 156,
         "coronal": 157
       },
       "sliceRange": {
         "axial": [
-          152,
-          177
+          82,
+          107
         ],
         "sagittal": [
           149,
@@ -254,14 +186,14 @@
       "category": "vessel",
       "color": "#3B82F6",
       "bestSlice": {
-        "axial": 161,
+        "axial": 91,
         "sagittal": 148,
         "coronal": 161
       },
       "sliceRange": {
         "axial": [
-          145,
-          177
+          75,
+          107
         ],
         "sagittal": [
           128,
@@ -288,14 +220,14 @@
       "category": "vessel",
       "color": "#3B82F6",
       "bestSlice": {
-        "axial": 165,
+        "axial": 95,
         "sagittal": 170,
         "coronal": 156
       },
       "sliceRange": {
         "axial": [
-          151,
-          180
+          81,
+          110
         ],
         "sagittal": [
           165,
@@ -322,14 +254,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 181,
+        "axial": 111,
         "sagittal": 99,
         "coronal": 141
       },
       "sliceRange": {
         "axial": [
-          166,
-          197
+          96,
+          127
         ],
         "sagittal": [
           59,
@@ -356,14 +288,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 183,
+        "axial": 113,
         "sagittal": 200,
         "coronal": 139
       },
       "sliceRange": {
         "axial": [
-          168,
-          199
+          98,
+          129
         ],
         "sagittal": [
           162,
@@ -372,40 +304,6 @@
         "coronal": [
           103,
           175
-        ]
-      }
-    },
-    {
-      "id": 12,
-      "name": "colon",
-      "displayName": {
-        "en": "Colon",
-        "ko": "Colon",
-        "ja": "Colon",
-        "zh": "Colon",
-        "es": "Colon",
-        "de": "Colon",
-        "fr": "Colon"
-      },
-      "category": "other",
-      "color": "#94A3B8",
-      "bestSlice": {
-        "axial": 10,
-        "sagittal": 105,
-        "coronal": 185
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          21
-        ],
-        "sagittal": [
-          87,
-          124
-        ],
-        "coronal": [
-          160,
-          211
         ]
       }
     },
@@ -424,14 +322,14 @@
       "category": "vessel",
       "color": "#3B82F6",
       "bestSlice": {
-        "axial": 175,
+        "axial": 105,
         "sagittal": 140,
         "coronal": 153
       },
       "sliceRange": {
         "axial": [
-          152,
-          199
+          82,
+          129
         ],
         "sagittal": [
           132,
@@ -458,14 +356,14 @@
       "category": "vessel",
       "color": "#3B82F6",
       "bestSlice": {
-        "axial": 188,
+        "axial": 118,
         "sagittal": 161,
         "coronal": 157
       },
       "sliceRange": {
         "axial": [
-          177,
-          199
+          107,
+          129
         ],
         "sagittal": [
           158,
@@ -492,22 +390,22 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 85,
-        "sagittal": 161,
-        "coronal": 190
+        "axial": 50,
+        "sagittal": 153,
+        "coronal": 189
       },
       "sliceRange": {
         "axial": [
           0,
-          171
+          101
         ],
         "sagittal": [
-          82,
-          240
+          104,
+          203
         ],
         "coronal": [
           164,
-          217
+          215
         ]
       }
     },
@@ -526,14 +424,14 @@
       "category": "organ",
       "color": "#EF4444",
       "bestSlice": {
-        "axial": 115,
+        "axial": 63,
         "sagittal": 150,
-        "coronal": 141
+        "coronal": 139
       },
       "sliceRange": {
         "axial": [
-          34,
-          196
+          0,
+          126
         ],
         "sagittal": [
           141,
@@ -541,7 +439,7 @@
         ],
         "coronal": [
           127,
-          155
+          151
         ]
       }
     },
@@ -560,17 +458,17 @@
       "category": "organ",
       "color": "#EF4444",
       "bestSlice": {
-        "axial": 90,
-        "sagittal": 147,
+        "axial": 31,
+        "sagittal": 148,
         "coronal": 164
       },
       "sliceRange": {
         "axial": [
-          49,
-          132
+          0,
+          62
         ],
         "sagittal": [
-          109,
+          110,
           186
         ],
         "coronal": [
@@ -594,14 +492,14 @@
       "category": "organ",
       "color": "#EF4444",
       "bestSlice": {
-        "axial": 111,
+        "axial": 41,
         "sagittal": 170,
         "coronal": 155
       },
       "sliceRange": {
         "axial": [
-          101,
-          121
+          31,
+          51
         ],
         "sagittal": [
           166,
@@ -610,40 +508,6 @@
         "coronal": [
           150,
           160
-        ]
-      }
-    },
-    {
-      "id": 29,
-      "name": "heart_atrium_right",
-      "displayName": {
-        "en": "Heart Atrium Right",
-        "ko": "Heart Atrium Right",
-        "ja": "Heart Atrium Right",
-        "zh": "Heart Atrium Right",
-        "es": "Heart Atrium Right",
-        "de": "Heart Atrium Right",
-        "fr": "Heart Atrium Right"
-      },
-      "category": "organ",
-      "color": "#EF4444",
-      "bestSlice": {
-        "axial": 11,
-        "sagittal": 105,
-        "coronal": 185
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          22
-        ],
-        "sagittal": [
-          86,
-          125
-        ],
-        "coronal": [
-          159,
-          211
         ]
       }
     },
@@ -662,14 +526,14 @@
       "category": "organ",
       "color": "#EF4444",
       "bestSlice": {
-        "axial": 177,
+        "axial": 107,
         "sagittal": 115,
         "coronal": 155
       },
       "sliceRange": {
         "axial": [
-          156,
-          199
+          86,
+          129
         ],
         "sagittal": [
           102,
@@ -696,14 +560,14 @@
       "category": "organ",
       "color": "#EF4444",
       "bestSlice": {
-        "axial": 168,
+        "axial": 98,
         "sagittal": 105,
         "coronal": 153
       },
       "sliceRange": {
         "axial": [
-          145,
-          192
+          75,
+          122
         ],
         "sagittal": [
           84,
@@ -730,14 +594,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 181,
+        "axial": 111,
         "sagittal": 44,
         "coronal": 135
       },
       "sliceRange": {
         "axial": [
-          163,
-          199
+          93,
+          129
         ],
         "sagittal": [
           27,
@@ -764,14 +628,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 185,
+        "axial": 115,
         "sagittal": 251,
         "coronal": 132
       },
       "sliceRange": {
         "axial": [
-          172,
-          199
+          102,
+          129
         ],
         "sagittal": [
           236,
@@ -798,124 +662,22 @@
       "category": "other",
       "color": "#94A3B8",
       "bestSlice": {
-        "axial": 39,
-        "sagittal": 170,
-        "coronal": 150
+        "axial": 4,
+        "sagittal": 168,
+        "coronal": 151
       },
       "sliceRange": {
         "axial": [
           0,
-          78
+          8
         ],
         "sagittal": [
-          162,
-          179
+          163,
+          173
         ],
         "coronal": [
-          141,
-          160
-        ]
-      }
-    },
-    {
-      "id": 45,
-      "name": "kidney_left",
-      "displayName": {
-        "en": "Kidney Left",
-        "ko": "Kidney Left",
-        "ja": "Kidney Left",
-        "zh": "Kidney Left",
-        "es": "Kidney Left",
-        "de": "Kidney Left",
-        "fr": "Kidney Left"
-      },
-      "category": "other",
-      "color": "#94A3B8",
-      "bestSlice": {
-        "axial": 5,
-        "sagittal": 117,
-        "coronal": 115
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          11
-        ],
-        "sagittal": [
-          104,
-          131
-        ],
-        "coronal": [
-          101,
-          130
-        ]
-      }
-    },
-    {
-      "id": 48,
-      "name": "left_kidney",
-      "displayName": {
-        "en": "Left Kidney",
-        "ko": "Left Kidney",
-        "ja": "Left Kidney",
-        "zh": "Left Kidney",
-        "es": "Left Kidney",
-        "de": "Left Kidney",
-        "fr": "Left Kidney"
-      },
-      "category": "other",
-      "color": "#94A3B8",
-      "bestSlice": {
-        "axial": 18,
-        "sagittal": 95,
-        "coronal": 127
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          37
-        ],
-        "sagittal": [
-          65,
-          125
-        ],
-        "coronal": [
-          97,
-          158
-        ]
-      }
-    },
-    {
-      "id": 50,
-      "name": "liver",
-      "displayName": {
-        "en": "Liver",
-        "ko": "Liver",
-        "ja": "Liver",
-        "zh": "Liver",
-        "es": "Liver",
-        "de": "Liver",
-        "fr": "Liver"
-      },
-      "category": "other",
-      "color": "#94A3B8",
-      "bestSlice": {
-        "axial": 31,
-        "sagittal": 174,
-        "coronal": 158
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          62
-        ],
-        "sagittal": [
-          100,
-          249
-        ],
-        "coronal": [
-          96,
-          220
+          148,
+          155
         ]
       }
     },
@@ -934,22 +696,22 @@
       "category": "organ",
       "color": "#EF4444",
       "bestSlice": {
-        "axial": 78,
-        "sagittal": 105,
-        "coronal": 140
+        "axial": 41,
+        "sagittal": 106,
+        "coronal": 123
       },
       "sliceRange": {
         "axial": [
-          4,
-          152
+          0,
+          82
         ],
         "sagittal": [
-          62,
-          148
+          68,
+          144
         ],
         "coronal": [
           80,
-          201
+          167
         ]
       }
     },
@@ -968,22 +730,22 @@
       "category": "organ",
       "color": "#EF4444",
       "bestSlice": {
-        "axial": 66,
-        "sagittal": 202,
-        "coronal": 134
+        "axial": 31,
+        "sagittal": 199,
+        "coronal": 125
       },
       "sliceRange": {
         "axial": [
           0,
-          133
+          63
         ],
         "sagittal": [
-          154,
-          250
+          156,
+          243
         ],
         "coronal": [
           78,
-          191
+          173
         ]
       }
     },
@@ -1002,14 +764,14 @@
       "category": "organ",
       "color": "#EF4444",
       "bestSlice": {
-        "axial": 76,
+        "axial": 20,
         "sagittal": 199,
         "coronal": 167
       },
       "sliceRange": {
         "axial": [
-          43,
-          110
+          0,
+          40
         ],
         "sagittal": [
           159,
@@ -1036,22 +798,22 @@
       "category": "organ",
       "color": "#EF4444",
       "bestSlice": {
-        "axial": 110,
+        "axial": 58,
         "sagittal": 113,
         "coronal": 154
       },
       "sliceRange": {
         "axial": [
-          33,
-          187
+          0,
+          117
         ],
         "sagittal": [
-          69,
+          70,
           157
         ],
         "coronal": [
           100,
-          209
+          208
         ]
       }
     },
@@ -1070,14 +832,14 @@
       "category": "organ",
       "color": "#EF4444",
       "bestSlice": {
-        "axial": 145,
+        "axial": 75,
         "sagittal": 193,
         "coronal": 144
       },
       "sliceRange": {
         "axial": [
-          100,
-          191
+          30,
+          121
         ],
         "sagittal": [
           150,
@@ -1086,74 +848,6 @@
         "coronal": [
           88,
           200
-        ]
-      }
-    },
-    {
-      "id": 56,
-      "name": "pancreas",
-      "displayName": {
-        "en": "Pancreas",
-        "ko": "Pancreas",
-        "ja": "Pancreas",
-        "zh": "Pancreas",
-        "es": "Pancreas",
-        "de": "Pancreas",
-        "fr": "Pancreas"
-      },
-      "category": "other",
-      "color": "#94A3B8",
-      "bestSlice": {
-        "axial": 4,
-        "sagittal": 119,
-        "coronal": 152
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          8
-        ],
-        "sagittal": [
-          92,
-          147
-        ],
-        "coronal": [
-          134,
-          171
-        ]
-      }
-    },
-    {
-      "id": 57,
-      "name": "portal_vein_and_splenic_vein",
-      "displayName": {
-        "en": "Portal Vein And Splenic Vein",
-        "ko": "Portal Vein And Splenic Vein",
-        "ja": "Portal Vein And Splenic Vein",
-        "zh": "Portal Vein And Splenic Vein",
-        "es": "Portal Vein And Splenic Vein",
-        "de": "Portal Vein And Splenic Vein",
-        "fr": "Portal Vein And Splenic Vein"
-      },
-      "category": "vessel",
-      "color": "#3B82F6",
-      "bestSlice": {
-        "axial": 10,
-        "sagittal": 150,
-        "coronal": 162
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          20
-        ],
-        "sagittal": [
-          94,
-          207
-        ],
-        "coronal": [
-          131,
-          193
         ]
       }
     },
@@ -1172,14 +866,14 @@
       "category": "vessel",
       "color": "#3B82F6",
       "bestSlice": {
-        "axial": 150,
+        "axial": 80,
         "sagittal": 100,
         "coronal": 151
       },
       "sliceRange": {
         "axial": [
-          122,
-          179
+          52,
+          109
         ],
         "sagittal": [
           73,
@@ -1206,14 +900,14 @@
       "category": "vessel",
       "color": "#3B82F6",
       "bestSlice": {
-        "axial": 96,
+        "axial": 26,
         "sagittal": 154,
         "coronal": 140
       },
       "sliceRange": {
         "axial": [
-          78,
-          115
+          8,
+          45
         ],
         "sagittal": [
           119,
@@ -1240,14 +934,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 178,
+        "axial": 108,
         "sagittal": 114,
         "coronal": 155
       },
       "sliceRange": {
         "axial": [
-          157,
-          199
+          87,
+          129
         ],
         "sagittal": [
           102,
@@ -1256,108 +950,6 @@
         "coronal": [
           129,
           181
-        ]
-      }
-    },
-    {
-      "id": 62,
-      "name": "rib_left_10",
-      "displayName": {
-        "en": "Rib Left 10",
-        "ko": "Rib Left 10",
-        "ja": "Rib Left 10",
-        "zh": "Rib Left 10",
-        "es": "Rib Left 10",
-        "de": "Rib Left 10",
-        "fr": "Rib Left 10"
-      },
-      "category": "bone",
-      "color": "#F59E0B",
-      "bestSlice": {
-        "axial": 31,
-        "sagittal": 97,
-        "coronal": 105
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          63
-        ],
-        "sagittal": [
-          61,
-          133
-        ],
-        "coronal": [
-          77,
-          133
-        ]
-      }
-    },
-    {
-      "id": 63,
-      "name": "rib_left_11",
-      "displayName": {
-        "en": "Rib Left 11",
-        "ko": "Rib Left 11",
-        "ja": "Rib Left 11",
-        "zh": "Rib Left 11",
-        "es": "Rib Left 11",
-        "de": "Rib Left 11",
-        "fr": "Rib Left 11"
-      },
-      "category": "bone",
-      "color": "#F59E0B",
-      "bestSlice": {
-        "axial": 21,
-        "sagittal": 107,
-        "coronal": 90
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          43
-        ],
-        "sagittal": [
-          81,
-          133
-        ],
-        "coronal": [
-          81,
-          99
-        ]
-      }
-    },
-    {
-      "id": 64,
-      "name": "rib_left_12",
-      "displayName": {
-        "en": "Rib Left 12",
-        "ko": "Rib Left 12",
-        "ja": "Rib Left 12",
-        "zh": "Rib Left 12",
-        "es": "Rib Left 12",
-        "de": "Rib Left 12",
-        "fr": "Rib Left 12"
-      },
-      "category": "bone",
-      "color": "#F59E0B",
-      "bestSlice": {
-        "axial": 7,
-        "sagittal": 126,
-        "coronal": 93
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          14
-        ],
-        "sagittal": [
-          119,
-          133
-        ],
-        "coronal": [
-          89,
-          97
         ]
       }
     },
@@ -1376,14 +968,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 168,
+        "axial": 98,
         "sagittal": 105,
         "coronal": 153
       },
       "sliceRange": {
         "axial": [
-          145,
-          192
+          75,
+          122
         ],
         "sagittal": [
           84,
@@ -1410,14 +1002,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 150,
+        "axial": 80,
         "sagittal": 100,
         "coronal": 151
       },
       "sliceRange": {
         "axial": [
-          122,
-          179
+          52,
+          109
         ],
         "sagittal": [
           74,
@@ -1444,14 +1036,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 132,
+        "axial": 62,
         "sagittal": 97,
         "coronal": 146
       },
       "sliceRange": {
         "axial": [
-          102,
-          163
+          32,
+          93
         ],
         "sagittal": [
           69,
@@ -1478,14 +1070,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 110,
+        "axial": 40,
         "sagittal": 96,
         "coronal": 150
       },
       "sliceRange": {
         "axial": [
-          73,
-          148
+          3,
+          78
         ],
         "sagittal": [
           67,
@@ -1512,14 +1104,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 90,
+        "axial": 32,
         "sagittal": 93,
-        "coronal": 147
+        "coronal": 134
       },
       "sliceRange": {
         "axial": [
-          46,
-          135
+          0,
+          65
         ],
         "sagittal": [
           62,
@@ -1527,7 +1119,7 @@
         ],
         "coronal": [
           83,
-          212
+          186
         ]
       }
     },
@@ -1546,22 +1138,22 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 72,
-        "sagittal": 93,
-        "coronal": 143
+        "axial": 24,
+        "sagittal": 94,
+        "coronal": 112
       },
       "sliceRange": {
         "axial": [
-          25,
-          119
+          0,
+          49
         ],
         "sagittal": [
-          60,
+          62,
           126
         ],
         "coronal": [
           79,
-          207
+          146
         ]
       }
     },
@@ -1580,22 +1172,22 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 54,
-        "sagittal": 94,
-        "coronal": 137
+        "axial": 15,
+        "sagittal": 100,
+        "coronal": 94
       },
       "sliceRange": {
         "axial": [
-          9,
-          100
+          0,
+          30
         ],
         "sagittal": [
-          60,
+          72,
           128
         ],
         "coronal": [
           76,
-          199
+          112
         ]
       }
     },
@@ -1614,22 +1206,22 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 40,
-        "sagittal": 94,
-        "coronal": 129
+        "axial": 5,
+        "sagittal": 117,
+        "coronal": 79
       },
       "sliceRange": {
         "axial": [
           0,
-          81
+          11
         ],
         "sagittal": [
-          58,
+          104,
           131
         ],
         "coronal": [
           74,
-          185
+          85
         ]
       }
     },
@@ -1648,14 +1240,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 180,
+        "axial": 110,
         "sagittal": 184,
         "coronal": 151
       },
       "sliceRange": {
         "axial": [
-          161,
-          199
+          91,
+          129
         ],
         "sagittal": [
           172,
@@ -1664,108 +1256,6 @@
         "coronal": [
           126,
           177
-        ]
-      }
-    },
-    {
-      "id": 74,
-      "name": "rib_right_10",
-      "displayName": {
-        "en": "Rib Right 10",
-        "ko": "Rib Right 10",
-        "ja": "Rib Right 10",
-        "zh": "Rib Right 10",
-        "es": "Rib Right 10",
-        "de": "Rib Right 10",
-        "fr": "Rib Right 10"
-      },
-      "category": "bone",
-      "color": "#F59E0B",
-      "bestSlice": {
-        "axial": 32,
-        "sagittal": 213,
-        "coronal": 102
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          65
-        ],
-        "sagittal": [
-          175,
-          252
-        ],
-        "coronal": [
-          74,
-          131
-        ]
-      }
-    },
-    {
-      "id": 75,
-      "name": "rib_right_11",
-      "displayName": {
-        "en": "Rib Right 11",
-        "ko": "Rib Right 11",
-        "ja": "Rib Right 11",
-        "zh": "Rib Right 11",
-        "es": "Rib Right 11",
-        "de": "Rib Right 11",
-        "fr": "Rib Right 11"
-      },
-      "category": "bone",
-      "color": "#F59E0B",
-      "bestSlice": {
-        "axial": 20,
-        "sagittal": 202,
-        "coronal": 86
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          40
-        ],
-        "sagittal": [
-          175,
-          229
-        ],
-        "coronal": [
-          78,
-          94
-        ]
-      }
-    },
-    {
-      "id": 76,
-      "name": "rib_right_12",
-      "displayName": {
-        "en": "Rib Right 12",
-        "ko": "Rib Right 12",
-        "ja": "Rib Right 12",
-        "zh": "Rib Right 12",
-        "es": "Rib Right 12",
-        "de": "Rib Right 12",
-        "fr": "Rib Right 12"
-      },
-      "category": "bone",
-      "color": "#F59E0B",
-      "bestSlice": {
-        "axial": 5,
-        "sagittal": 182,
-        "coronal": 90
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          10
-        ],
-        "sagittal": [
-          176,
-          188
-        ],
-        "coronal": [
-          87,
-          93
         ]
       }
     },
@@ -1784,14 +1274,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 172,
+        "axial": 102,
         "sagittal": 192,
         "coronal": 150
       },
       "sliceRange": {
         "axial": [
-          148,
-          196
+          78,
+          126
         ],
         "sagittal": [
           169,
@@ -1818,14 +1308,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 154,
+        "axial": 84,
         "sagittal": 200,
         "coronal": 148
       },
       "sliceRange": {
         "axial": [
-          127,
-          182
+          57,
+          112
         ],
         "sagittal": [
           171,
@@ -1852,14 +1342,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 135,
+        "axial": 65,
         "sagittal": 205,
         "coronal": 146
       },
       "sliceRange": {
         "axial": [
-          104,
-          166
+          34,
+          96
         ],
         "sagittal": [
           173,
@@ -1886,14 +1376,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 116,
+        "axial": 46,
         "sagittal": 208,
         "coronal": 146
       },
       "sliceRange": {
         "axial": [
-          80,
-          152
+          10,
+          82
         ],
         "sagittal": [
           175,
@@ -1920,14 +1410,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 96,
+        "axial": 33,
         "sagittal": 210,
-        "coronal": 143
+        "coronal": 138
       },
       "sliceRange": {
         "axial": [
-          57,
-          136
+          0,
+          66
         ],
         "sagittal": [
           176,
@@ -1935,7 +1425,7 @@
         ],
         "coronal": [
           79,
-          207
+          198
         ]
       }
     },
@@ -1954,22 +1444,22 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 76,
+        "axial": 25,
         "sagittal": 212,
-        "coronal": 138
+        "coronal": 116
       },
       "sliceRange": {
         "axial": [
-          32,
-          121
+          0,
+          51
         ],
         "sagittal": [
           176,
-          249
+          248
         ],
         "coronal": [
           75,
-          201
+          157
         ]
       }
     },
@@ -1988,22 +1478,22 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 59,
-        "sagittal": 213,
-        "coronal": 133
+        "axial": 16,
+        "sagittal": 207,
+        "coronal": 96
       },
       "sliceRange": {
         "axial": [
-          16,
-          103
+          0,
+          33
         ],
         "sagittal": [
           174,
-          252
+          241
         ],
         "coronal": [
           73,
-          193
+          119
         ]
       }
     },
@@ -2022,90 +1512,22 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 42,
-        "sagittal": 214,
-        "coronal": 126
+        "axial": 7,
+        "sagittal": 194,
+        "coronal": 79
       },
       "sliceRange": {
         "axial": [
           0,
-          84
+          14
         ],
         "sagittal": [
           175,
-          254
+          214
         ],
         "coronal": [
           72,
-          181
-        ]
-      }
-    },
-    {
-      "id": 85,
-      "name": "right_adrenal_gland",
-      "displayName": {
-        "en": "Right Adrenal Gland",
-        "ko": "Right Adrenal Gland",
-        "ja": "Right Adrenal Gland",
-        "zh": "Right Adrenal Gland",
-        "es": "Right Adrenal Gland",
-        "de": "Right Adrenal Gland",
-        "fr": "Right Adrenal Gland"
-      },
-      "category": "gland",
-      "color": "#F97316",
-      "bestSlice": {
-        "axial": 21,
-        "sagittal": 126,
-        "coronal": 173
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          42
-        ],
-        "sagittal": [
-          102,
-          150
-        ],
-        "coronal": [
-          129,
-          217
-        ]
-      }
-    },
-    {
-      "id": 86,
-      "name": "right_lung_middle_lobe",
-      "displayName": {
-        "en": "Right Lung Middle Lobe",
-        "ko": "Right Lung Middle Lobe",
-        "ja": "Right Lung Middle Lobe",
-        "zh": "Right Lung Middle Lobe",
-        "es": "Right Lung Middle Lobe",
-        "de": "Right Lung Middle Lobe",
-        "fr": "Right Lung Middle Lobe"
-      },
-      "category": "organ",
-      "color": "#EF4444",
-      "bestSlice": {
-        "axial": 10,
-        "sagittal": 150,
-        "coronal": 163
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          20
-        ],
-        "sagittal": [
-          95,
-          205
-        ],
-        "coronal": [
-          133,
-          194
+          86
         ]
       }
     },
@@ -2124,14 +1546,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 138,
+        "axial": 68,
         "sagittal": 68,
         "coronal": 111
       },
       "sliceRange": {
         "axial": [
-          78,
-          199
+          8,
+          129
         ],
         "sagittal": [
           34,
@@ -2158,14 +1580,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 143,
+        "axial": 73,
         "sagittal": 232,
         "coronal": 108
       },
       "sliceRange": {
         "axial": [
-          87,
-          199
+          17,
+          129
         ],
         "sagittal": [
           199,
@@ -2192,14 +1614,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 199,
+        "axial": 129,
         "sagittal": 155,
         "coronal": 155
       },
       "sliceRange": {
         "axial": [
-          199,
-          199
+          129,
+          129
         ]
       }
     },
@@ -2218,56 +1640,22 @@
       "category": "nerve",
       "color": "#EC4899",
       "bestSlice": {
-        "axial": 99,
-        "sagittal": 151,
+        "axial": 64,
+        "sagittal": 150,
         "coronal": 109
       },
       "sliceRange": {
         "axial": [
           0,
-          199
+          129
         ],
         "sagittal": [
           143,
-          159
+          157
         ],
         "coronal": [
           89,
           130
-        ]
-      }
-    },
-    {
-      "id": 93,
-      "name": "spleen",
-      "displayName": {
-        "en": "Spleen",
-        "ko": "Spleen",
-        "ja": "Spleen",
-        "zh": "Spleen",
-        "es": "Spleen",
-        "de": "Spleen",
-        "fr": "Spleen"
-      },
-      "category": "other",
-      "color": "#94A3B8",
-      "bestSlice": {
-        "axial": 18,
-        "sagittal": 95,
-        "coronal": 128
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          37
-        ],
-        "sagittal": [
-          65,
-          126
-        ],
-        "coronal": [
-          98,
-          159
         ]
       }
     },
@@ -2286,14 +1674,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 119,
+        "axial": 52,
         "sagittal": 151,
         "coronal": 190
       },
       "sliceRange": {
         "axial": [
-          65,
-          174
+          0,
+          104
         ],
         "sagittal": [
           132,
@@ -2302,40 +1690,6 @@
         "coronal": [
           170,
           210
-        ]
-      }
-    },
-    {
-      "id": 95,
-      "name": "stomach",
-      "displayName": {
-        "en": "Stomach",
-        "ko": "Stomach",
-        "ja": "Stomach",
-        "zh": "Stomach",
-        "es": "Stomach",
-        "de": "Stomach",
-        "fr": "Stomach"
-      },
-      "category": "other",
-      "color": "#94A3B8",
-      "bestSlice": {
-        "axial": 21,
-        "sagittal": 127,
-        "coronal": 173
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          42
-        ],
-        "sagittal": [
-          103,
-          152
-        ],
-        "coronal": [
-          129,
-          218
         ]
       }
     },
@@ -2354,14 +1708,14 @@
       "category": "vessel",
       "color": "#3B82F6",
       "bestSlice": {
-        "axial": 168,
+        "axial": 98,
         "sagittal": 109,
         "coronal": 148
       },
       "sliceRange": {
         "axial": [
-          151,
-          186
+          81,
+          116
         ],
         "sagittal": [
           75,
@@ -2388,14 +1742,14 @@
       "category": "vessel",
       "color": "#3B82F6",
       "bestSlice": {
-        "axial": 183,
+        "axial": 113,
         "sagittal": 192,
         "coronal": 149
       },
       "sliceRange": {
         "axial": [
-          174,
-          192
+          104,
+          122
         ],
         "sagittal": [
           160,
@@ -2422,14 +1776,14 @@
       "category": "other",
       "color": "#94A3B8",
       "bestSlice": {
-        "axial": 124,
+        "axial": 54,
         "sagittal": 170,
         "coronal": 154
       },
       "sliceRange": {
         "axial": [
-          99,
-          150
+          29,
+          80
         ],
         "sagittal": [
           164,
@@ -2456,14 +1810,14 @@
       "category": "gland",
       "color": "#F97316",
       "bestSlice": {
-        "axial": 190,
+        "axial": 120,
         "sagittal": 149,
         "coronal": 158
       },
       "sliceRange": {
         "axial": [
-          181,
-          199
+          111,
+          129
         ],
         "sagittal": [
           134,
@@ -2490,14 +1844,14 @@
       "category": "cavity",
       "color": "#8B5CF6",
       "bestSlice": {
-        "axial": 152,
+        "axial": 82,
         "sagittal": 153,
         "coronal": 148
       },
       "sliceRange": {
         "axial": [
-          110,
-          194
+          40,
+          124
         ],
         "sagittal": [
           127,
@@ -2524,14 +1878,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 199,
+        "axial": 129,
         "sagittal": 155,
         "coronal": 155
       },
       "sliceRange": {
         "axial": [
-          199,
-          199
+          129,
+          129
         ]
       }
     },
@@ -2550,48 +1904,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 199,
+        "axial": 129,
         "sagittal": 155,
         "coronal": 155
       },
       "sliceRange": {
         "axial": [
-          199,
-          199
-        ]
-      }
-    },
-    {
-      "id": 104,
-      "name": "vertebrae_L1",
-      "displayName": {
-        "en": "Vertebrae L1",
-        "ko": "Vertebrae L1",
-        "ja": "Vertebrae L1",
-        "zh": "Vertebrae L1",
-        "es": "Vertebrae L1",
-        "de": "Vertebrae L1",
-        "fr": "Vertebrae L1"
-      },
-      "category": "bone",
-      "color": "#F59E0B",
-      "bestSlice": {
-        "axial": 2,
-        "sagittal": 155,
-        "coronal": 108
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          5
-        ],
-        "sagittal": [
-          141,
-          170
-        ],
-        "coronal": [
-          90,
-          127
+          129,
+          129
         ]
       }
     },
@@ -2610,14 +1930,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 193,
+        "axial": 123,
         "sagittal": 144,
         "coronal": 121
       },
       "sliceRange": {
         "axial": [
-          187,
-          199
+          117,
+          129
         ],
         "sagittal": [
           127,
@@ -2626,108 +1946,6 @@
         "coronal": [
           99,
           143
-        ]
-      }
-    },
-    {
-      "id": 111,
-      "name": "vertebrae_T10",
-      "displayName": {
-        "en": "Vertebrae T10",
-        "ko": "Vertebrae T10",
-        "ja": "Vertebrae T10",
-        "zh": "Vertebrae T10",
-        "es": "Vertebrae T10",
-        "de": "Vertebrae T10",
-        "fr": "Vertebrae T10"
-      },
-      "category": "bone",
-      "color": "#F59E0B",
-      "bestSlice": {
-        "axial": 51,
-        "sagittal": 154,
-        "coronal": 96
-      },
-      "sliceRange": {
-        "axial": [
-          35,
-          68
-        ],
-        "sagittal": [
-          136,
-          172
-        ],
-        "coronal": [
-          73,
-          119
-        ]
-      }
-    },
-    {
-      "id": 112,
-      "name": "vertebrae_T11",
-      "displayName": {
-        "en": "Vertebrae T11",
-        "ko": "Vertebrae T11",
-        "ja": "Vertebrae T11",
-        "zh": "Vertebrae T11",
-        "es": "Vertebrae T11",
-        "de": "Vertebrae T11",
-        "fr": "Vertebrae T11"
-      },
-      "category": "bone",
-      "color": "#F59E0B",
-      "bestSlice": {
-        "axial": 34,
-        "sagittal": 154,
-        "coronal": 99
-      },
-      "sliceRange": {
-        "axial": [
-          20,
-          49
-        ],
-        "sagittal": [
-          138,
-          170
-        ],
-        "coronal": [
-          77,
-          122
-        ]
-      }
-    },
-    {
-      "id": 113,
-      "name": "vertebrae_T12",
-      "displayName": {
-        "en": "Vertebrae T12",
-        "ko": "Vertebrae T12",
-        "ja": "Vertebrae T12",
-        "zh": "Vertebrae T12",
-        "es": "Vertebrae T12",
-        "de": "Vertebrae T12",
-        "fr": "Vertebrae T12"
-      },
-      "category": "bone",
-      "color": "#F59E0B",
-      "bestSlice": {
-        "axial": 13,
-        "sagittal": 154,
-        "coronal": 101
-      },
-      "sliceRange": {
-        "axial": [
-          0,
-          27
-        ],
-        "sagittal": [
-          137,
-          171
-        ],
-        "coronal": [
-          76,
-          126
         ]
       }
     },
@@ -2746,14 +1964,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 185,
+        "axial": 115,
         "sagittal": 148,
         "coronal": 114
       },
       "sliceRange": {
         "axial": [
-          172,
-          198
+          102,
+          128
         ],
         "sagittal": [
           125,
@@ -2780,14 +1998,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 168,
+        "axial": 98,
         "sagittal": 149,
         "coronal": 109
       },
       "sliceRange": {
         "axial": [
-          155,
-          182
+          85,
+          112
         ],
         "sagittal": [
           129,
@@ -2814,14 +2032,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 151,
+        "axial": 81,
         "sagittal": 150,
         "coronal": 104
       },
       "sliceRange": {
         "axial": [
-          134,
-          168
+          64,
+          98
         ],
         "sagittal": [
           130,
@@ -2848,14 +2066,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 134,
+        "axial": 64,
         "sagittal": 152,
         "coronal": 101
       },
       "sliceRange": {
         "axial": [
-          115,
-          153
+          45,
+          83
         ],
         "sagittal": [
           132,
@@ -2882,14 +2100,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 117,
+        "axial": 47,
         "sagittal": 152,
         "coronal": 99
       },
       "sliceRange": {
         "axial": [
-          96,
-          138
+          26,
+          68
         ],
         "sagittal": [
           131,
@@ -2916,14 +2134,14 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 102,
+        "axial": 32,
         "sagittal": 152,
         "coronal": 97
       },
       "sliceRange": {
         "axial": [
-          82,
-          122
+          12,
+          52
         ],
         "sagittal": [
           131,
@@ -2950,21 +2168,21 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 84,
+        "axial": 17,
         "sagittal": 152,
-        "coronal": 94
+        "coronal": 95
       },
       "sliceRange": {
         "axial": [
-          63,
-          105
+          0,
+          35
         ],
         "sagittal": [
           133,
           172
         ],
         "coronal": [
-          71,
+          72,
           118
         ]
       }
@@ -2984,21 +2202,21 @@
       "category": "bone",
       "color": "#F59E0B",
       "bestSlice": {
-        "axial": 67,
+        "axial": 8,
         "sagittal": 153,
-        "coronal": 95
+        "coronal": 98
       },
       "sliceRange": {
         "axial": [
-          48,
-          87
+          0,
+          17
         ],
         "sagittal": [
           134,
           173
         ],
         "coronal": [
-          72,
+          78,
           118
         ]
       }

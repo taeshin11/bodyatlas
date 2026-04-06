@@ -54,9 +54,9 @@ WINDOW_WIDTH  = 80      # Soft tissue window (good for brain)
 VOXEL_TARGET  = 1.5     # mm
 
 # ── Head region crop (Z range in voxels from top of full-body CT) ─────────────
-# TotalSegmentator Zenodo CTs are head-to-pelvis, top = skull
-# Crop to head + neck only (approx top 200 voxels at 1.5mm = 300mm)
-HEAD_CROP_VOXELS = 200
+# CT is in RAS: high Z = superior (head). Skull is at z≈300-430 in s0011 (431 slices).
+# Take the top 130 slices (head + neck only, ~195mm at 1.5mm/voxel).
+HEAD_CROP_VOXELS = 130
 
 # ── Structure colors by category ─────────────────────────────────────────────
 CATEGORY_COLORS = {
@@ -321,8 +321,12 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
             else:
                 ct_slice = ct_head[:, :, si]
 
+            # Orient to standard display: transpose + flipud
+            # RAS: axial (x,y)→(AP,LR), sagittal (y,z)→(SI,AP), coronal (x,z)→(SI,LR)
+            ct_disp = np.flipud(ct_slice.T)
+
             # Save PNG
-            img = ct_to_png_slice(ct_slice, WINDOW_CENTER, WINDOW_WIDTH)
+            img = ct_to_png_slice(ct_disp, WINDOW_CENTER, WINDOW_WIDTH)
             img_path = img_dir / f"{si:04d}.png"
             img.save(img_path)
 
@@ -341,12 +345,8 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
 
                 if seg_slice.max() < 0.5: continue
 
-                # Handle orientation: sagittal/coronal need transpose for proper display
-                if axis == 0:  # sagittal: flip for correct orientation
-                    seg_slice = np.fliplr(seg_slice)
-                    ct_disp = np.fliplr(ct_slice)
-                elif axis == 1:  # coronal: flip vertically
-                    seg_slice = np.flipud(seg_slice)
+                # Same display transform applied to mask
+                seg_slice = np.flipud(seg_slice.T)
 
                 contours = mask_to_contours(seg_slice)
                 if not contours: continue

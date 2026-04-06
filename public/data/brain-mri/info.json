@@ -11,8 +11,8 @@
     }
   },
   "window": {
-    "center": 50,
-    "width": 100
+    "center": 160,
+    "width": 200
   },
   "voxelSpacing": [
     1.0,

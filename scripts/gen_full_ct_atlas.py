@@ -134,7 +134,10 @@ def build_atlas(ct_path: Path, merged: dict, out_dir: Path):
             elif axis == 1: ct_sl = ct_data[:, si, :]
             else:           ct_sl = ct_data[:, :, si]
 
-            ct_to_png_slice(ct_sl, WINDOW_CENTER, WINDOW_WIDTH).save(
+            # Standard display orientation: transpose + flipud
+            # RAS axial(x,y)→(AP,LR), sagittal(y,z)→(SI,AP), coronal(x,z)→(SI,LR)
+            ct_disp = np.flipud(ct_sl.T)
+            ct_to_png_slice(ct_disp, WINDOW_CENTER, WINDOW_WIDTH).save(
                 img_dir / f"{si:04d}.png"
             )
 
@@ -146,8 +149,8 @@ def build_atlas(ct_path: Path, merged: dict, out_dir: Path):
 
                 if seg_sl.max() < 0.5: continue
 
-                if axis == 0:   seg_sl = np.fliplr(seg_sl)
-                elif axis == 1: seg_sl = np.flipud(seg_sl)
+                # Same display transform as CT image
+                seg_sl = np.flipud(seg_sl.T)
 
                 contours = mask_to_contours(seg_sl)
                 if not contours: continue
