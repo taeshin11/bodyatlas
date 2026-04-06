@@ -156,3 +156,22 @@
   - head_glands_cavities, headneck_bones_vessels, brain_structures, craniofacial_structures
   - 완료 시 104 + 추가 -> 117+ structures로 atlas 재빌드
 
+  추가 head tasks (CPU 실행):
+  - head_glands_cavities: 19 seg (눈, 시신경, 부비동 등) - 완료
+  - headneck_bones_vessels: 12 seg (후두, 설골, 경동맥 등) - 완료
+  - brain_structures: TotalSegmentator 유료 라이선스 필요 - 스킵
+  - craniofacial_structures: TotalSegmentator 유료 라이선스 필요 - 스킵
+  - 최종: 96 active structures (head crop 후)
+
+  CADS (murong-xu/CADS) 시도:
+  - 모델 라이선스: CC BY-NC-SA 4.0 (비상업) - CC BY 4.0 버전 준비 중
+  - Task 557 (brain): head detection 실패 ("does not contain head part") - 전신 CT/head crop 모두 실패
+  - Task 553 (general): 16 labels 출력 but TotalSegmentator와 중복
+  - 결론: CADS brain segmentation은 이 CT에서 작동 안 함
+
+  Brain PET Atlas 추가:
+  - aaa/ 폴더 DICOM (PT modality, 47 slices, 256x256, 3.26mm)
+  - public/data/brain-pet/ 생성 (47/256/256 slices, percentile windowing)
+  - RegionSelector: brain_pet 추가 (☢️ 뇌 PET)
+  - 라벨 없음 (PET은 대사 활성 표시, 해부학적 구조 분할 불가)
+

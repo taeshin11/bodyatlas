@@ -8,8 +8,7 @@
 ## 🏃 지금 바로 할 일
 
 - **현재 상태:** Head CT Atlas v2 재빌드 완료 (D드라이브 TotalSegmentator v2 데이터)
-- **백그라운드 실행 중:** `data_pipeline/run_head_upgrade.py` — VRAM 4GB+ 대기 → 추가 head tasks 자동 실행 (117+ structures 목표)
-- **다음 세션 시작 시:** head upgrade 결과 확인, `.env.local` 확인 후 `npm run dev` → 실제 동작 확인
+- **다음 세션 시작 시:** `.env.local` 확인 후 `npm run dev` → Brain PET 탭 + head-ct 실제 동작 확인
 
 ## 📝 최근 결정사항 (WHY)
 
@@ -25,8 +24,9 @@
 
 ## 🚧 미해결 블로커
 
-- `run_head_upgrade.py` 백그라운드 대기 중 (train.py GPU 점유 → VRAM 부족)
 - `.env.local` 아직 미확인 (유저가 수동 이동 예정)
+- CADS brain task (557): 이 CT에서 head detection 실패 — CC BY 4.0 모델 출시 대기
+- TotalSegmentator brain_structures/craniofacial_structures: 유료 라이선스 필요
 
 ## 🔑 필요한 환경변수 (.env.local)
 
