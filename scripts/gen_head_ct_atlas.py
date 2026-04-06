@@ -55,8 +55,8 @@ VOXEL_TARGET  = 1.5     # mm
 
 # ── Head region crop (Z range in voxels from top of full-body CT) ─────────────
 # TotalSegmentator Zenodo CTs are head-to-pelvis, top = skull
-# We crop to head + neck + upper chest (approx top 320 voxels at 1.5mm = 480mm)
-HEAD_CROP_VOXELS = 320
+# Crop to head + neck only (approx top 200 voxels at 1.5mm = 300mm)
+HEAD_CROP_VOXELS = 200
 
 # ── Structure colors by category ─────────────────────────────────────────────
 CATEGORY_COLORS = {

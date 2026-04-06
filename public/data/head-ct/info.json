@@ -1,7 +1,7 @@
 {
   "planes": {
     "axial": {
-      "slices": 320
+      "slices": 200
     },
     "sagittal": {
       "slices": 311
