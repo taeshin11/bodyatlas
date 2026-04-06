@@ -215,3 +215,37 @@
   - scripts/smooth_labels.py: JSON 라벨 post-process 스무딩
   - scripts/gen_multi_atlas_head.py: multi-atlas 빌더 (미래용)
 
+
+## Session 6
+- Date: 2026-04-06
+- Session #: 6
+- Phase: annotation quality upgrade (VISTA3D + visibility fix)
+- Completed:
+  1. Annotation visibility fix: default overlay opacity 0.15→0.22 + always-on stroke (AtlasViewer + SpineXrayViewer)
+  2. VISTA3D (MONAI 1.5, 127-class CT segmentation) 설치 + inference on s0011
+  3. head-ct: TotalSegmentator + VISTA3D merged → 89 structures (was 80)
+  4. chest-ct: TotalSegmentator + VISTA3D merged → 122 structures (was 106)
+- Blockers:
+  - OpenMAP-T1 (280 brain regions): weights require Microsoft Forms 수동 신청
+  - Multi-atlas: ANTs registration 없이 불가
+- Next Up:
+  - OpenMAP-T1 weights 신청 후 brain-mri 280 structures rebuild
+  - VISTA3D 실행은 `conda activate vista3d` + `python scripts/run_vista3d.py`
+- Git Commits:
+  - feat: improve annotation visibility (always-on strokes, higher opacity)
+  - feat: rebuild head-ct with VISTA3D+TotalSegmentator merged (89 structures)
+  - feat: rebuild chest-ct with VISTA3D+TotalSegmentator merged (122 structures)
+- Pushed to Remote: yes
+- Notes:
+  VISTA3D 설치:
+  - conda env: vista3d (Python 3.10, MONAI 1.5.2, PyTorch 2.6+cu124)
+  - Bundle: data_pipeline/vista3d_bundle/vista3d/ (auto-downloaded from MONAI)
+  - Weights: NVIDIA NCLS v1 (non-commercial) — 유료 전환 시 재검토 필요
+  - s0011 inference: 83 structures, ~7분 (RTX 4090)
+  - VISTA3D segs: data_pipeline/vista3d_seg/ (flat .nii.gz files)
+  - head_ct_seg/vista3d/ 에 복사해서 merge_segmentations() 활용
+
+  brain-mri 개선 방법:
+  - OpenMAP-T1: https://forms.office.com/Pages/ResponsePage.aspx?id=OPSkn-axO0eAP4b4rt8N7Iz6VabmlEBIhG4j3FiMk75UQUxBMkVPTzlIQTQ1UEZJSFY1NURDNzRERC4u
+  - weights 받으면: python scripts/run_openmap.py
+  - 현재 brain-mri는 1mm isotropic T1 MRI → OpenMAP-T1 바로 적용 가능
