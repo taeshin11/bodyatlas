@@ -1,5 +1,5 @@
 {
-  "totalStructures": 91,
+  "totalStructures": 96,
   "structures": [
     {
       "id": 0,
@@ -275,6 +275,40 @@
     },
     {
       "id": 8,
+      "name": "cricoid_cartilage",
+      "displayName": {
+        "en": "Cricoid Cartilage",
+        "ko": "Cricoid Cartilage",
+        "ja": "Cricoid Cartilage",
+        "zh": "Cricoid Cartilage",
+        "es": "Cricoid Cartilage",
+        "de": "Cricoid Cartilage",
+        "fr": "Cricoid Cartilage"
+      },
+      "category": "bone",
+      "color": "#F59E0B",
+      "bestSlice": {
+        "axial": 315,
+        "sagittal": 148,
+        "coronal": 160
+      },
+      "sliceRange": {
+        "axial": [
+          312,
+          319
+        ],
+        "sagittal": [
+          140,
+          156
+        ],
+        "coronal": [
+          153,
+          167
+        ]
+      }
+    },
+    {
+      "id": 9,
       "name": "duodenum",
       "displayName": {
         "en": "Duodenum",
@@ -308,7 +342,7 @@
       }
     },
     {
-      "id": 9,
+      "id": 10,
       "name": "esophagus",
       "displayName": {
         "en": "Esophagus",
@@ -342,7 +376,7 @@
       }
     },
     {
-      "id": 12,
+      "id": 13,
       "name": "gallbladder",
       "displayName": {
         "en": "Gallbladder",
@@ -376,7 +410,7 @@
       }
     },
     {
-      "id": 13,
+      "id": 14,
       "name": "gluteus_maximus_left",
       "displayName": {
         "en": "Gluteus Maximus Left",
@@ -410,7 +444,7 @@
       }
     },
     {
-      "id": 14,
+      "id": 15,
       "name": "gluteus_maximus_right",
       "displayName": {
         "en": "Gluteus Maximus Right",
@@ -444,7 +478,7 @@
       }
     },
     {
-      "id": 15,
+      "id": 16,
       "name": "gluteus_medius_left",
       "displayName": {
         "en": "Gluteus Medius Left",
@@ -478,7 +512,7 @@
       }
     },
     {
-      "id": 16,
+      "id": 17,
       "name": "gluteus_medius_right",
       "displayName": {
         "en": "Gluteus Medius Right",
@@ -512,7 +546,7 @@
       }
     },
     {
-      "id": 19,
+      "id": 20,
       "name": "heart_atrium_left",
       "displayName": {
         "en": "Heart Atrium Left",
@@ -546,7 +580,7 @@
       }
     },
     {
-      "id": 20,
+      "id": 21,
       "name": "heart_atrium_right",
       "displayName": {
         "en": "Heart Atrium Right",
@@ -580,7 +614,7 @@
       }
     },
     {
-      "id": 21,
+      "id": 22,
       "name": "heart_myocardium",
       "displayName": {
         "en": "Heart Myocardium",
@@ -614,7 +648,7 @@
       }
     },
     {
-      "id": 22,
+      "id": 23,
       "name": "heart_ventricle_left",
       "displayName": {
         "en": "Heart Ventricle Left",
@@ -648,7 +682,7 @@
       }
     },
     {
-      "id": 23,
+      "id": 24,
       "name": "heart_ventricle_right",
       "displayName": {
         "en": "Heart Ventricle Right",
@@ -682,7 +716,7 @@
       }
     },
     {
-      "id": 24,
+      "id": 25,
       "name": "hip_left",
       "displayName": {
         "en": "Hip Left",
@@ -716,7 +750,7 @@
       }
     },
     {
-      "id": 25,
+      "id": 26,
       "name": "hip_right",
       "displayName": {
         "en": "Hip Right",
@@ -750,7 +784,7 @@
       }
     },
     {
-      "id": 26,
+      "id": 27,
       "name": "humerus_left",
       "displayName": {
         "en": "Humerus Left",
@@ -784,7 +818,7 @@
       }
     },
     {
-      "id": 27,
+      "id": 28,
       "name": "humerus_right",
       "displayName": {
         "en": "Humerus Right",
@@ -818,7 +852,7 @@
       }
     },
     {
-      "id": 28,
+      "id": 29,
       "name": "iliac_artery_left",
       "displayName": {
         "en": "Iliac Artery Left",
@@ -852,7 +886,7 @@
       }
     },
     {
-      "id": 29,
+      "id": 30,
       "name": "iliac_artery_right",
       "displayName": {
         "en": "Iliac Artery Right",
@@ -886,7 +920,7 @@
       }
     },
     {
-      "id": 30,
+      "id": 31,
       "name": "iliac_vena_left",
       "displayName": {
         "en": "Iliac Vena Left",
@@ -920,7 +954,7 @@
       }
     },
     {
-      "id": 31,
+      "id": 32,
       "name": "iliac_vena_right",
       "displayName": {
         "en": "Iliac Vena Right",
@@ -954,7 +988,7 @@
       }
     },
     {
-      "id": 32,
+      "id": 33,
       "name": "iliopsoas_left",
       "displayName": {
         "en": "Iliopsoas Left",
@@ -988,7 +1022,7 @@
       }
     },
     {
-      "id": 33,
+      "id": 34,
       "name": "iliopsoas_right",
       "displayName": {
         "en": "Iliopsoas Right",
@@ -1022,7 +1056,7 @@
       }
     },
     {
-      "id": 34,
+      "id": 35,
       "name": "inferior_vena_cava",
       "displayName": {
         "en": "Inferior Vena Cava",
@@ -1056,7 +1090,75 @@
       }
     },
     {
-      "id": 35,
+      "id": 36,
+      "name": "internal_jugular_vein_left",
+      "displayName": {
+        "en": "Internal Jugular Vein Left",
+        "ko": "Internal Jugular Vein Left",
+        "ja": "Internal Jugular Vein Left",
+        "zh": "Internal Jugular Vein Left",
+        "es": "Internal Jugular Vein Left",
+        "de": "Internal Jugular Vein Left",
+        "fr": "Internal Jugular Vein Left"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 309,
+        "sagittal": 130,
+        "coronal": 159
+      },
+      "sliceRange": {
+        "axial": [
+          299,
+          319
+        ],
+        "sagittal": [
+          126,
+          135
+        ],
+        "coronal": [
+          154,
+          165
+        ]
+      }
+    },
+    {
+      "id": 37,
+      "name": "internal_jugular_vein_right",
+      "displayName": {
+        "en": "Internal Jugular Vein Right",
+        "ko": "Internal Jugular Vein Right",
+        "ja": "Internal Jugular Vein Right",
+        "zh": "Internal Jugular Vein Right",
+        "es": "Internal Jugular Vein Right",
+        "de": "Internal Jugular Vein Right",
+        "fr": "Internal Jugular Vein Right"
+      },
+      "category": "vessel",
+      "color": "#3B82F6",
+      "bestSlice": {
+        "axial": 312,
+        "sagittal": 169,
+        "coronal": 158
+      },
+      "sliceRange": {
+        "axial": [
+          305,
+          319
+        ],
+        "sagittal": [
+          165,
+          174
+        ],
+        "coronal": [
+          154,
+          163
+        ]
+      }
+    },
+    {
+      "id": 38,
       "name": "kidney_left",
       "displayName": {
         "en": "Kidney Left",
@@ -1090,7 +1192,7 @@
       }
     },
     {
-      "id": 36,
+      "id": 39,
       "name": "kidney_right",
       "displayName": {
         "en": "Kidney Right",
@@ -1124,7 +1226,41 @@
       }
     },
     {
-      "id": 37,
+      "id": 40,
+      "name": "larynx_air",
+      "displayName": {
+        "en": "Larynx Air",
+        "ko": "Larynx Air",
+        "ja": "Larynx Air",
+        "zh": "Larynx Air",
+        "es": "Larynx Air",
+        "de": "Larynx Air",
+        "fr": "Larynx Air"
+      },
+      "category": "cavity",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "axial": 315,
+        "sagittal": 148,
+        "coronal": 162
+      },
+      "sliceRange": {
+        "axial": [
+          312,
+          319
+        ],
+        "sagittal": [
+          144,
+          153
+        ],
+        "coronal": [
+          154,
+          170
+        ]
+      }
+    },
+    {
+      "id": 41,
       "name": "liver",
       "displayName": {
         "en": "Liver",
@@ -1158,7 +1294,7 @@
       }
     },
     {
-      "id": 38,
+      "id": 42,
       "name": "lung_lower_lobe_left",
       "displayName": {
         "en": "Lung Lower Lobe Left",
@@ -1192,7 +1328,7 @@
       }
     },
     {
-      "id": 39,
+      "id": 43,
       "name": "lung_lower_lobe_right",
       "displayName": {
         "en": "Lung Lower Lobe Right",
@@ -1226,7 +1362,7 @@
       }
     },
     {
-      "id": 40,
+      "id": 44,
       "name": "lung_middle_lobe_right",
       "displayName": {
         "en": "Lung Middle Lobe Right",
@@ -1260,7 +1396,7 @@
       }
     },
     {
-      "id": 41,
+      "id": 45,
       "name": "lung_upper_lobe_left",
       "displayName": {
         "en": "Lung Upper Lobe Left",
@@ -1294,7 +1430,7 @@
       }
     },
     {
-      "id": 42,
+      "id": 46,
       "name": "lung_upper_lobe_right",
       "displayName": {
         "en": "Lung Upper Lobe Right",
@@ -1328,7 +1464,7 @@
       }
     },
     {
-      "id": 43,
+      "id": 47,
       "name": "pancreas",
       "displayName": {
         "en": "Pancreas",
@@ -1362,7 +1498,7 @@
       }
     },
     {
-      "id": 44,
+      "id": 48,
       "name": "portal_vein_and_splenic_vein",
       "displayName": {
         "en": "Portal Vein And Splenic Vein",
@@ -1396,7 +1532,7 @@
       }
     },
     {
-      "id": 45,
+      "id": 49,
       "name": "pulmonary_artery",
       "displayName": {
         "en": "Pulmonary Artery",
@@ -1430,7 +1566,7 @@
       }
     },
     {
-      "id": 46,
+      "id": 50,
       "name": "rib_left_1",
       "displayName": {
         "en": "Rib Left 1",
@@ -1464,7 +1600,7 @@
       }
     },
     {
-      "id": 47,
+      "id": 51,
       "name": "rib_left_10",
       "displayName": {
         "en": "Rib Left 10",
@@ -1498,7 +1634,7 @@
       }
     },
     {
-      "id": 48,
+      "id": 52,
       "name": "rib_left_11",
       "displayName": {
         "en": "Rib Left 11",
@@ -1532,7 +1668,7 @@
       }
     },
     {
-      "id": 49,
+      "id": 53,
       "name": "rib_left_12",
       "displayName": {
         "en": "Rib Left 12",
@@ -1566,7 +1702,7 @@
       }
     },
     {
-      "id": 50,
+      "id": 54,
       "name": "rib_left_2",
       "displayName": {
         "en": "Rib Left 2",
@@ -1600,7 +1736,7 @@
       }
     },
     {
-      "id": 51,
+      "id": 55,
       "name": "rib_left_3",
       "displayName": {
         "en": "Rib Left 3",
@@ -1634,7 +1770,7 @@
       }
     },
     {
-      "id": 52,
+      "id": 56,
       "name": "rib_left_4",
       "displayName": {
         "en": "Rib Left 4",
@@ -1668,7 +1804,7 @@
       }
     },
     {
-      "id": 53,
+      "id": 57,
       "name": "rib_left_5",
       "displayName": {
         "en": "Rib Left 5",
@@ -1702,7 +1838,7 @@
       }
     },
     {
-      "id": 54,
+      "id": 58,
       "name": "rib_left_6",
       "displayName": {
         "en": "Rib Left 6",
@@ -1736,7 +1872,7 @@
       }
     },
     {
-      "id": 55,
+      "id": 59,
       "name": "rib_left_7",
       "displayName": {
         "en": "Rib Left 7",
@@ -1770,7 +1906,7 @@
       }
     },
     {
-      "id": 56,
+      "id": 60,
       "name": "rib_left_8",
       "displayName": {
         "en": "Rib Left 8",
@@ -1804,7 +1940,7 @@
       }
     },
     {
-      "id": 57,
+      "id": 61,
       "name": "rib_left_9",
       "displayName": {
         "en": "Rib Left 9",
@@ -1838,7 +1974,7 @@
       }
     },
     {
-      "id": 58,
+      "id": 62,
       "name": "rib_right_1",
       "displayName": {
         "en": "Rib Right 1",
@@ -1872,7 +2008,7 @@
       }
     },
     {
-      "id": 59,
+      "id": 63,
       "name": "rib_right_10",
       "displayName": {
         "en": "Rib Right 10",
@@ -1906,7 +2042,7 @@
       }
     },
     {
-      "id": 60,
+      "id": 64,
       "name": "rib_right_11",
       "displayName": {
         "en": "Rib Right 11",
@@ -1940,7 +2076,7 @@
       }
     },
     {
-      "id": 61,
+      "id": 65,
       "name": "rib_right_12",
       "displayName": {
         "en": "Rib Right 12",
@@ -1974,7 +2110,7 @@
       }
     },
     {
-      "id": 62,
+      "id": 66,
       "name": "rib_right_2",
       "displayName": {
         "en": "Rib Right 2",
@@ -2008,7 +2144,7 @@
       }
     },
     {
-      "id": 63,
+      "id": 67,
       "name": "rib_right_3",
       "displayName": {
         "en": "Rib Right 3",
@@ -2042,7 +2178,7 @@
       }
     },
     {
-      "id": 64,
+      "id": 68,
       "name": "rib_right_4",
       "displayName": {
         "en": "Rib Right 4",
@@ -2076,7 +2212,7 @@
       }
     },
     {
-      "id": 65,
+      "id": 69,
       "name": "rib_right_5",
       "displayName": {
         "en": "Rib Right 5",
@@ -2110,7 +2246,7 @@
       }
     },
     {
-      "id": 66,
+      "id": 70,
       "name": "rib_right_6",
       "displayName": {
         "en": "Rib Right 6",
@@ -2144,7 +2280,7 @@
       }
     },
     {
-      "id": 67,
+      "id": 71,
       "name": "rib_right_7",
       "displayName": {
         "en": "Rib Right 7",
@@ -2178,7 +2314,7 @@
       }
     },
     {
-      "id": 68,
+      "id": 72,
       "name": "rib_right_8",
       "displayName": {
         "en": "Rib Right 8",
@@ -2212,7 +2348,7 @@
       }
     },
     {
-      "id": 69,
+      "id": 73,
       "name": "rib_right_9",
       "displayName": {
         "en": "Rib Right 9",
@@ -2246,7 +2382,7 @@
       }
     },
     {
-      "id": 70,
+      "id": 74,
       "name": "sacrum",
       "displayName": {
         "en": "Sacrum",
@@ -2280,7 +2416,7 @@
       }
     },
     {
-      "id": 71,
+      "id": 75,
       "name": "scapula_left",
       "displayName": {
         "en": "Scapula Left",
@@ -2314,7 +2450,7 @@
       }
     },
     {
-      "id": 72,
+      "id": 76,
       "name": "scapula_right",
       "displayName": {
         "en": "Scapula Right",
@@ -2348,7 +2484,7 @@
       }
     },
     {
-      "id": 73,
+      "id": 77,
       "name": "small_bowel",
       "displayName": {
         "en": "Small Bowel",
@@ -2382,7 +2518,7 @@
       }
     },
     {
-      "id": 74,
+      "id": 78,
       "name": "spleen",
       "displayName": {
         "en": "Spleen",
@@ -2416,7 +2552,7 @@
       }
     },
     {
-      "id": 75,
+      "id": 79,
       "name": "stomach",
       "displayName": {
         "en": "Stomach",
@@ -2450,7 +2586,41 @@
       }
     },
     {
-      "id": 76,
+      "id": 80,
+      "name": "thyroid_cartilage",
+      "displayName": {
+        "en": "Thyroid Cartilage",
+        "ko": "Thyroid Cartilage",
+        "ja": "Thyroid Cartilage",
+        "zh": "Thyroid Cartilage",
+        "es": "Thyroid Cartilage",
+        "de": "Thyroid Cartilage",
+        "fr": "Thyroid Cartilage"
+      },
+      "category": "bone",
+      "color": "#F59E0B",
+      "bestSlice": {
+        "axial": 317,
+        "sagittal": 146,
+        "coronal": 168
+      },
+      "sliceRange": {
+        "axial": [
+          315,
+          319
+        ],
+        "sagittal": [
+          136,
+          156
+        ],
+        "coronal": [
+          156,
+          181
+        ]
+      }
+    },
+    {
+      "id": 81,
       "name": "trachea",
       "displayName": {
         "en": "Trachea",
@@ -2484,7 +2654,7 @@
       }
     },
     {
-      "id": 78,
+      "id": 83,
       "name": "vertebrae_C7",
       "displayName": {
         "en": "Vertebrae C7",
@@ -2518,7 +2688,7 @@
       }
     },
     {
-      "id": 79,
+      "id": 84,
       "name": "vertebrae_L1",
       "displayName": {
         "en": "Vertebrae L1",
@@ -2552,7 +2722,7 @@
       }
     },
     {
-      "id": 80,
+      "id": 85,
       "name": "vertebrae_L2",
       "displayName": {
         "en": "Vertebrae L2",
@@ -2586,7 +2756,7 @@
       }
     },
     {
-      "id": 81,
+      "id": 86,
       "name": "vertebrae_L3",
       "displayName": {
         "en": "Vertebrae L3",
@@ -2620,7 +2790,7 @@
       }
     },
     {
-      "id": 82,
+      "id": 87,
       "name": "vertebrae_L4",
       "displayName": {
         "en": "Vertebrae L4",
@@ -2654,7 +2824,7 @@
       }
     },
     {
-      "id": 83,
+      "id": 88,
       "name": "vertebrae_L5",
       "displayName": {
         "en": "Vertebrae L5",
@@ -2688,7 +2858,7 @@
       }
     },
     {
-      "id": 84,
+      "id": 89,
       "name": "vertebrae_T1",
       "displayName": {
         "en": "Vertebrae T1",
@@ -2722,7 +2892,7 @@
       }
     },
     {
-      "id": 85,
+      "id": 90,
       "name": "vertebrae_T10",
       "displayName": {
         "en": "Vertebrae T10",
@@ -2756,7 +2926,7 @@
       }
     },
     {
-      "id": 86,
+      "id": 91,
       "name": "vertebrae_T11",
       "displayName": {
         "en": "Vertebrae T11",
@@ -2790,7 +2960,7 @@
       }
     },
     {
-      "id": 87,
+      "id": 92,
       "name": "vertebrae_T12",
       "displayName": {
         "en": "Vertebrae T12",
@@ -2824,7 +2994,7 @@
       }
     },
     {
-      "id": 88,
+      "id": 93,
       "name": "vertebrae_T2",
       "displayName": {
         "en": "Vertebrae T2",
@@ -2858,7 +3028,7 @@
       }
     },
     {
-      "id": 89,
+      "id": 94,
       "name": "vertebrae_T3",
       "displayName": {
         "en": "Vertebrae T3",
@@ -2892,7 +3062,7 @@
       }
     },
     {
-      "id": 90,
+      "id": 95,
       "name": "vertebrae_T4",
       "displayName": {
         "en": "Vertebrae T4",
@@ -2926,7 +3096,7 @@
       }
     },
     {
-      "id": 91,
+      "id": 96,
       "name": "vertebrae_T5",
       "displayName": {
         "en": "Vertebrae T5",
@@ -2960,7 +3130,7 @@
       }
     },
     {
-      "id": 92,
+      "id": 97,
       "name": "vertebrae_T6",
       "displayName": {
         "en": "Vertebrae T6",
@@ -2994,7 +3164,7 @@
       }
     },
     {
-      "id": 93,
+      "id": 98,
       "name": "vertebrae_T7",
       "displayName": {
         "en": "Vertebrae T7",
@@ -3028,7 +3198,7 @@
       }
     },
     {
-      "id": 94,
+      "id": 99,
       "name": "vertebrae_T8",
       "displayName": {
         "en": "Vertebrae T8",
@@ -3062,7 +3232,7 @@
       }
     },
     {
-      "id": 95,
+      "id": 100,
       "name": "vertebrae_T9",
       "displayName": {
         "en": "Vertebrae T9",
