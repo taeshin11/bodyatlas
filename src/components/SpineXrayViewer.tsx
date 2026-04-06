@@ -97,18 +97,26 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
       const isHovered   = hoveredStructure === label.name;
       const isSelected  = selectedStructure?.name === label.name;
 
-      let alpha: number;
+      let fillAlpha: number;
+      let strokeAlpha: number;
+      let lineWidth: number;
+
       if (isHovered || isSelected) {
-        alpha = 0.45;
+        fillAlpha   = 0.40;
+        strokeAlpha = 1.0;
+        lineWidth   = 2.5;
       } else if (hasSelection) {
-        alpha = 0.05;
+        fillAlpha   = 0.05;
+        strokeAlpha = 0.20;
+        lineWidth   = 1;
       } else {
-        alpha = 0.15;
+        fillAlpha   = 0.22;
+        strokeAlpha = 0.55;
+        lineWidth   = 1;
       }
 
-      ctx.fillStyle = struct.color;
-      ctx.globalAlpha = alpha;
-
+      ctx.fillStyle   = struct.color;
+      ctx.globalAlpha = fillAlpha;
       for (const contour of label.contours) {
         if (contour.length < 3) continue;
         ctx.beginPath();
@@ -118,18 +126,16 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
         ctx.fill();
       }
 
-      if (isHovered || isSelected) {
-        ctx.strokeStyle = struct.color;
-        ctx.globalAlpha = 0.9;
-        ctx.lineWidth = 2;
-        for (const contour of label.contours) {
-          if (contour.length < 3) continue;
-          ctx.beginPath();
-          ctx.moveTo(contour[0][0], contour[0][1]);
-          for (let i = 1; i < contour.length; i++) ctx.lineTo(contour[i][0], contour[i][1]);
-          ctx.closePath();
-          ctx.stroke();
-        }
+      ctx.strokeStyle = struct.color;
+      ctx.globalAlpha = strokeAlpha;
+      ctx.lineWidth   = lineWidth;
+      for (const contour of label.contours) {
+        if (contour.length < 3) continue;
+        ctx.beginPath();
+        ctx.moveTo(contour[0][0], contour[0][1]);
+        for (let i = 1; i < contour.length; i++) ctx.lineTo(contour[i][0], contour[i][1]);
+        ctx.closePath();
+        ctx.stroke();
       }
     }
     ctx.globalAlpha = 1;
