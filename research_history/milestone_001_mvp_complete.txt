@@ -6,7 +6,7 @@ Summary:
 - Pivoted from BrainAxis (DICOM AC-PC alignment tool) to BodyAtlas (free anatomy atlas)
 - Reason: Radiologist feedback — AC-PC alignment already exists in hospital PACS; real need is free IMAIOS alternative
 - Deployed to: https://bodyatlas-ten.vercel.app (bodyatlas.vercel.app was already taken)
-- Deleted old brainaxis.vercel.app deployment
+- Deleted old vercel deployment
 
 Features Completed:
 - F01: Data Pipeline — TotalSegmentator + reference CT → 109 structures, 431 axial / 311 sagittal / 311 coronal slices
@@ -18,7 +18,7 @@ Features Completed:
 Technical Details:
 - Auth gate removed for MVP (100% free, no signup required)
 - BrainAxis feature flags cleaned up
-- Service worker cache renamed brainaxis-v1 → bodyatlas-v1
+- Service worker cache renamed to bodyatlas-v1
 - 108 anatomical structures translated to 7 languages (en/ko/ja/zh/es/de/fr)
 - .vercelignore added to exclude 24GB data_pipeline from deployment
 - Structure names display: English first, local translation below

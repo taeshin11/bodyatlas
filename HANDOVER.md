@@ -75,7 +75,7 @@ npm run dev
 
 ## 🌐 배포
 
-- 프로덕션: brainaxis.vercel.app (도메인 교체 예정)
+- 프로덕션: bodyatlas.vercel.app (Vercel 프로젝트명 변경 필요)
 - GitHub: github.com/taeshin11/bodyatlas
 
 ---

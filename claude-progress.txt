@@ -1,4 +1,4 @@
-# BrainAxis — Claude Code Progress Log
+# BodyAtlas — Claude Code Progress Log
 
 ## Session 1
 - Date: 2026-03-31
@@ -48,8 +48,8 @@
   - NEXT_PUBLIC_FORMSPREE_ID — for feedback emails
   - NEXT_PUBLIC_SHEETS_WEBHOOK_URL — for silent analytics
 
-  Deployed to: brainaxis.vercel.app
-  GitHub repo: github.com/taeshin11/brainaxis
+  Deployed to: bodyatlas.vercel.app
+  GitHub repo: github.com/taeshin11/bodyatlas
 
 ## Session 2
 - Date: 2026-04-06
@@ -65,7 +65,7 @@
 - PRD Updated: modified (details TBD on next read)
 - Notes:
   Repo housekeeping:
-  - Renamed GitHub repo: brainaxis → bodyatlas (via GitHub settings)
+  - Renamed GitHub repo to bodyatlas (via GitHub settings)
   - Updated local remote URL to https://github.com/taeshin11/bodyatlas.git
   - Created HANDOVER.md as single-source-of-truth entry point for future sessions
 

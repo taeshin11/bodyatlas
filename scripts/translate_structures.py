@@ -992,7 +992,7 @@ TRANSLATIONS = {
 
 
 def main():
-    filepath = r"C:\NoAddsMakingApps\BrainAxis\public\data\chest-ct\structures.json"
+    filepath = r"C:\NoAddsMakingApps\BodyAtlas\public\data\chest-ct\structures.json"
 
     with open(filepath, "r", encoding="utf-8") as f:
         data = json.load(f)
