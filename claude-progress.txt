@@ -178,20 +178,40 @@
 ## Session 5
 - Date: 2026-04-06
 - Session #: 5
-- Phase: Brain PET tab 제거
-- Features Worked On: RegionSelector cleanup
-- Completed: Brain PET tab 제거 (annotation 불가로 유저 요청)
-- Blockers: none
-- Next Up: live annotation test (head-ct, chest, brain-mri, spine-xray)
+- Phase: annotation quality 개선 + Brain PET tab 제거
+- Features Worked On: contour smoothing (all atlases), head-ct rebuild, Brain PET 제거
+- Completed: 모든 atlas contour smoothing + head-ct rebuild + Brain PET 탭 제거
+- Blockers: multi-atlas는 registration 도구(ANTs) 없이 불가 — 단독 케이스 + smoothing으로 대체
+- Next Up: 배포 후 live annotation 품질 검증
 - Git Commits:
   - feat: remove Brain PET tab (no annotation support)
+  - feat: smooth contour labels for brain-mri and chest-ct
+  - feat: rebuild head-ct atlas with spline smoothing (80 structures)
 - Pushed to Remote: yes
 - PRD Updated: no
 - Notes:
   Brain PET 탭 제거:
   - PET 모달리티는 해부학적 구조 분할 불가 → annotation 0개
-  - RegionSelector.tsx: BodyRegion 타입에서 'brain_pet' 제거, BODY_REGIONS 배열에서 brain_pet 엔트리 제거
-  - 현재 탭: Head & Neck / Chest / Abdomen / Pelvis / Brain MRI / Spine X-ray (6개)
-  - public/data/brain-pet/ 폴더는 남겨둠 (git 기록용)
-  - TypeScript: 0 errors
+  - RegionSelector.tsx: 'brain_pet' 제거. 현재 탭 6개
+
+  Annotation 품질 개선 (3단계):
+  1. mask_to_contours 개선 (gen_head_ct_atlas.py):
+     - scipy binary_fill_holes + binary_closing (모폴로지 클리닝)
+     - splprep/splev periodic spline smoothing (s=n*2)
+     - 포인트 수 ~75% 감소, 곡선 품질 대폭 향상
+  2. brain-mri + chest-ct JSON 라벨 직접 smoothing (scripts/smooth_labels.py):
+     - brain-mri: 519/582 파일 업데이트
+     - chest-ct:  831/1053 파일 업데이트
+  3. head-ct 완전 rebuild (smoothed contours):
+     - 80 structures, 200/311/311 slices
+
+  Multi-atlas 시도 결과:
+  - gen_multi_atlas_head.py 작성 (메모리 효율적, structure별 처리)
+  - 근본 문제: 각 케이스가 다른 voxel grid → 재샘플링 필요
+  - 재샘플링 없이는 좌표계 불일치 → 의미없는 평균
+  - 진정한 multi-atlas는 ANTs registration 필요 → 향후 과제
+
+  신규 스크립트:
+  - scripts/smooth_labels.py: JSON 라벨 post-process 스무딩
+  - scripts/gen_multi_atlas_head.py: multi-atlas 빌더 (미래용)
 
