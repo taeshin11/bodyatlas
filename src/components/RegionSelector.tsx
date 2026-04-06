@@ -22,7 +22,7 @@ export const BODY_REGIONS: RegionConfig[] = [
     labelKo: '머리/목',
     icon: '🧠',
     dataPath: '/data/head-ct',
-    defaultSlice: 130,
+    defaultSlice: 100,
     free: true,
   },
   {
