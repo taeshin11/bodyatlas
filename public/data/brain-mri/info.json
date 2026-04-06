@@ -1,22 +1,23 @@
 {
   "planes": {
     "axial": {
-      "slices": 182
+      "slices": 189
     },
     "sagittal": {
-      "slices": 182
+      "slices": 197
     },
     "coronal": {
-      "slices": 218
+      "slices": 233
     }
   },
   "window": {
-    "center": 5000,
-    "width": 8000
+    "center": 50,
+    "width": 100
   },
   "voxelSpacing": [
     1.0,
     1.0,
     1.0
-  ]
+  ],
+  "source": "OpenMAP-T1 Level5 (275 regions)"
 }
