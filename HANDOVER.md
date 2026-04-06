@@ -7,16 +7,19 @@
 
 ## 🏃 지금 바로 할 일
 
-- **현재 상태:** Head CT Atlas v2 재빌드 완료 (D드라이브 TotalSegmentator v2 데이터)
-- **다음 세션 시작 시:** `.env.local` 확인 후 `npm run dev` → Brain PET 탭 + head-ct 실제 동작 확인
+- **현재 상태:** Brain PET 탭 제거 완료. 탭 6개 (Head & Neck / Chest / Abdomen / Pelvis / Brain MRI / Spine X-ray)
+- **다음 세션 시작 시:** `.env.local` 확인 후 `npm run dev` → live annotation test (head-ct, chest, brain-mri, spine-xray)
 
 ## 📝 최근 결정사항 (WHY)
 
+- **Brain PET 탭 제거 (Session 5):**
+  - PET 모달리티는 해부학적 구조 분할 불가 → annotation 0개
+  - 유저: "annotation도 안되는데 빼버리자"
+
 - **Head CT Atlas v2 재빌드 (Session 4):**
-  - D:/ImageLabelAPI_SPINAI/data/cat_F_opensource/TotalSegmentator_v2/ 데이터 직접 사용 (중복 다운로드 제거)
-  - s0011 (311×311×431, 1.5mm, head-to-pelvis) — head crop 320 slices
-  - 91 structures, 320/311/311 slices (axial/sag/cor) — 기존 대비 슬라이스 대폭 증가
-  - 추가 head tasks (brain_structures 등)는 GPU 여유 시 자동 실행 예정
+  - D:/ImageLabelAPI_SPINAI/data/cat_F_opensource/TotalSegmentator_v2/ 데이터 직접 사용
+  - s0011 (311×311×431, 1.5mm, head-to-pelvis) — head crop 200 slices (300mm)
+  - 85 structures, 200/311/311 slices (axial/sag/cor)
 
 - **Spine X-ray Atlas 추가 (Session 3):**
   - `D:\ImageLabelAPI_SPINAI\SBJ_LLXR` 데이터에서 최적 이미지 2장 선별
@@ -57,9 +60,9 @@ npm run dev
 - `src/config/features.ts` — 활성화된 기능 플래그
 - `src/components/AtlasViewer.tsx` — CT/MRI 뷰어 (axial/sagittal/coronal 3-plane)
 - `src/components/SpineXrayViewer.tsx` — Spine X-ray 뷰어 (Lateral/AP 2-panel)
-- `src/components/RegionSelector.tsx` — 바디 리전 탭 (BodyRegion 타입 포함)
+- `src/components/RegionSelector.tsx` — 바디 리전 탭 (BodyRegion 타입 포함, 6개 탭)
 - `public/data/chest-ct/` — CT 아틀라스 데이터 (108 structures, 1053 slices, 1.5mm)
-- `public/data/head-ct/` — Head CT 아틀라스 (91 structures, 320/311/311 slices)
+- `public/data/head-ct/` — Head CT 아틀라스 (85 structures, 200/311/311 slices)
 - `public/data/spine-xray/` — Spine X-ray 아틀라스 (15 structures, Lateral+AP)
 - `scripts/gen_head_ct_atlas.py` — Head CT 데이터 생성 파이프라인
 - `scripts/gen_spine_xray_atlas.py` — Spine X-ray 데이터 생성 스크립트
@@ -80,4 +83,4 @@ npm run dev
 
 ---
 
-_마지막 업데이트: 2026-04-06 (Session 4)_
+_마지막 업데이트: 2026-04-06 (Session 5)_

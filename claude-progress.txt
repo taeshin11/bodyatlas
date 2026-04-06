@@ -175,3 +175,23 @@
   - RegionSelector: brain_pet 추가 (☢️ 뇌 PET)
   - 라벨 없음 (PET은 대사 활성 표시, 해부학적 구조 분할 불가)
 
+## Session 5
+- Date: 2026-04-06
+- Session #: 5
+- Phase: Brain PET tab 제거
+- Features Worked On: RegionSelector cleanup
+- Completed: Brain PET tab 제거 (annotation 불가로 유저 요청)
+- Blockers: none
+- Next Up: live annotation test (head-ct, chest, brain-mri, spine-xray)
+- Git Commits:
+  - feat: remove Brain PET tab (no annotation support)
+- Pushed to Remote: yes
+- PRD Updated: no
+- Notes:
+  Brain PET 탭 제거:
+  - PET 모달리티는 해부학적 구조 분할 불가 → annotation 0개
+  - RegionSelector.tsx: BodyRegion 타입에서 'brain_pet' 제거, BODY_REGIONS 배열에서 brain_pet 엔트리 제거
+  - 현재 탭: Head & Neck / Chest / Abdomen / Pelvis / Brain MRI / Spine X-ray (6개)
+  - public/data/brain-pet/ 폴더는 남겨둠 (git 기록용)
+  - TypeScript: 0 errors
+
