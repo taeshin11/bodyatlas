@@ -280,3 +280,18 @@
   - Spline-smoothed contours, NaN/Inf guard
   - Categories: frontal/parietal/temporal/occipital/limbic/subcortical/cerebellum/brainstem/white/ventricle
   - Output: 275 structures, 189/197/233 slices
+
+## Session 8 — 2026-04-06
+
+### 완료
+- Atlas orientation 버그 전체 수정: `np.flipud(slice.T)` 모든 plane에 적용
+  - NIfTI RAS 데이터 PNG 저장 시 90° 회전 문제 해결
+  - PNG 이미지와 contour annotation 동일 transform → 매칭 정확
+- head-ct: Z-crop 수정 (HEAD_CROP_VOXELS 200→130), Z[301:431] → 가슴→머리/목
+- brain-mri: T1 windowing 수정 (center=160, width=200)
+- spine-xray 탭 제거 (RegionSelector.tsx: BodyRegion type + BODY_REGIONS)
+- Atlas 재빌드:
+  - brain-mri: 275 structures (orientation+windowing fixed)
+  - head-ct: 66 structures (orientation+crop fixed), 130/311/311 slices
+  - chest-ct: 122 structures (orientation fixed), 431/311/311 slices
+- git commit fb8ac1b6 + push
