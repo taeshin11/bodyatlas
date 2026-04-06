@@ -126,7 +126,7 @@ def run_totalsegmentator():
     if torch.cuda.is_available():
         vram_free = torch.cuda.mem_get_info()[0] // 1024 // 1024
         vram_total = torch.cuda.mem_get_info()[1] // 1024 // 1024
-        print(f"GPU: {torch.cuda.get_device_name(0)} — {vram_free}MB free / {vram_total}MB total")
+        print(f"GPU: {torch.cuda.get_device_name(0)} - {vram_free}MB free / {vram_total}MB total")
         if vram_free < 4000:
             print(f"WARNING: Only {vram_free}MB VRAM free. Some tasks may fail. Consider freeing VRAM first.")
 
@@ -371,8 +371,13 @@ def main():
     parser.add_argument("--ct", type=Path, help="Path to head CT NIfTI (skips extraction)")
     parser.add_argument("--extract-only", action="store_true", help="Only extract CT, don't run TotalSegmentator")
     parser.add_argument("--build-only", action="store_true", help="Skip TotalSegmentator, build atlas from existing segs")
+    parser.add_argument("--seg-dir", type=Path, help="Path to segmentation directory (overrides default)")
     parser.add_argument("--out", type=Path, default=OUT_DIR, help="Output directory")
     args = parser.parse_args()
+
+    global SEG_DIR
+    if args.seg_dir:
+        SEG_DIR = args.seg_dir
 
     ct_path = args.ct or CT_PATH
 

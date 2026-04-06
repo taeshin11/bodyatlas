@@ -1,0 +1,104 @@
+================================================================================
+RESEARCH LOG #006 - Head CT Atlas v2 Rebuild (D드라이브 TotalSegmentator 데이터)
+================================================================================
+Date: 2026-04-06
+Session: 4
+Feature: Head CT Atlas 재빌드 - D드라이브 기존 데이터 활용
+
+================================================================================
+PROBLEM
+================================================================================
+
+Session 3에서 TotalSegmentator v2 파이프라인 구축 (scripts/gen_head_ct_atlas.py)
+했으나 실행 중 여러 문제 발생:
+
+  1. UnicodeEncodeError (cp949): em-dash 문자 -> 수정됨
+  2. run_when_ready.py 고아 프로세스: 여러 인스턴스 동시 실행
+  3. bash background task + & 조합: Python이 bash 종료 시 kill됨 (exit 127)
+  4. VRAM 부족: train.py (X-ray UNet 80 epochs) + 2개 gen_head_ct_atlas.py 동시
+     -> 24GB GPU 포화 (343MB free)
+
+유저 요청: "D:/ImageLabelAPI_SPINAI/ 에 있는거 쓰고, 중복 용량 차지 하지 마"
+
+================================================================================
+SOLUTION
+================================================================================
+
+D:/ImageLabelAPI_SPINAI/data/cat_F_opensource/ 에 이미 TotalSegmentator v2 데이터 있음:
+
+  TotalSegmentator_v2/
+    Totalsegmentator_dataset.zip
+    Totalsegmentator_dataset/          (1205 cases, 압축 해제됨)
+      s0011/
+        ct.nii.gz                      (46MB, 311x311x431, 1.5mm isotropic)
+        segmentations/                 (104 .nii.gz files)
+          adrenal_gland_left.nii.gz
+          aorta.nii.gz
+          brain.nii.gz
+          ...
+
+  TotalSegmentator_v2_new/
+    Totalsegmentator_dataset_v201.zip  (아직 미압축)
+
+s0011: Z range -61~584mm, 431 slices, 머리~골반 full-body CT (Session 3에서 선정)
+
+Approach:
+  1. gen_head_ct_atlas.py에 --seg-dir 인자 추가
+  2. --build-only --ct D:/.../s0011/ct.nii.gz --seg-dir D:/.../s0011/
+  3. GPU 불필요 (segmentation 이미 있으므로 CPU only)
+  4. data_pipeline/에 중복 복사 없음
+
+================================================================================
+RESULT
+================================================================================
+
+Before (Session 3):
+  Structures: 96 (-> 91 active in head crop)
+  Axial:      262 slices
+  Sagittal:   225 slices
+  Coronal:    160 slices
+  Source:     totalseg_small.zip s0011 (Zenodo small dataset)
+
+After (Session 4):
+  Structures: 91 active (104 base, head crop 후 91 non-empty)
+  Axial:      320 slices (+58)
+  Sagittal:   311 slices (+86)
+  Coronal:    311 slices (+151)
+  Source:     D드라이브 TotalSegmentator v2 full dataset s0011
+  Window:     center=40, width=80 (soft tissue)
+
+Category breakdown:
+  bone: 48, other: 22, organ: 11, vessel: 5, gland: 2, muscle: 2, cavity: 1
+
+npm run build: PASSED (zero errors)
+
+================================================================================
+PENDING UPGRADE
+================================================================================
+
+data_pipeline/run_head_upgrade.py 백그라운드 대기 중:
+  - VRAM 4GB+ 되면 자동 실행
+  - 추가 4개 head-specific tasks:
+    head_glands_cavities, headneck_bones_vessels,
+    brain_structures, craniofacial_structures
+  - 완료 시 기존 104개 + 추가 seg 합쳐서 atlas 재빌드 -> 117+ structures
+  - 현재 blocker: train.py (X-ray UNet 80 epochs) GPU 점유 중
+
+================================================================================
+FILES CHANGED
+================================================================================
+
+MODIFIED:
+  scripts/gen_head_ct_atlas.py        -- --seg-dir 인자 추가
+  public/data/head-ct/info.json       -- slices 320/311/311
+  public/data/head-ct/structures.json -- 91 structures
+  public/data/head-ct/axial/*.png     -- 320 slices (was 262)
+  public/data/head-ct/sagittal/*.png  -- 311 slices (was 225)
+  public/data/head-ct/coronal/*.png   -- 311 slices (was 160)
+  public/data/head-ct/labels/**/*.json -- 전체 재생성
+
+NEW:
+  data_pipeline/run_head_upgrade.py   -- VRAM 대기 + 추가 head tasks 자동 실행
+  research_history/research_006_head_ct_v2_rebuild.txt
+
+================================================================================

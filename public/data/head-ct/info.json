@@ -1,13 +1,13 @@
 {
   "planes": {
     "axial": {
-      "slices": 262
+      "slices": 320
     },
     "sagittal": {
-      "slices": 225
+      "slices": 311
     },
     "coronal": {
-      "slices": 160
+      "slices": 311
     }
   },
   "window": {
@@ -16,7 +16,7 @@
   },
   "voxelSpacing": [
     1.5,
-    1.5000001192092896,
+    1.5,
     1.5
   ]
 }

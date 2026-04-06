@@ -123,3 +123,36 @@
 
   Build: npm run build passed (zero TS errors)
 
+## Session 4
+- Date: 2026-04-06
+- Session #: 4
+- Phase: head-ct atlas v2 rebuild
+- Features Worked On: Head CT atlas rebuild with D-drive TotalSegmentator v2 data
+- Completed: Head CT atlas v2 rebuild (91 structures, 320/311/311 slices)
+- Blockers: train.py GPU 점유 (추가 head tasks 보류)
+- Next Up: VRAM 여유 시 추가 head tasks 자동 실행 (117+ structures)
+- Git Commits:
+  - feat: rebuild head-ct atlas with TotalSegmentator v2 data (91 structures, 320/311/311 slices)
+- Pushed to Remote: yes
+- PRD Updated: no
+- Notes:
+  Session 3에서 시작한 TotalSegmentator v2 파이프라인 실행 중 문제 해결:
+  - UnicodeEncodeError (cp949 em-dash) -> ASCII 대체로 수정
+  - run_when_ready.py 고아 프로세스 여러 개 동시 실행 -> kill
+  - bash background task exit code 127 -> & 제거, run_in_background만 사용
+  - VRAM 포화 (543MB free) -> 고아 프로세스 정리
+
+  유저 요청: D:/ImageLabelAPI_SPINAI/ 에 이미 TotalSegmentator v2 데이터 있으니 중복 안 하고 그거 사용
+  발견: D:/ImageLabelAPI_SPINAI/data/cat_F_opensource/TotalSegmentator_v2/Totalsegmentator_dataset/
+    - 1205 cases (full dataset, 압축 해제됨)
+    - s0011: ct.nii.gz + segmentations/ (104 .nii.gz files)
+
+  gen_head_ct_atlas.py --seg-dir 인자 추가, --build-only로 GPU 없이 atlas 빌드
+  결과: 91 active structures, axial 320 (+58), sagittal 311 (+86), coronal 311 (+151)
+  npm run build: PASSED
+
+  백그라운드: data_pipeline/run_head_upgrade.py
+  - VRAM 4GB+ 대기 -> 추가 4개 head tasks 자동 실행
+  - head_glands_cavities, headneck_bones_vessels, brain_structures, craniofacial_structures
+  - 완료 시 104 + 추가 -> 117+ structures로 atlas 재빌드
+
