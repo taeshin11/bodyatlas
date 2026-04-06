@@ -2,7 +2,7 @@
 
 import { Lock } from 'lucide-react';
 
-export type BodyRegion = 'chest' | 'head_neck' | 'abdomen' | 'pelvis' | 'brain_mri' | 'spine_xray';
+export type BodyRegion = 'chest' | 'head_neck' | 'abdomen' | 'pelvis' | 'brain_mri' | 'brain_pet' | 'spine_xray';
 
 interface RegionConfig {
   id: BodyRegion;
@@ -62,6 +62,15 @@ export const BODY_REGIONS: RegionConfig[] = [
     icon: '🧲',
     dataPath: '/data/brain-mri',
     defaultSlice: 91,
+    free: true,
+  },
+  {
+    id: 'brain_pet',
+    label: 'Brain PET',
+    labelKo: '뇌 PET',
+    icon: '☢️',
+    dataPath: '/data/brain-pet',
+    defaultSlice: 23,
     free: true,
   },
   {

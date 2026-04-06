@@ -1,0 +1,20 @@
+{
+  "modality": "PET",
+  "description": "Brain PET (FDG)",
+  "planes": {
+    "axial": {
+      "slices": 47
+    },
+    "sagittal": {
+      "slices": 256
+    },
+    "coronal": {
+      "slices": 256
+    }
+  },
+  "voxelSpacing": [
+    1.171875,
+    1.171875,
+    3.26
+  ]
+}
