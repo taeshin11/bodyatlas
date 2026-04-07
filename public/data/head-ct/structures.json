@@ -1,5 +1,5 @@
 {
-  "totalStructures": 12,
+  "totalStructures": 28,
   "structures": [
     {
       "id": 0,
@@ -105,6 +105,142 @@
     },
     {
       "id": 3,
+      "name": "brainstem",
+      "displayName": {
+        "en": "Brainstem",
+        "ko": "Brainstem",
+        "ja": "Brainstem",
+        "zh": "Brainstem",
+        "es": "Brainstem",
+        "de": "Brainstem",
+        "fr": "Brainstem"
+      },
+      "category": "brain",
+      "color": "#6366F1",
+      "bestSlice": {
+        "axial": 35,
+        "sagittal": 83,
+        "coronal": 125
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          71
+        ],
+        "sagittal": [
+          51,
+          116
+        ],
+        "coronal": [
+          88,
+          163
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "caudate_nucleus",
+      "displayName": {
+        "en": "Caudate Nucleus",
+        "ko": "Caudate Nucleus",
+        "ja": "Caudate Nucleus",
+        "zh": "Caudate Nucleus",
+        "es": "Caudate Nucleus",
+        "de": "Caudate Nucleus",
+        "fr": "Caudate Nucleus"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "axial": 66,
+        "sagittal": 72,
+        "coronal": 137
+      },
+      "sliceRange": {
+        "axial": [
+          52,
+          80
+        ],
+        "sagittal": [
+          57,
+          88
+        ],
+        "coronal": [
+          114,
+          161
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "name": "central_sulcus",
+      "displayName": {
+        "en": "Central Sulcus",
+        "ko": "Central Sulcus",
+        "ja": "Central Sulcus",
+        "zh": "Central Sulcus",
+        "es": "Central Sulcus",
+        "de": "Central Sulcus",
+        "fr": "Central Sulcus"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "axial": 114,
+        "sagittal": 52,
+        "coronal": 105
+      },
+      "sliceRange": {
+        "axial": [
+          100,
+          129
+        ],
+        "sagittal": [
+          34,
+          70
+        ],
+        "coronal": [
+          89,
+          121
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "name": "cerebellum",
+      "displayName": {
+        "en": "Cerebellum",
+        "ko": "Cerebellum",
+        "ja": "Cerebellum",
+        "zh": "Cerebellum",
+        "es": "Cerebellum",
+        "de": "Cerebellum",
+        "fr": "Cerebellum"
+      },
+      "category": "brain",
+      "color": "#6366F1",
+      "bestSlice": {
+        "axial": 57,
+        "sagittal": 78,
+        "coronal": 107
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          114
+        ],
+        "sagittal": [
+          26,
+          131
+        ],
+        "coronal": [
+          33,
+          181
+        ]
+      }
+    },
+    {
+      "id": 7,
       "name": "eye_left",
       "displayName": {
         "en": "Eye Left",
@@ -138,7 +274,7 @@
       }
     },
     {
-      "id": 4,
+      "id": 8,
       "name": "eye_lens_left",
       "displayName": {
         "en": "Eye Lens Left",
@@ -172,7 +308,7 @@
       }
     },
     {
-      "id": 5,
+      "id": 9,
       "name": "eye_lens_right",
       "displayName": {
         "en": "Eye Lens Right",
@@ -206,7 +342,7 @@
       }
     },
     {
-      "id": 6,
+      "id": 10,
       "name": "eye_right",
       "displayName": {
         "en": "Eye Right",
@@ -240,7 +376,143 @@
       }
     },
     {
-      "id": 7,
+      "id": 11,
+      "name": "frontal_lobe",
+      "displayName": {
+        "en": "Frontal Lobe",
+        "ko": "Frontal Lobe",
+        "ja": "Frontal Lobe",
+        "zh": "Frontal Lobe",
+        "es": "Frontal Lobe",
+        "de": "Frontal Lobe",
+        "fr": "Frontal Lobe"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "axial": 68,
+        "sagittal": 71,
+        "coronal": 149
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          136
+        ],
+        "sagittal": [
+          21,
+          122
+        ],
+        "coronal": [
+          88,
+          211
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "name": "insular_cortex",
+      "displayName": {
+        "en": "Insular Cortex",
+        "ko": "Insular Cortex",
+        "ja": "Insular Cortex",
+        "zh": "Insular Cortex",
+        "es": "Insular Cortex",
+        "de": "Insular Cortex",
+        "fr": "Insular Cortex"
+      },
+      "category": "brain",
+      "color": "#6366F1",
+      "bestSlice": {
+        "axial": 55,
+        "sagittal": 68,
+        "coronal": 135
+      },
+      "sliceRange": {
+        "axial": [
+          39,
+          71
+        ],
+        "sagittal": [
+          36,
+          100
+        ],
+        "coronal": [
+          116,
+          154
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "name": "internal_capsule",
+      "displayName": {
+        "en": "Internal Capsule",
+        "ko": "Internal Capsule",
+        "ja": "Internal Capsule",
+        "zh": "Internal Capsule",
+        "es": "Internal Capsule",
+        "de": "Internal Capsule",
+        "fr": "Internal Capsule"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "axial": 59,
+        "sagittal": 72,
+        "coronal": 135
+      },
+      "sliceRange": {
+        "axial": [
+          49,
+          70
+        ],
+        "sagittal": [
+          54,
+          90
+        ],
+        "coronal": [
+          118,
+          152
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "name": "lentiform_nucleus",
+      "displayName": {
+        "en": "Lentiform Nucleus",
+        "ko": "Lentiform Nucleus",
+        "ja": "Lentiform Nucleus",
+        "zh": "Lentiform Nucleus",
+        "es": "Lentiform Nucleus",
+        "de": "Lentiform Nucleus",
+        "fr": "Lentiform Nucleus"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "axial": 56,
+        "sagittal": 72,
+        "coronal": 142
+      },
+      "sliceRange": {
+        "axial": [
+          48,
+          64
+        ],
+        "sagittal": [
+          52,
+          93
+        ],
+        "coronal": [
+          136,
+          149
+        ]
+      }
+    },
+    {
+      "id": 15,
       "name": "nasal_cavity_left",
       "displayName": {
         "en": "Nasal Cavity Left",
@@ -274,7 +546,7 @@
       }
     },
     {
-      "id": 8,
+      "id": 16,
       "name": "nasal_cavity_right",
       "displayName": {
         "en": "Nasal Cavity Right",
@@ -308,7 +580,41 @@
       }
     },
     {
-      "id": 9,
+      "id": 17,
+      "name": "occipital_lobe",
+      "displayName": {
+        "en": "Occipital Lobe",
+        "ko": "Occipital Lobe",
+        "ja": "Occipital Lobe",
+        "zh": "Occipital Lobe",
+        "es": "Occipital Lobe",
+        "de": "Occipital Lobe",
+        "fr": "Occipital Lobe"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "axial": 69,
+        "sagittal": 79,
+        "coronal": 119
+      },
+      "sliceRange": {
+        "axial": [
+          28,
+          110
+        ],
+        "sagittal": [
+          42,
+          117
+        ],
+        "coronal": [
+          24,
+          214
+        ]
+      }
+    },
+    {
+      "id": 18,
       "name": "optic_nerve_left",
       "displayName": {
         "en": "Optic Nerve Left",
@@ -342,7 +648,7 @@
       }
     },
     {
-      "id": 10,
+      "id": 19,
       "name": "optic_nerve_right",
       "displayName": {
         "en": "Optic Nerve Right",
@@ -376,7 +682,75 @@
       }
     },
     {
-      "id": 11,
+      "id": 20,
+      "name": "parietal_lobe",
+      "displayName": {
+        "en": "Parietal Lobe",
+        "ko": "Parietal Lobe",
+        "ja": "Parietal Lobe",
+        "zh": "Parietal Lobe",
+        "es": "Parietal Lobe",
+        "de": "Parietal Lobe",
+        "fr": "Parietal Lobe"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "axial": 93,
+        "sagittal": 64,
+        "coronal": 86
+      },
+      "sliceRange": {
+        "axial": [
+          51,
+          136
+        ],
+        "sagittal": [
+          15,
+          113
+        ],
+        "coronal": [
+          33,
+          140
+        ]
+      }
+    },
+    {
+      "id": 21,
+      "name": "septum_pellucidum",
+      "displayName": {
+        "en": "Septum Pellucidum",
+        "ko": "Septum Pellucidum",
+        "ja": "Septum Pellucidum",
+        "zh": "Septum Pellucidum",
+        "es": "Septum Pellucidum",
+        "de": "Septum Pellucidum",
+        "fr": "Septum Pellucidum"
+      },
+      "category": "brain",
+      "color": "#6366F1",
+      "bestSlice": {
+        "axial": 68,
+        "sagittal": 71,
+        "coronal": 128
+      },
+      "sliceRange": {
+        "axial": [
+          58,
+          78
+        ],
+        "sagittal": [
+          69,
+          74
+        ],
+        "coronal": [
+          101,
+          155
+        ]
+      }
+    },
+    {
+      "id": 22,
       "name": "skull",
       "displayName": {
         "en": "Skull",
@@ -406,6 +780,176 @@
         "coronal": [
           15,
           225
+        ]
+      }
+    },
+    {
+      "id": 23,
+      "name": "subarachnoid_space",
+      "displayName": {
+        "en": "Subarachnoid Space",
+        "ko": "Subarachnoid Space",
+        "ja": "Subarachnoid Space",
+        "zh": "Subarachnoid Space",
+        "es": "Subarachnoid Space",
+        "de": "Subarachnoid Space",
+        "fr": "Subarachnoid Space"
+      },
+      "category": "brain",
+      "color": "#6366F1",
+      "bestSlice": {
+        "axial": 69,
+        "sagittal": 72,
+        "coronal": 116
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          138
+        ],
+        "sagittal": [
+          16,
+          129
+        ],
+        "coronal": [
+          24,
+          208
+        ]
+      }
+    },
+    {
+      "id": 24,
+      "name": "temporal_lobe",
+      "displayName": {
+        "en": "Temporal Lobe",
+        "ko": "Temporal Lobe",
+        "ja": "Temporal Lobe",
+        "zh": "Temporal Lobe",
+        "es": "Temporal Lobe",
+        "de": "Temporal Lobe",
+        "fr": "Temporal Lobe"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "axial": 53,
+        "sagittal": 73,
+        "coronal": 97
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          106
+        ],
+        "sagittal": [
+          13,
+          133
+        ],
+        "coronal": [
+          29,
+          165
+        ]
+      }
+    },
+    {
+      "id": 25,
+      "name": "thalamus",
+      "displayName": {
+        "en": "Thalamus",
+        "ko": "Thalamus",
+        "ja": "Thalamus",
+        "zh": "Thalamus",
+        "es": "Thalamus",
+        "de": "Thalamus",
+        "fr": "Thalamus"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "axial": 63,
+        "sagittal": 66,
+        "coronal": 116
+      },
+      "sliceRange": {
+        "axial": [
+          52,
+          74
+        ],
+        "sagittal": [
+          52,
+          81
+        ],
+        "coronal": [
+          93,
+          139
+        ]
+      }
+    },
+    {
+      "id": 26,
+      "name": "venous_sinuses",
+      "displayName": {
+        "en": "Venous Sinuses",
+        "ko": "Venous Sinuses",
+        "ja": "Venous Sinuses",
+        "zh": "Venous Sinuses",
+        "es": "Venous Sinuses",
+        "de": "Venous Sinuses",
+        "fr": "Venous Sinuses"
+      },
+      "category": "brain",
+      "color": "#6366F1",
+      "bestSlice": {
+        "axial": 68,
+        "sagittal": 79,
+        "coronal": 116
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          137
+        ],
+        "sagittal": [
+          23,
+          135
+        ],
+        "coronal": [
+          29,
+          204
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "name": "ventricle",
+      "displayName": {
+        "en": "Ventricle",
+        "ko": "Ventricle",
+        "ja": "Ventricle",
+        "zh": "Ventricle",
+        "es": "Ventricle",
+        "de": "Ventricle",
+        "fr": "Ventricle"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "axial": 42,
+        "sagittal": 71,
+        "coronal": 114
+      },
+      "sliceRange": {
+        "axial": [
+          0,
+          85
+        ],
+        "sagittal": [
+          41,
+          102
+        ],
+        "coronal": [
+          62,
+          167
         ]
       }
     }
