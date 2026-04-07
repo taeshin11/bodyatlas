@@ -292,13 +292,20 @@ export default function AtlasViewer({ onStructureSelect, selectedStructure, loca
     }
   }, [hoveredStructure, structures, onStructureSelect]);
 
-  const handleWheel = useCallback((e: React.WheelEvent) => {
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? 1 : -1;
-    setSliceIndices(prev => ({
-      ...prev,
-      [activeTab]: Math.max(minSlice, Math.min(maxSlice, prev[activeTab] + delta)),
-    }));
+  // Native wheel handler (passive: false) to prevent page scroll while navigating slices
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const handler = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? 1 : -1;
+      setSliceIndices(prev => ({
+        ...prev,
+        [activeTab]: Math.max(minSlice, Math.min(maxSlice, prev[activeTab] + delta)),
+      }));
+    };
+    el.addEventListener('wheel', handler, { passive: false });
+    return () => el.removeEventListener('wheel', handler);
   }, [activeTab, minSlice, maxSlice]);
 
   // Keyboard navigation
@@ -358,7 +365,6 @@ export default function AtlasViewer({ onStructureSelect, selectedStructure, loca
       <div
         ref={containerRef}
         className="relative bg-slate-900 border border-slate-800 rounded-xl overflow-hidden cursor-crosshair focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-        onWheel={handleWheel}
         tabIndex={0}
       >
         {/* Slice info */}

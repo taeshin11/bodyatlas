@@ -25,7 +25,7 @@ import numpy as np
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).parent.parent
-SEG_DIR      = PROJECT_ROOT / "data_pipeline/head_ct_seg"          # same source CT segs
+SEG_DIR      = PROJECT_ROOT / "data_pipeline/chest_ct_seg"
 VISTA_SEG    = PROJECT_ROOT / "data_pipeline/vista3d_seg"
 OUT_DIR      = PROJECT_ROOT / "public/data/chest-ct"
 
@@ -72,14 +72,9 @@ def merge_all_segs(seg_dir: Path, vista_dir: Path) -> dict:
             if data.max() > 0:
                 merged[name] = (data, img.affine)
 
-    # VISTA3D flat dir (add new or prefer if same name)
-    for f in vista_dir.glob("*.nii.gz"):
-        name = f.stem.replace(".nii", "")
-        img  = nib.load(f)
-        data = img.get_fdata(dtype=np.float32)
-        if data.max() > 0:
-            # Prefer VISTA3D for structures it detected (newer model)
-            merged[name] = (data, img.affine)
+    # VISTA3D removed: had Z-flip issues, noisy segmentations, and
+    # non-commercial license (NVIDIA NCLS v1). TotalSegmentator alone
+    # provides 117 structures with Apache 2.0 license.
 
     print(f"Merged {len(merged)} structures total")
     return merged
@@ -98,6 +93,12 @@ def build_atlas(ct_path: Path, merged: dict, out_dir: Path):
     import nibabel as nib
 
     print(f"\nBuilding full-CT atlas -> {out_dir}")
+    # Clean output directory to remove stale files from previous runs
+    import shutil
+    for sub in ["axial", "sagittal", "coronal", "labels"]:
+        p = out_dir / sub
+        if p.exists():
+            shutil.rmtree(p)
     ct_img  = nib.load(ct_path)
     ct_data = ct_img.get_fdata(dtype=np.float32)
     print(f"CT shape: {ct_data.shape}")
