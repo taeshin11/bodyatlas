@@ -167,8 +167,23 @@ export default function AtlasViewer({ onStructureSelect, selectedStructure, loca
 
     canvas.width = img.width;
     canvas.height = img.height;
-    // Ensure correct aspect ratio when CSS scales the canvas
-    canvas.style.aspectRatio = `${img.width} / ${img.height}`;
+
+    // Compute CSS display size preserving aspect ratio
+    const container = canvas.parentElement;
+    if (container) {
+      const containerW = container.clientWidth;
+      const maxH = window.innerHeight - 280;
+      const ratio = img.width / img.height;
+      let displayH = maxH;
+      let displayW = displayH * ratio;
+      if (displayW > containerW) {
+        displayW = containerW;
+        displayH = displayW / ratio;
+      }
+      canvas.style.width = `${displayW}px`;
+      canvas.style.height = `${displayH}px`;
+    }
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -385,7 +400,7 @@ export default function AtlasViewer({ onStructureSelect, selectedStructure, loca
         {/* Single canvas — image + overlay, fills container height */}
         <canvas
           ref={canvasRef}
-          style={{ maxHeight: 'calc(100vh - 280px)', maxWidth: '100%', width: 'auto', height: 'auto', display: 'block', margin: '0 auto' }}
+          style={{ display: 'block', margin: '0 auto' }}
           onMouseMove={handleCanvasMouseMove}
           onMouseLeave={() => { setHoveredStructure(null); setTooltipPos(null); }}
           onClick={handleCanvasClick}
