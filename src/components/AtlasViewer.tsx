@@ -46,9 +46,11 @@ export default function AtlasViewer({
   const [hoveredStructure, setHoveredStructure] = useState<string | null>(null);
   const [showOverlay, setShowOverlay] = useState(true);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
-  const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
+  const [imgNatural, setImgNatural] = useState<{ w: number; h: number } | null>(null);
+  const [imgRect, setImgRect] = useState<{ w: number; h: number; top: number; left: number } | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   // ── Data loading ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -137,11 +139,11 @@ export default function AtlasViewer({
 
   // ── SVG hover/click ───────────────────────────────────────────────────────
   const handleSvgMove = useCallback((e: React.MouseEvent<SVGSVGElement>) => {
-    if (!imgSize || labels.length === 0) { setHoveredStructure(null); setTooltipPos(null); return; }
+    if (!imgNatural || labels.length === 0) { setHoveredStructure(null); setTooltipPos(null); return; }
     const svg = e.currentTarget;
     const rect = svg.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width * imgSize.w;
-    const y = (e.clientY - rect.top) / rect.height * imgSize.h;
+    const x = (e.clientX - rect.left) / rect.width * imgNatural.w;
+    const y = (e.clientY - rect.top) / rect.height * imgNatural.h;
 
     let found: string | null = null;
     for (const label of labels) {
@@ -158,7 +160,7 @@ export default function AtlasViewer({
     } else {
       setTooltipPos(null);
     }
-  }, [imgSize, labels]);
+  }, [imgNatural, labels]);
 
   const handleSvgClick = useCallback(() => {
     if (hoveredStructure) {
@@ -208,32 +210,49 @@ export default function AtlasViewer({
           Arrow keys / scroll to navigate
         </div>
 
-        {/* Image + SVG overlay wrapper — inline-block shrinks to image size */}
-        <div className="flex justify-center" style={{ maxHeight: 'calc(100vh - 280px)' }}>
-          <div className="relative inline-block" style={{ maxHeight: 'calc(100vh - 280px)' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imagePath}
-              alt={`${activeTab} slice ${currentSlice}`}
-              className="block"
-              style={{ maxHeight: 'calc(100vh - 280px)', maxWidth: '100%', width: 'auto', height: 'auto' }}
-              onLoad={(e) => {
-                const el = e.currentTarget;
-                setImgSize({ w: el.naturalWidth, h: el.naturalHeight });
-              }}
-              draggable={false}
-            />
+        {/* Image + SVG overlay — SVG positioned to match image exactly */}
+        <div className="relative" style={{ minHeight: 100 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            ref={imgRef}
+            src={imagePath}
+            alt={`${activeTab} slice ${currentSlice}`}
+            className="block mx-auto"
+            style={{ maxHeight: 'calc(100vh - 280px)', maxWidth: '100%', width: 'auto', height: 'auto' }}
+            onLoad={(e) => {
+              const el = e.currentTarget;
+              setImgNatural({ w: el.naturalWidth, h: el.naturalHeight });
+              // Measure actual rendered position relative to parent
+              const parent = el.parentElement!;
+              const parentRect = parent.getBoundingClientRect();
+              const elRect = el.getBoundingClientRect();
+              setImgRect({
+                w: elRect.width,
+                h: elRect.height,
+                top: elRect.top - parentRect.top,
+                left: elRect.left - parentRect.left,
+              });
+            }}
+            draggable={false}
+          />
 
-            {/* SVG overlay — exactly covers the img element */}
-            {showOverlay && imgSize && labels.length > 0 && (
-              <svg
-                viewBox={`0 0 ${imgSize.w} ${imgSize.h}`}
-                preserveAspectRatio="none"
-                className="absolute top-0 left-0 w-full h-full"
-                onMouseMove={handleSvgMove}
-                onMouseLeave={() => { setHoveredStructure(null); setTooltipPos(null); }}
-                onClick={handleSvgClick}
-              >
+          {/* SVG overlay — pixel-perfect match to rendered image */}
+          {showOverlay && imgNatural && imgRect && labels.length > 0 && (
+            <svg
+              viewBox={`0 0 ${imgNatural.w} ${imgNatural.h}`}
+              preserveAspectRatio="none"
+              style={{
+                position: 'absolute',
+                top: imgRect.top,
+                left: imgRect.left,
+                width: imgRect.w,
+                height: imgRect.h,
+                pointerEvents: 'auto',
+              }}
+              onMouseMove={handleSvgMove}
+              onMouseLeave={() => { setHoveredStructure(null); setTooltipPos(null); }}
+              onClick={handleSvgClick}
+            >
               {labels.map((label) => {
                 const struct = structures.find(s => s.id === label.id);
                 if (!struct) return null;
@@ -255,7 +274,6 @@ export default function AtlasViewer({
               })}
             </svg>
           )}
-          </div>
         </div>
 
         {/* Tooltip */}
