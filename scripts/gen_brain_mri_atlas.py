@@ -27,8 +27,8 @@ T1_NII    = PROJECT_ROOT / "data_pipeline/openmap_output/t1/original/t1.nii"
 LABEL_CSV = PROJECT_ROOT / "data_pipeline/openmap_t1/level/OpenMAP-T1_multilevel_lookup_table_dictionary.csv"
 OUT_DIR   = PROJECT_ROOT / "public/data/brain-mri"
 
-WINDOW_CENTER = 140
-WINDOW_WIDTH  = 220    # T1 MRI: values 0-255, p5≈107 p95≈225 → range 30-250 (better contrast)
+WINDOW_CENTER = 165
+WINDOW_WIDTH  = 130    # T1 MRI: tight window [100-230] for good gray/white matter contrast
 
 CATEGORY_COLORS = {
     "frontal":   "#EF4444",
