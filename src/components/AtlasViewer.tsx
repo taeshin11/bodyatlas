@@ -209,8 +209,9 @@ export default function AtlasViewer({
           Arrow keys / scroll to navigate
         </div>
 
-        {/* Image + SVG overlay — wrapper shrinks to image via fit-content */}
-        <div className="relative" style={{ width: 'fit-content', margin: '0 auto', lineHeight: 0 }}>
+        {/* Image + SVG overlay */}
+        <div style={{ textAlign: 'center' }}>
+        <div style={{ display: 'inline-block', position: 'relative', lineHeight: 0, fontSize: 0, verticalAlign: 'top' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               ref={imgRef}
@@ -255,6 +256,7 @@ export default function AtlasViewer({
               })}
             </svg>
           )}
+        </div>
         </div>
 
         {/* Tooltip */}
