@@ -47,7 +47,6 @@ export default function AtlasViewer({
   const [showOverlay, setShowOverlay] = useState(true);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
   const [imgNatural, setImgNatural] = useState<{ w: number; h: number } | null>(null);
-  const [imgRect, setImgRect] = useState<{ w: number; h: number; top: number; left: number } | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -210,49 +209,32 @@ export default function AtlasViewer({
           Arrow keys / scroll to navigate
         </div>
 
-        {/* Image + SVG overlay — SVG positioned to match image exactly */}
-        <div className="relative" style={{ minHeight: 100 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            ref={imgRef}
-            src={imagePath}
-            alt={`${activeTab} slice ${currentSlice}`}
-            className="block mx-auto"
-            style={{ maxHeight: 'calc(100vh - 280px)', maxWidth: '100%', width: 'auto', height: 'auto' }}
-            onLoad={(e) => {
-              const el = e.currentTarget;
-              setImgNatural({ w: el.naturalWidth, h: el.naturalHeight });
-              // Measure actual rendered position relative to parent
-              const parent = el.parentElement!;
-              const parentRect = parent.getBoundingClientRect();
-              const elRect = el.getBoundingClientRect();
-              setImgRect({
-                w: elRect.width,
-                h: elRect.height,
-                top: elRect.top - parentRect.top,
-                left: elRect.left - parentRect.left,
-              });
-            }}
-            draggable={false}
-          />
-
-          {/* SVG overlay — pixel-perfect match to rendered image */}
-          {showOverlay && imgNatural && imgRect && labels.length > 0 && (
-            <svg
-              viewBox={`0 0 ${imgNatural.w} ${imgNatural.h}`}
-              preserveAspectRatio="none"
-              style={{
-                position: 'absolute',
-                top: imgRect.top,
-                left: imgRect.left,
-                width: imgRect.w,
-                height: imgRect.h,
-                pointerEvents: 'auto',
+        {/* Image + SVG overlay — both inside a shrink-wrapped container */}
+        <div className="flex justify-center" style={{ maxHeight: 'calc(100vh - 280px)' }}>
+          <div className="relative" style={{ lineHeight: 0, maxHeight: 'calc(100vh - 280px)' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              ref={imgRef}
+              src={imagePath}
+              alt={`${activeTab} slice ${currentSlice}`}
+              style={{ display: 'block', maxHeight: 'calc(100vh - 280px)', maxWidth: '100%', width: 'auto', height: 'auto' }}
+              onLoad={(e) => {
+                const el = e.currentTarget;
+                setImgNatural({ w: el.naturalWidth, h: el.naturalHeight });
               }}
-              onMouseMove={handleSvgMove}
-              onMouseLeave={() => { setHoveredStructure(null); setTooltipPos(null); }}
-              onClick={handleSvgClick}
-            >
+              draggable={false}
+            />
+
+            {/* SVG fills the same space as img — lineHeight:0 prevents baseline gap */}
+            {showOverlay && imgNatural && labels.length > 0 && (
+              <svg
+                viewBox={`0 0 ${imgNatural.w} ${imgNatural.h}`}
+                preserveAspectRatio="none"
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                onMouseMove={handleSvgMove}
+                onMouseLeave={() => { setHoveredStructure(null); setTooltipPos(null); }}
+                onClick={handleSvgClick}
+              >
               {labels.map((label) => {
                 const struct = structures.find(s => s.id === label.id);
                 if (!struct) return null;
@@ -274,6 +256,7 @@ export default function AtlasViewer({
               })}
             </svg>
           )}
+          </div>
         </div>
 
         {/* Tooltip */}
