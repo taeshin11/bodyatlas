@@ -1,13 +1,13 @@
 {
   "planes": {
     "axial": {
-      "slices": 160
+      "slices": 312
     },
     "sagittal": {
-      "slices": 160
+      "slices": 512
     },
     "coronal": {
-      "slices": 232
+      "slices": 512
     }
   },
   "window": {

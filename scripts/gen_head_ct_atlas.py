@@ -54,8 +54,9 @@ WINDOW_WIDTH  = 80      # Soft tissue window (good for brain)
 VOXEL_TARGET  = 1.5     # mm
 
 # ── Head region crop ─────────────────────────────────────────────────────────
-# s1359 is a dedicated head CT (196 slices, 140x140) — use full volume, no crop.
-HEAD_CROP_VOXELS = 0  # 0 = no crop (use entire volume)
+# Muschelli template is 512^3 at 0.5mm. Crop to skull region [106:418] in Z.
+HEAD_Z_START = 106
+HEAD_Z_END = 418  # exclusive
 
 # ── Structure colors by category ─────────────────────────────────────────────
 CATEGORY_COLORS = {
@@ -268,14 +269,11 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
     ct_data = ct_img.get_fdata(dtype=np.float32)
     print(f"CT shape: {ct_data.shape}, voxel: {ct_img.header.get_zooms()}")
 
-    # Crop to head region (top N voxels in Z), or use full volume if HEAD_CROP_VOXELS == 0
-    z_size = ct_data.shape[2]
-    if HEAD_CROP_VOXELS > 0:
-        head_z_start = max(0, z_size - HEAD_CROP_VOXELS)
-    else:
-        head_z_start = 0
-    ct_head = ct_data[:, :, head_z_start:]
-    print(f"Head crop: Z[{head_z_start}:{z_size}] → {ct_head.shape}")
+    # Crop to head region
+    head_z_start = HEAD_Z_START
+    head_z_end = min(HEAD_Z_END, ct_data.shape[2])
+    ct_head = ct_data[:, :, head_z_start:head_z_end]
+    print(f"Head crop: Z[{head_z_start}:{head_z_end}] → {ct_head.shape}")
 
     planes = {
         "axial":    (2, ct_head.shape[2]),
@@ -342,12 +340,12 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
             for name, (seg_full, _) in merged_segs.items():
                 # Crop seg to head region
                 if axis == 0:
-                    seg_slice = seg_full[si, :, head_z_start:] if seg_full.shape[2] > head_z_start else seg_full[si, :, :]
+                    seg_slice = seg_full[si, :, head_z_start:head_z_end]
                 elif axis == 1:
-                    seg_slice = seg_full[:, si, head_z_start:] if seg_full.shape[2] > head_z_start else seg_full[:, si, :]
+                    seg_slice = seg_full[:, si, head_z_start:head_z_end]
                 else:
                     seg_z = head_z_start + si
-                    if seg_z >= seg_full.shape[2]: continue
+                    if seg_z >= head_z_end: continue
                     seg_slice = seg_full[:, :, seg_z]
 
                 if seg_slice.max() < 0.5: continue
