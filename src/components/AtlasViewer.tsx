@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 // Increment to force CDN cache refresh
-const CACHE_V = 'v2';
+const CACHE_V = 'v3';
 
 type Plane = 'axial' | 'sagittal' | 'coronal';
 
