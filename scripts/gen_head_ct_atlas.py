@@ -53,10 +53,9 @@ WINDOW_CENTER = 40
 WINDOW_WIDTH  = 80      # Soft tissue window (good for brain)
 VOXEL_TARGET  = 1.5     # mm
 
-# ── Head region crop (Z range in voxels from top of full-body CT) ─────────────
-# CT is in RAS: high Z = superior (head). Skull is at z≈300-430 in s0011 (431 slices).
-# Take the top 130 slices (head + neck only, ~195mm at 1.5mm/voxel).
-HEAD_CROP_VOXELS = 130
+# ── Head region crop ─────────────────────────────────────────────────────────
+# s1359 is a dedicated head CT (196 slices, 140x140) — use full volume, no crop.
+HEAD_CROP_VOXELS = 0  # 0 = no crop (use entire volume)
 
 # ── Structure colors by category ─────────────────────────────────────────────
 CATEGORY_COLORS = {
@@ -264,9 +263,12 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
     ct_data = ct_img.get_fdata(dtype=np.float32)
     print(f"CT shape: {ct_data.shape}, voxel: {ct_img.header.get_zooms()}")
 
-    # Crop to head region (top N voxels in Z)
+    # Crop to head region (top N voxels in Z), or use full volume if HEAD_CROP_VOXELS == 0
     z_size = ct_data.shape[2]
-    head_z_start = max(0, z_size - HEAD_CROP_VOXELS)
+    if HEAD_CROP_VOXELS > 0:
+        head_z_start = max(0, z_size - HEAD_CROP_VOXELS)
+    else:
+        head_z_start = 0
     ct_head = ct_data[:, :, head_z_start:]
     print(f"Head crop: Z[{head_z_start}:{z_size}] → {ct_head.shape}")
 
