@@ -209,9 +209,8 @@ export default function AtlasViewer({
           Arrow keys / scroll to navigate
         </div>
 
-        {/* Image + SVG overlay — both inside a shrink-wrapped container */}
-        <div className="flex justify-center" style={{ maxHeight: 'calc(100vh - 280px)' }}>
-          <div className="relative" style={{ lineHeight: 0, maxHeight: 'calc(100vh - 280px)' }}>
+        {/* Image + SVG overlay — wrapper shrinks to image via fit-content */}
+        <div className="relative" style={{ width: 'fit-content', margin: '0 auto', lineHeight: 0 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               ref={imgRef}
@@ -256,7 +255,6 @@ export default function AtlasViewer({
               })}
             </svg>
           )}
-          </div>
         </div>
 
         {/* Tooltip */}
