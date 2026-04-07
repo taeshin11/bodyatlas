@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 
+// Increment to force CDN cache refresh
+const CACHE_V = 'v2';
+
 type Plane = 'axial' | 'sagittal' | 'coronal';
 
 interface AtlasInfo {
@@ -53,8 +56,8 @@ export default function AtlasViewer({
 
   // ── Data loading ──────────────────────────────────────────────────────────
   useEffect(() => {
-    fetch(`${dataPath}/info.json`).then(r => r.json()).then(setInfo);
-    fetch(`${dataPath}/structures.json`).then(r => r.json())
+    fetch(`${dataPath}/info.json?${CACHE_V}`).then(r => r.json()).then(setInfo);
+    fetch(`${dataPath}/structures.json?${CACHE_V}`).then(r => r.json())
       .then((d: { structures: Structure[] }) => setStructures(d.structures));
   }, [dataPath]);
 
@@ -81,14 +84,14 @@ export default function AtlasViewer({
     : info ? info.planes[activeTab].slices - 1 : 0;
 
   const imagePath = info
-    ? `${dataPath}/${activeTab}/${String(currentSlice).padStart(4, '0')}.png`
+    ? `${dataPath}/${activeTab}/${String(currentSlice).padStart(4, '0')}.png?${CACHE_V}`
     : '';
 
   // Load labels
   useEffect(() => {
     if (!info) return;
     const padded = String(currentSlice).padStart(4, '0');
-    fetch(`${dataPath}/labels/${activeTab}/${padded}.json`)
+    fetch(`${dataPath}/labels/${activeTab}/${padded}.json?${CACHE_V}`)
       .then(r => r.ok ? r.json() : [])
       .then(setLabels)
       .catch(() => setLabels([]));
