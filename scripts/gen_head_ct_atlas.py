@@ -259,6 +259,11 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
     import nibabel as nib
 
     print(f"\nBuilding atlas → {out_dir}")
+    # Clean output directory to remove stale files from previous runs
+    for sub in ["axial", "sagittal", "coronal", "labels"]:
+        p = out_dir / sub
+        if p.exists():
+            shutil.rmtree(p)
     ct_img = nib.load(ct_path)
     ct_data = ct_img.get_fdata(dtype=np.float32)
     print(f"CT shape: {ct_data.shape}, voxel: {ct_img.header.get_zooms()}")
