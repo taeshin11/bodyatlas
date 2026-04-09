@@ -200,6 +200,27 @@ export default function AboutContent() {
             </div>
           </section>
 
+          {/* Internal Links */}
+          <section>
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">Learn More</h2>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Link href="/how-to-use" className="flex items-center gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/50 transition-all group">
+                <ArrowRight className="w-5 h-5 text-indigo-400 group-hover:text-indigo-600" />
+                <div>
+                  <div className="font-semibold text-slate-800 text-sm">How to Use BodyAtlas</div>
+                  <div className="text-xs text-slate-500">Step-by-step guide & FAQ</div>
+                </div>
+              </Link>
+              <Link href="/privacy" className="flex items-center gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/50 transition-all group">
+                <ArrowRight className="w-5 h-5 text-indigo-400 group-hover:text-indigo-600" />
+                <div>
+                  <div className="font-semibold text-slate-800 text-sm">Privacy Policy</div>
+                  <div className="text-xs text-slate-500">How we handle your data</div>
+                </div>
+              </Link>
+            </div>
+          </section>
+
           {/* CTA */}
           <section className="text-center py-6">
             <h2 className="text-xl font-bold text-slate-900 mb-3">

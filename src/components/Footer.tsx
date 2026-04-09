@@ -1,14 +1,30 @@
 'use client';
 
-import { useI18n } from '@/lib/i18n-context';
+import Link from 'next/link';
 
 export default function Footer() {
-  const { t } = useI18n();
   return (
     <footer className="border-t border-slate-200/60 bg-white/50">
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-1">
-        <span><a href="http://www.spinai.net" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-500 transition-colors">SPINAI</a> 제작</span>
-        <span>&copy; {new Date().getFullYear()} BodyAtlas</span>
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Links */}
+          <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-xs text-slate-500">
+            <Link href="/about" className="hover:text-indigo-500 transition-colors">About</Link>
+            <Link href="/how-to-use" className="hover:text-indigo-500 transition-colors">How to Use</Link>
+            <Link href="/privacy" className="hover:text-indigo-500 transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-indigo-500 transition-colors">Terms of Service</Link>
+            <a href="mailto:taeshinkim11@gmail.com" className="hover:text-indigo-500 transition-colors">Contact</a>
+          </nav>
+
+          {/* Copyright */}
+          <div className="text-xs text-slate-400 text-center sm:text-right">
+            <span>&copy; {new Date().getFullYear()} BodyAtlas by{' '}
+              <a href="http://www.spinai.net" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-500 transition-colors">
+                SPINAI
+              </a>
+            </span>
+          </div>
+        </div>
       </div>
     </footer>
   );
