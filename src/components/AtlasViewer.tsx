@@ -220,7 +220,7 @@ export default function AtlasViewer({
               ref={imgRef}
               src={imagePath}
               alt={`${activeTab} slice ${currentSlice}`}
-              style={{ display: 'block', maxHeight: 'calc(100vh - 280px)', maxWidth: '100%', width: 'auto', height: 'auto' }}
+              style={{ display: 'block', maxHeight: 'calc(100vh - 280px)', maxWidth: '100%', width: 'auto', height: 'calc(100vh - 280px)' }}
               onLoad={(e) => {
                 const el = e.currentTarget;
                 setImgNatural({ w: el.naturalWidth, h: el.naturalHeight });
