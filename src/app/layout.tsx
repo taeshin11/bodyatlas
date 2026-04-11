@@ -59,8 +59,8 @@ export const metadata: Metadata = {
     images: ['https://bodyatlas-ten.vercel.app/opengraph-image'],
   },
   robots: { index: true, follow: true },
-  other: {
-    'google-site-verification': '',
+  verification: {
+    google: 'WddgcbVJsL2BGHNAje5m6DK56IcR0Mw5UOqozI2Xtrc',
   },
 };
 
