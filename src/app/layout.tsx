@@ -36,6 +36,16 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://bodyatlas-ten.vercel.app',
+    languages: {
+      'en': 'https://bodyatlas-ten.vercel.app',
+      'ko': 'https://bodyatlas-ten.vercel.app',
+      'ja': 'https://bodyatlas-ten.vercel.app',
+      'zh': 'https://bodyatlas-ten.vercel.app',
+      'es': 'https://bodyatlas-ten.vercel.app',
+      'de': 'https://bodyatlas-ten.vercel.app',
+      'fr': 'https://bodyatlas-ten.vercel.app',
+      'x-default': 'https://bodyatlas-ten.vercel.app',
+    },
   },
   openGraph: {
     title: 'BodyAtlas — Free Interactive Anatomy Atlas | IMAIOS Alternative ($0 vs $22/mo)',
@@ -61,6 +71,12 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   verification: {
     google: 'WddgcbVJsL2BGHNAje5m6DK56IcR0Mw5UOqozI2Xtrc',
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || '',
+    other: {
+      'naver-site-verification': process.env.NEXT_PUBLIC_NAVER_VERIFICATION || '',
+      'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION || '',
+      'baidu-site-verification': process.env.NEXT_PUBLIC_BAIDU_VERIFICATION || '',
+    },
   },
 };
 

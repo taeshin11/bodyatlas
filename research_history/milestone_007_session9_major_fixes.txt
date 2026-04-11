@@ -1,0 +1,80 @@
+================================================================================
+MILESTONE #007 - Session 9: Head CT 교체 + Chest CT 수정 + 뷰어 리팩토링
+================================================================================
+Date: 2026-04-07
+Session: 9
+
+================================================================================
+SUMMARY
+================================================================================
+
+이번 세션에서 수행한 주요 작업:
+
+1. Head CT 데이터 교체 (3회)
+   - s0011 (흉복부 CT, 머리 없음) → CT_Electrodes (전극 CT) → Muschelli template (정상 CT)
+   - 최종: Muschelli high-res CT template (130명 평균, 0.5mm, 512³)
+   - 라이선스: CC BY-NC-SA 4.0
+   - TotalSegmentator total + head_glands_cavities + brain_structures = 19 structures
+
+2. Chest CT annotation 수정
+   - VISTA3D segmentation 완전 제거 (Z-flip 버그 + 노이즈 + 비상업 라이선스)
+   - TotalSegmentator만 사용 (Apache 2.0, 108 structures)
+   - 골반에 rib annotation 뜨던 문제 해결
+
+3. AtlasViewer 전면 리팩토링
+   - Canvas 렌더링 → img + SVG overlay 방식으로 전환
+   - 모바일 aspect ratio 깨짐 문제 해결
+   - 스크롤 시 페이지 이동 방지 (passive: false wheel listener)
+
+4. Brain MRI contrast 개선
+   - Window center 160→165, width 200→130
+
+5. CDN 캐시 문제 대응
+   - 이미지 URL에 cache-busting query parameter 추가 (?v3)
+   - Vercel 강제 재배포
+
+6. SPINAI 크레딧 추가
+   - Footer에 "SPINAI 제작" + http://www.spinai.net 링크
+
+================================================================================
+DATA SOURCES & LICENSES
+================================================================================
+
+Head CT:
+  - CT: Muschelli high-res CT template (CC BY-NC-SA 4.0)
+  - Segmentation: TotalSegmentator (Apache 2.0)
+  - brain_structures: TotalSegmentator academic license (aca_JH13N7GGTG1VK7)
+
+Chest CT:
+  - CT: TotalSegmentator v2 s0011 (CC BY 4.0)
+  - Segmentation: TotalSegmentator only (Apache 2.0) — VISTA3D 제거됨
+
+Brain MRI:
+  - MRI: MNI152 T1 template (nilearn)
+  - Parcellation: OpenMAP-T1 Level5 (CC BY-NC)
+
+================================================================================
+CURRENT ATLAS STRUCTURE COUNT
+================================================================================
+
+  head-ct:   19 structures (312 axial, 512 sag, 512 cor)
+  chest-ct:  108 structures (431 axial, 311 sag, 311 cor)
+  brain-mri: 275 structures (189 axial, 197 sag, 233 cor)
+
+================================================================================
+KNOWN ISSUES
+================================================================================
+
+  - Vercel CDN 캐시: 구버전 이미지가 일부 사용자에게 남아있을 수 있음
+    → cache-busting param으로 대응 (CACHE_V 상수)
+  - Head CT가 template (평균)이라 개인 CT보다 부드러움
+  - TotalSegmentator academic license 키: aca_JH13N7GGTG1VK7
+
+================================================================================
+ENVIRONMENT
+================================================================================
+
+  - TotalSegmentator: vista3d conda env
+  - Python: C:/Users/taesh/Anaconda3/envs/vista3d/python.exe
+  - GPU: RTX 4090 24GB
+  - Base env NumPy 2.x 호환 문제 → vista3d env 필수
