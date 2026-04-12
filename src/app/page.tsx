@@ -28,7 +28,7 @@ export default function Home() {
   const { locale } = useI18n();
   const { user } = useAuth();
   const [selectedStructure, setSelectedStructure] = useState<Structure | null>(null);
-  const [activeRegion, setActiveRegion] = useState<BodyRegion>('chest');
+  const [activeRegion, setActiveRegion] = useState<BodyRegion>('head_neck');
   const [showAuth, setShowAuth] = useState(false);
   const [forceAxial, setForceAxial] = useState(0);
 

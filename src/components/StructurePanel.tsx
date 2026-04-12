@@ -158,7 +158,11 @@ export default function StructurePanel({ selectedStructure, onStructureSelect, l
           </div>
         ))}
         {filtered.length === 0 && (
-          <div className="text-center text-xs text-slate-400 py-4">No structures found</div>
+          <div className="text-center text-xs text-slate-400 py-4">
+            {search.trim()
+              ? `No structures matching "${search.trim()}"`
+              : 'Type a name to search (e.g. "liver", "femur")'}
+          </div>
         )}
       </div>
     </div>

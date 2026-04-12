@@ -87,6 +87,8 @@ export default function RegionSelector({ activeRegion, onRegionSelect, locale, i
           <button
             key={region.id}
             onClick={() => onRegionSelect(region.id)}
+            aria-label={region.label}
+            aria-pressed={activeRegion === region.id}
             className={`flex-1 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-1 ${
               activeRegion === region.id
                 ? 'bg-indigo-500 text-white shadow-sm'

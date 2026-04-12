@@ -445,6 +445,14 @@ def main():
 
     # Step 2: Run TotalSegmentator
     if not args.build_only:
+        # ── GPU global mutex (shared with other ML projects on this machine) ──
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).parent))
+        from gpu_lock import acquire as gpu_acquire
+        if not gpu_acquire("bodyatlas_head_ct", vram_mb=4000, on_busy="wait"):
+            print("GPU busy, exiting")
+            return
+
         import torch
         vram_free = torch.cuda.mem_get_info()[0] // 1024 // 1024 if torch.cuda.is_available() else 0
         print(f"VRAM free: {vram_free}MB")

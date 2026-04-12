@@ -144,6 +144,14 @@ def main():
     raw_out = args.out.parent / "vista3d_raw"
 
     if not args.skip_inference:
+        # ── GPU global mutex (shared with other ML projects on this machine) ──
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).parent))
+        from gpu_lock import acquire as gpu_acquire
+        if not gpu_acquire("bodyatlas_vista3d", vram_mb=12000, on_busy="wait"):
+            print("GPU busy, exiting")
+            return
+
         seg_path = run_bundle_inference(args.ct, raw_out)
         print(f"Raw segmentation: {seg_path}")
     else:

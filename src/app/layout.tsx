@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://bodyatlas-ten.vercel.app'),
   title: 'BodyAtlas — Free Interactive Cross-Sectional Anatomy Atlas | IMAIOS Alternative',
   description: 'Free interactive cross-sectional anatomy atlas — the best free alternative to IMAIOS e-Anatomy. Browse CT and MRI scans with labeled anatomical structures. Search any structure, see it highlighted instantly. Zero cost, zero install, works offline. Perfect for medical students, radiologists, and anatomy learners.',
-  keywords: 'free anatomy atlas, cross-sectional anatomy online free, CT anatomy atlas, MRI anatomy labels, IMAIOS free alternative, IMAIOS alternative free, interactive anatomy atlas, free alternative to IMAIOS e-anatomy, cross-sectional anatomy atlas online free, anatomy atlas for medical students, radiology anatomy tool, brain anatomy atlas free, free medical imaging atlas, 무료 해부학 아틀라스, 단면 해부학, 解剖学アトラス, 解剖学图谱, atlas anatomía gratis, anatomie atlas kostenlos, atlas anatomie gratuit',
+  keywords: 'free anatomy atlas, cross-sectional anatomy, CT MRI anatomy, IMAIOS alternative, interactive anatomy atlas, medical imaging atlas',
   manifest: '/manifest.json',
   icons: {
     icon: '/favicon.svg',
@@ -37,13 +37,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://bodyatlas-ten.vercel.app',
     languages: {
-      'en': 'https://bodyatlas-ten.vercel.app',
-      'ko': 'https://bodyatlas-ten.vercel.app',
-      'ja': 'https://bodyatlas-ten.vercel.app',
-      'zh': 'https://bodyatlas-ten.vercel.app',
-      'es': 'https://bodyatlas-ten.vercel.app',
-      'de': 'https://bodyatlas-ten.vercel.app',
-      'fr': 'https://bodyatlas-ten.vercel.app',
       'x-default': 'https://bodyatlas-ten.vercel.app',
     },
   },
@@ -97,12 +90,6 @@ export default function RootLayout({
       url: 'https://bodyatlas-ten.vercel.app',
       applicationSubCategory: 'Anatomy Atlas',
       inLanguage: ['en', 'ko', 'ja', 'zh', 'es', 'de', 'fr'],
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.8',
-        ratingCount: '120',
-        bestRating: '5',
-      },
       featureList: 'Cross-sectional anatomy viewer, CT/MRI labeled structures, Structure search, Offline support, Multi-language support, Free forever',
       screenshot: 'https://bodyatlas-ten.vercel.app/opengraph-image',
       author: { '@type': 'Organization', name: 'SPINAI' },
@@ -162,7 +149,7 @@ export default function RootLayout({
         {
           '@type': 'HowToStep',
           name: 'Open BodyAtlas',
-          text: 'Visit bodyatlas.vercel.app in any web browser. No account or installation required.',
+          text: 'Visit bodyatlas-ten.vercel.app in any web browser. No account or installation required.',
         },
         {
           '@type': 'HowToStep',

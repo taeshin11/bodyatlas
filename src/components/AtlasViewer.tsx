@@ -219,7 +219,7 @@ export default function AtlasViewer({
             <img
               ref={imgRef}
               src={imagePath}
-              alt={`${activeTab} slice ${currentSlice}`}
+              alt={`Cross-sectional anatomy ${activeTab} view, slice ${currentSlice - minSlice + 1} of ${maxSlice - minSlice + 1}`}
               style={{ display: 'block', maxHeight: 'calc(100vh - 280px)', maxWidth: '100%', width: 'auto', height: 'calc(100vh - 280px)' }}
               onLoad={(e) => {
                 const el = e.currentTarget;
