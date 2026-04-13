@@ -4,7 +4,7 @@ import { Lock } from 'lucide-react';
 
 export type BodyRegion =
   | 'head_neck' | 'chest' | 'abdomen' | 'pelvis' | 'brain_mri'
-  | 'our_head' | 'our_chest' | 'our_abdomen' | 'our_pelvis' | 'lumbar_mri';
+  | 'our_head' | 'our_chest' | 'our_abdomen' | 'our_pelvis' | 'our_brain_mri' | 'lumbar_mri';
 
 interface RegionConfig {
   id: BodyRegion;
@@ -56,6 +56,10 @@ export const BODY_REGIONS: RegionConfig[] = [
   {
     id: 'our_pelvis', label: 'Pelvis CT', labelKo: '골반 CT', icon: '🦴',
     dataPath: '/data/our-ct', axialRange: [0, 120], defaultSlice: 60, free: true, group: 'spinai',
+  },
+  {
+    id: 'our_brain_mri', label: 'Brain MRI', labelKo: '뇌 MRI', icon: '🧲',
+    dataPath: '/data/brain-mri', defaultSlice: 91, free: true, group: 'spinai',
   },
   {
     id: 'lumbar_mri', label: 'Lumbar MRI', labelKo: '요추 MRI', icon: '💿',
