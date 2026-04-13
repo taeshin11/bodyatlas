@@ -5,10 +5,10 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 // Increment to force CDN cache refresh
 const CACHE_V = 'v3';
 
-type Plane = 'axial' | 'sagittal' | 'coronal';
+type Plane = string;
 
 interface AtlasInfo {
-  planes: Record<Plane, { slices: number }>;
+  planes: Record<string, { slices: number }>;
 }
 
 interface Structure {
@@ -17,8 +17,8 @@ interface Structure {
   displayName: Record<string, string>;
   category: string;
   color: string;
-  bestSlice: Record<Plane, number>;
-  sliceRange: Record<Plane, number[]>;
+  bestSlice: Record<string, number>;
+  sliceRange: Record<string, number[]>;
 }
 
 interface SliceLabel {
@@ -35,16 +35,19 @@ interface AtlasViewerProps {
   regionAxialRange?: [number, number];
   regionDefaultSlice?: number;
   forceAxial?: number;
+  planes?: string[];
+  defaultPlane?: string;
 }
 
 export default function AtlasViewer({
   onStructureSelect, selectedStructure, locale,
   dataPath = '/data/chest-ct', regionAxialRange, regionDefaultSlice, forceAxial,
+  planes: planesProp, defaultPlane,
 }: AtlasViewerProps) {
   const [info, setInfo] = useState<AtlasInfo | null>(null);
   const [structures, setStructures] = useState<Structure[]>([]);
-  const [activeTab, setActiveTab] = useState<Plane>('axial');
-  const [sliceIndices, setSliceIndices] = useState<Record<Plane, number>>({ axial: 0, sagittal: 0, coronal: 0 });
+  const [activeTab, setActiveTab] = useState<Plane>(defaultPlane || 'axial');
+  const [sliceIndices, setSliceIndices] = useState<Record<string, number>>({});
   const [labels, setLabels] = useState<SliceLabel[]>([]);
   const [hoveredStructure, setHoveredStructure] = useState<string | null>(null);
   const [showOverlay, setShowOverlay] = useState(true);
@@ -53,6 +56,10 @@ export default function AtlasViewer({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+
+  // Derive available planes from info or prop
+  const availablePlanes = planesProp || (info ? Object.keys(info.planes) : ['axial', 'sagittal', 'coronal']);
+  const firstPlane = defaultPlane || availablePlanes[0] || 'axial';
 
   // ── Data loading ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -63,25 +70,30 @@ export default function AtlasViewer({
 
   useEffect(() => {
     if (!info) return;
-    setSliceIndices({
-      axial: regionDefaultSlice ?? Math.floor(info.planes.axial.slices / 2),
-      sagittal: Math.floor(info.planes.sagittal.slices / 2),
-      coronal: Math.floor(info.planes.coronal.slices / 2),
-    });
+    const indices: Record<string, number> = {};
+    for (const [plane, cfg] of Object.entries(info.planes)) {
+      indices[plane] = plane === firstPlane && regionDefaultSlice != null
+        ? regionDefaultSlice
+        : Math.floor(cfg.slices / 2);
+    }
+    setSliceIndices(indices);
+    if (!availablePlanes.includes(activeTab)) {
+      setActiveTab(firstPlane);
+    }
   }, [info, regionDefaultSlice]);
 
   useEffect(() => {
     if (regionDefaultSlice != null) {
-      setActiveTab('axial');
-      setSliceIndices(prev => ({ ...prev, axial: regionDefaultSlice }));
+      setActiveTab(firstPlane);
+      setSliceIndices(prev => ({ ...prev, [firstPlane]: regionDefaultSlice }));
     }
   }, [forceAxial]);
 
-  const currentSlice = sliceIndices[activeTab];
-  const minSlice = activeTab === 'axial' && regionAxialRange ? regionAxialRange[0] : 0;
-  const maxSlice = activeTab === 'axial' && regionAxialRange
+  const currentSlice = sliceIndices[activeTab] ?? 0;
+  const minSlice = (activeTab === 'axial' || activeTab === firstPlane) && regionAxialRange ? regionAxialRange[0] : 0;
+  const maxSlice = (activeTab === 'axial' || activeTab === firstPlane) && regionAxialRange
     ? regionAxialRange[1]
-    : info ? info.planes[activeTab].slices - 1 : 0;
+    : info?.planes[activeTab] ? info.planes[activeTab].slices - 1 : 0;
 
   const imagePath = info
     ? `${dataPath}/${activeTab}/${String(currentSlice).padStart(4, '0')}.png?${CACHE_V}`
@@ -100,10 +112,14 @@ export default function AtlasViewer({
   // Jump to structure's best slice
   useEffect(() => {
     if (!selectedStructure) return;
-    setSliceIndices({
-      axial: selectedStructure.bestSlice.axial,
-      sagittal: selectedStructure.bestSlice.sagittal,
-      coronal: selectedStructure.bestSlice.coronal,
+    setSliceIndices(prev => {
+      const next = { ...prev };
+      for (const plane of availablePlanes) {
+        if (selectedStructure.bestSlice[plane] != null) {
+          next[plane] = selectedStructure.bestSlice[plane];
+        }
+      }
+      return next;
     });
   }, [selectedStructure]);
 
@@ -182,7 +198,7 @@ export default function AtlasViewer({
     <div className="space-y-3">
       {/* Plane tabs */}
       <div className="flex rounded-xl bg-white/70 backdrop-blur-xl border border-slate-200/60 p-1 gap-1">
-        {(['axial', 'sagittal', 'coronal'] as const).map((tab) => (
+        {availablePlanes.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -190,7 +206,7 @@ export default function AtlasViewer({
               activeTab === tab ? 'bg-indigo-500 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            {tab === 'ap' ? 'AP' : tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
         ))}
       </div>
@@ -203,7 +219,7 @@ export default function AtlasViewer({
       >
         {/* Slice info */}
         <div className="absolute top-2 left-2 z-10 text-xs font-mono text-white/50 bg-black/40 px-2 py-0.5 rounded">
-          {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+          {activeTab === 'ap' ? 'AP' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
         </div>
         <div className="absolute top-2 right-2 z-10 text-xs font-mono text-white/50 bg-black/40 px-2 py-0.5 rounded">
           {currentSlice - minSlice + 1}/{maxSlice - minSlice + 1}

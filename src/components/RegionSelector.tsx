@@ -2,7 +2,9 @@
 
 import { Lock } from 'lucide-react';
 
-export type BodyRegion = 'chest' | 'head_neck' | 'abdomen' | 'pelvis' | 'brain_mri';
+export type BodyRegion =
+  | 'head_neck' | 'chest' | 'abdomen' | 'pelvis' | 'brain_mri'
+  | 'our_head' | 'our_chest' | 'our_abdomen' | 'our_pelvis' | 'lumbar_mri';
 
 interface RegionConfig {
   id: BodyRegion;
@@ -13,56 +15,51 @@ interface RegionConfig {
   axialRange?: [number, number];
   defaultSlice: number;
   free: boolean;
+  group: 'original' | 'spinai';
 }
 
 export const BODY_REGIONS: RegionConfig[] = [
+  // ── Original atlas ──
   {
-    id: 'head_neck',
-    label: 'Head & Neck',
-    labelKo: '머리/목',
-    icon: '🧠',
-    dataPath: '/data/head-ct',
-    defaultSlice: 100,
-    free: true,
+    id: 'head_neck', label: 'Head & Neck', labelKo: '머리/목', icon: '🧠',
+    dataPath: '/data/head-ct', defaultSlice: 100, free: true, group: 'original',
   },
   {
-    id: 'chest',
-    label: 'Chest',
-    labelKo: '흉부',
-    icon: '🫁',
-    dataPath: '/data/chest-ct',
-    axialRange: [200, 405],
-    defaultSlice: 320,
-    free: true,
+    id: 'chest', label: 'Chest', labelKo: '흉부', icon: '🫁',
+    dataPath: '/data/chest-ct', axialRange: [200, 405], defaultSlice: 320, free: true, group: 'original',
   },
   {
-    id: 'abdomen',
-    label: 'Abdomen',
-    labelKo: '복부',
-    icon: '🫀',
-    dataPath: '/data/chest-ct',
-    axialRange: [80, 200],
-    defaultSlice: 160,
-    free: true,
+    id: 'abdomen', label: 'Abdomen', labelKo: '복부', icon: '🫀',
+    dataPath: '/data/chest-ct', axialRange: [80, 200], defaultSlice: 160, free: true, group: 'original',
   },
   {
-    id: 'pelvis',
-    label: 'Pelvis',
-    labelKo: '골반',
-    icon: '🦴',
-    dataPath: '/data/chest-ct',
-    axialRange: [0, 80],
-    defaultSlice: 40,
-    free: true,
+    id: 'pelvis', label: 'Pelvis', labelKo: '골반', icon: '🦴',
+    dataPath: '/data/chest-ct', axialRange: [0, 80], defaultSlice: 40, free: true, group: 'original',
   },
   {
-    id: 'brain_mri',
-    label: 'Brain MRI',
-    labelKo: '뇌 MRI',
-    icon: '🧲',
-    dataPath: '/data/brain-mri',
-    defaultSlice: 91,
-    free: true,
+    id: 'brain_mri', label: 'Brain MRI', labelKo: '뇌 MRI', icon: '🧲',
+    dataPath: '/data/brain-mri', defaultSlice: 91, free: true, group: 'original',
+  },
+  // ── SPINAI atlas ──
+  {
+    id: 'our_head', label: 'Head CT', labelKo: '두부 CT', icon: '🧠',
+    dataPath: '/data/our-head-ct', defaultSlice: 116, free: true, group: 'spinai',
+  },
+  {
+    id: 'our_chest', label: 'Chest CT', labelKo: '흉부 CT', icon: '🫁',
+    dataPath: '/data/our-ct', axialRange: [260, 428], defaultSlice: 350, free: true, group: 'spinai',
+  },
+  {
+    id: 'our_abdomen', label: 'Abdomen CT', labelKo: '복부 CT', icon: '🫀',
+    dataPath: '/data/our-ct', axialRange: [120, 260], defaultSlice: 200, free: true, group: 'spinai',
+  },
+  {
+    id: 'our_pelvis', label: 'Pelvis CT', labelKo: '골반 CT', icon: '🦴',
+    dataPath: '/data/our-ct', axialRange: [0, 120], defaultSlice: 60, free: true, group: 'spinai',
+  },
+  {
+    id: 'lumbar_mri', label: 'Lumbar MRI', labelKo: '요추 MRI', icon: '💿',
+    dataPath: '/data/lumbar-mri', defaultSlice: 25, free: true, group: 'spinai',
   },
 ];
 
@@ -74,14 +71,14 @@ interface RegionSelectorProps {
 }
 
 export default function RegionSelector({ activeRegion, onRegionSelect, locale, isAuthenticated }: RegionSelectorProps) {
-  const getLabel = (r: RegionConfig) => {
-    if (locale === 'ko') return r.labelKo;
-    return r.label;
-  };
+  const getLabel = (r: RegionConfig) => locale === 'ko' ? r.labelKo : r.label;
 
-  return (
+  const original = BODY_REGIONS.filter(r => r.group === 'original');
+  const spinai = BODY_REGIONS.filter(r => r.group === 'spinai');
+
+  const renderRow = (regions: RegionConfig[]) => (
     <div className="flex rounded-xl bg-white/70 backdrop-blur-xl border border-slate-200/60 p-1 gap-1">
-      {BODY_REGIONS.map((region) => {
+      {regions.map((region) => {
         const locked = !region.free && !isAuthenticated;
         return (
           <button
@@ -103,6 +100,19 @@ export default function RegionSelector({ activeRegion, onRegionSelect, locale, i
           </button>
         );
       })}
+    </div>
+  );
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">Original</span>
+        {renderRow(original)}
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider whitespace-nowrap">SPINAI</span>
+        {renderRow(spinai)}
+      </div>
     </div>
   );
 }

@@ -1,15 +1,15 @@
 {
   "modality": "X-Ray",
   "planes": {
-    "lateral": {
-      "slices": 1,
-      "width": 679,
-      "height": 926
-    },
     "ap": {
-      "slices": 1,
-      "width": 467,
-      "height": 895
+      "slices": 10,
+      "width": 532,
+      "height": 900
+    },
+    "lateral": {
+      "slices": 10,
+      "width": 513,
+      "height": 900
     }
   }
 }
