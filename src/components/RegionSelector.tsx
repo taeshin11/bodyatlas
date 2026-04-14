@@ -59,7 +59,7 @@ export const BODY_REGIONS: RegionConfig[] = [
   },
   {
     id: 'our_brain_mri', label: 'Brain MRI', labelKo: '뇌 MRI', icon: '🧲',
-    dataPath: '/data/brain-mri', defaultSlice: 91, free: true, group: 'spinai',
+    dataPath: '/data/brain-mri-commercial', defaultSlice: 128, free: true, group: 'spinai',
   },
   {
     id: 'lumbar_mri', label: 'Lumbar MRI', labelKo: '요추 MRI', icon: '💿',
