@@ -1,5 +1,5 @@
 {
-  "last_check": "2026-04-16T15:05:06.698685",
+  "last_check": "2026-04-17T17:57:04.920002",
   "models": {
     "unet_ct_c65_20260407_122225": {
       "dice": 0.8083,
@@ -14,12 +14,24 @@
       "modality": "ct"
     },
     "unet_ct_c65_20260415_064501": {
-      "dice": 0.8466,
+      "dice": 0.8515,
+      "modality": "ct"
+    },
+    "unet_ct_c65_20260417_093321": {
+      "dice": 0.8515,
+      "modality": "ct"
+    },
+    "unet_ct_c65_20260417_093403": {
+      "dice": 0.0,
       "modality": "ct"
     },
     "unet_mri_c26_20260409_140851": {
       "dice": 0.5191,
       "modality": "mri"
+    },
+    "unet_xray_c34_20260406_084134": {
+      "dice": 0.9042,
+      "modality": "xray"
     },
     "unet_xray_c34_20260411_232821": {
       "dice": 0.0,
@@ -29,5 +41,10 @@
       "dice": 0.9042,
       "modality": "xray"
     }
+  },
+  "applied_ct": {
+    "name": "unet_ct_c65_20260415_064501",
+    "dice": 0.8515,
+    "applied_at": "2026-04-17T17:57:04.919001"
   }
 }
