@@ -42,3 +42,7 @@ scripts/__pycache__/
 
 # Monitor logs (keep status.json but ignore logs)
 scripts/monitor_log.txt
+
+# Auto-generated temp scripts (created by auto_model_monitor.py)
+scripts/_spinai_ct_inference.py
+scripts/_spinai_ct_rebuild.py

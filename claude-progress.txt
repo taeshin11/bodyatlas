@@ -345,3 +345,44 @@
 
 ### Git Commits (예정)
 - chore: add auto model monitor + Kaggle integration (Session 10)
+
+## Session 11 — 2026-04-17/18
+
+### 완료
+- **CT v2 학습 완료**: unet_ct_c65_20260415_064501 (EfficientUNet 20M params)
+  - Epoch 80/80 완료, Best Dice **0.8515** (기준 0.85 통과)
+- **자동화 시스템 첫 실행 성공**:
+  - `scripts/auto_model_monitor.py` 수동 실행 (스케줄러는 아직 미등록)
+  - CT v2 PASS 감지 → SPINAI inference 12초 → atlas rebuild 25초 → git push 자동
+  - commit `7d852d25 auto: update ct atlas from SPINAI models`
+- **our-ct atlas가 자체 UNet으로 완전 전환**:
+  - 이전: TotalSegmentator v2 pre-segmented 데이터 소비
+  - 현재: unet_ct_c65 inference 결과 직접 사용
+  - **VISTA3D 의존성 제거 — our-ct는 이제 Apache 2.0 완전 상업 가능**
+- .gitignore 업데이트:
+  - scripts/_spinai_ct_inference.py (자동생성 임시)
+  - scripts/_spinai_ct_rebuild.py (자동생성 임시)
+
+### 발견된 이슈
+- unet_ct_c65 동일 Dice 0.8515 모델 3개 (064501, 093321, 093403) — 학습 스크립트 중복 실행 흔적
+  - 현재는 가장 오래된 064501을 사용 중 — 문제 없음
+
+### 다음 세션에서 해야 할 일
+1. **MRI 모델 재학습 전략** (최우선): Dice 0.5191 → 0.70 필요
+   - 데이터 보강 (Kaggle에서 추가 MRI 데이터셋 다운로드)
+   - 또는 아키텍처 변경 (EfficientUNet → nnUNet 검토)
+2. **X-ray atlas 자동 재생성 파이프라인 구현**:
+   - unet_xray_c34 (Dice 0.9042) 이미 준비됨
+   - auto_model_monitor.py의 MODEL_ATLAS_MAP에 xray 추가 필요
+   - X-ray용 atlas builder 작성 (2D PNG + JSON contour)
+3. **chest-ct도 자체 UNet으로 교체 검토**:
+   - unet_ct_c65 65-class가 chest/abdomen/pelvis 대부분 커버
+   - VISTA3D 비상업 의존성 완전 제거 가능
+4. **사용자 수작업 리마인드**:
+   - setup_scheduler.bat 관리자 권한 실행 (매일 자동화 활성화)
+   - Google/Naver/Bing/Yandex/Baidu 포털 등록 + .env.local 인증코드
+   - (선택) 커스텀 도메인 구매
+
+### Git Commits
+- 7d852d25 auto: update ct atlas from SPINAI models (자동)
+- f5350b6f chore: add auto model monitor + Kaggle integration (Session 10)
