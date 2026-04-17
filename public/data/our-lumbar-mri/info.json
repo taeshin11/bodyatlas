@@ -1,0 +1,23 @@
+{
+  "modality": "MRI",
+  "planes": {
+    "axial": {
+      "slices": 578
+    },
+    "sagittal": {
+      "slices": 448
+    },
+    "coronal": {
+      "slices": 50
+    }
+  },
+  "window": {
+    "center": 0,
+    "width": 0
+  },
+  "voxelSpacing": [
+    3.32,
+    0.62,
+    0.5
+  ]
+}

@@ -1,0 +1,614 @@
+{
+  "totalStructures": 21,
+  "structures": [
+    {
+      "id": 0,
+      "name": "L1",
+      "displayName": {
+        "en": "L1 Vertebra",
+        "ko": "L1 척추",
+        "ja": "L1 Vertebra",
+        "zh": "L1 Vertebra",
+        "es": "L1 Vertebra",
+        "de": "L1 Vertebra",
+        "fr": "L1 Vertebra"
+      },
+      "category": "bone",
+      "color": "#F59E0B",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "name": "L2",
+      "displayName": {
+        "en": "L2 Vertebra",
+        "ko": "L2 척추",
+        "ja": "L2 Vertebra",
+        "zh": "L2 Vertebra",
+        "es": "L2 Vertebra",
+        "de": "L2 Vertebra",
+        "fr": "L2 Vertebra"
+      },
+      "category": "bone",
+      "color": "#F59E0B",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "L3",
+      "displayName": {
+        "en": "L3 Vertebra",
+        "ko": "L3 척추",
+        "ja": "L3 Vertebra",
+        "zh": "L3 Vertebra",
+        "es": "L3 Vertebra",
+        "de": "L3 Vertebra",
+        "fr": "L3 Vertebra"
+      },
+      "category": "bone",
+      "color": "#F59E0B",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "L4",
+      "displayName": {
+        "en": "L4 Vertebra",
+        "ko": "L4 척추",
+        "ja": "L4 Vertebra",
+        "zh": "L4 Vertebra",
+        "es": "L4 Vertebra",
+        "de": "L4 Vertebra",
+        "fr": "L4 Vertebra"
+      },
+      "category": "bone",
+      "color": "#F59E0B",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "L5",
+      "displayName": {
+        "en": "L5 Vertebra",
+        "ko": "L5 척추",
+        "ja": "L5 Vertebra",
+        "zh": "L5 Vertebra",
+        "es": "L5 Vertebra",
+        "de": "L5 Vertebra",
+        "fr": "L5 Vertebra"
+      },
+      "category": "bone",
+      "color": "#F59E0B",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "name": "S1",
+      "displayName": {
+        "en": "S1 Vertebra",
+        "ko": "S1 척추",
+        "ja": "S1 Vertebra",
+        "zh": "S1 Vertebra",
+        "es": "S1 Vertebra",
+        "de": "S1 Vertebra",
+        "fr": "S1 Vertebra"
+      },
+      "category": "bone",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "name": "T10",
+      "displayName": {
+        "en": "T10 Vertebra",
+        "ko": "T10 척추",
+        "ja": "T10 Vertebra",
+        "zh": "T10 Vertebra",
+        "es": "T10 Vertebra",
+        "de": "T10 Vertebra",
+        "fr": "T10 Vertebra"
+      },
+      "category": "bone",
+      "color": "#10B981",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "name": "T11",
+      "displayName": {
+        "en": "T11 Vertebra",
+        "ko": "T11 척추",
+        "ja": "T11 Vertebra",
+        "zh": "T11 Vertebra",
+        "es": "T11 Vertebra",
+        "de": "T11 Vertebra",
+        "fr": "T11 Vertebra"
+      },
+      "category": "bone",
+      "color": "#10B981",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "name": "T12",
+      "displayName": {
+        "en": "T12 Vertebra",
+        "ko": "T12 척추",
+        "ja": "T12 Vertebra",
+        "zh": "T12 Vertebra",
+        "es": "T12 Vertebra",
+        "de": "T12 Vertebra",
+        "fr": "T12 Vertebra"
+      },
+      "category": "bone",
+      "color": "#10B981",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "name": "T5",
+      "displayName": {
+        "en": "T5 Vertebra",
+        "ko": "T5 척추",
+        "ja": "T5 Vertebra",
+        "zh": "T5 Vertebra",
+        "es": "T5 Vertebra",
+        "de": "T5 Vertebra",
+        "fr": "T5 Vertebra"
+      },
+      "category": "bone",
+      "color": "#10B981",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "name": "T6",
+      "displayName": {
+        "en": "T6 Vertebra",
+        "ko": "T6 척추",
+        "ja": "T6 Vertebra",
+        "zh": "T6 Vertebra",
+        "es": "T6 Vertebra",
+        "de": "T6 Vertebra",
+        "fr": "T6 Vertebra"
+      },
+      "category": "bone",
+      "color": "#10B981",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "name": "T7",
+      "displayName": {
+        "en": "T7 Vertebra",
+        "ko": "T7 척추",
+        "ja": "T7 Vertebra",
+        "zh": "T7 Vertebra",
+        "es": "T7 Vertebra",
+        "de": "T7 Vertebra",
+        "fr": "T7 Vertebra"
+      },
+      "category": "bone",
+      "color": "#10B981",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "name": "T8",
+      "displayName": {
+        "en": "T8 Vertebra",
+        "ko": "T8 척추",
+        "ja": "T8 Vertebra",
+        "zh": "T8 Vertebra",
+        "es": "T8 Vertebra",
+        "de": "T8 Vertebra",
+        "fr": "T8 Vertebra"
+      },
+      "category": "bone",
+      "color": "#10B981",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "name": "T9",
+      "displayName": {
+        "en": "T9 Vertebra",
+        "ko": "T9 척추",
+        "ja": "T9 Vertebra",
+        "zh": "T9 Vertebra",
+        "es": "T9 Vertebra",
+        "de": "T9 Vertebra",
+        "fr": "T9 Vertebra"
+      },
+      "category": "bone",
+      "color": "#10B981",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "name": "femur",
+      "displayName": {
+        "en": "Femur",
+        "ko": "대퇴골",
+        "ja": "Femur",
+        "zh": "Femur",
+        "es": "Femur",
+        "de": "Femur",
+        "fr": "Femur"
+      },
+      "category": "bone",
+      "color": "#F97316",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "name": "iliac",
+      "displayName": {
+        "en": "Iliac",
+        "ko": "장골",
+        "ja": "Iliac",
+        "zh": "Iliac",
+        "es": "Iliac",
+        "de": "Iliac",
+        "fr": "Iliac"
+      },
+      "category": "bone",
+      "color": "#EC4899",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "name": "pedicle",
+      "displayName": {
+        "en": "Pedicle",
+        "ko": "척추경",
+        "ja": "Pedicle",
+        "zh": "Pedicle",
+        "es": "Pedicle",
+        "de": "Pedicle",
+        "fr": "Pedicle"
+      },
+      "category": "bone",
+      "color": "#60A5FA",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "name": "sacrum",
+      "displayName": {
+        "en": "Sacrum",
+        "ko": "천골",
+        "ja": "Sacrum",
+        "zh": "Sacrum",
+        "es": "Sacrum",
+        "de": "Sacrum",
+        "fr": "Sacrum"
+      },
+      "category": "bone",
+      "color": "#8B5CF6",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 18,
+      "name": "spine_other",
+      "displayName": {
+        "en": "Spine Other",
+        "ko": "기타 척추",
+        "ja": "Spine Other",
+        "zh": "Spine Other",
+        "es": "Spine Other",
+        "de": "Spine Other",
+        "fr": "Spine Other"
+      },
+      "category": "other",
+      "color": "#94A3B8",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 19,
+      "name": "spinous_process",
+      "displayName": {
+        "en": "Spinous Process",
+        "ko": "극돌기",
+        "ja": "Spinous Process",
+        "zh": "Spinous Process",
+        "es": "Spinous Process",
+        "de": "Spinous Process",
+        "fr": "Spinous Process"
+      },
+      "category": "bone",
+      "color": "#A78BFA",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    },
+    {
+      "id": 20,
+      "name": "transverse_process",
+      "displayName": {
+        "en": "Transverse Process",
+        "ko": "횡돌기",
+        "ja": "Transverse Process",
+        "zh": "Transverse Process",
+        "es": "Transverse Process",
+        "de": "Transverse Process",
+        "fr": "Transverse Process"
+      },
+      "category": "bone",
+      "color": "#34D399",
+      "bestSlice": {
+        "ap": 0,
+        "lateral": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ],
+        "lateral": [
+          0,
+          9
+        ]
+      }
+    }
+  ]
+}
