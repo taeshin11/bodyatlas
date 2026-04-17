@@ -45,6 +45,14 @@ MODEL_ATLAS_MAP = {
         "atlas_output": PROJECT_ROOT / "public" / "data" / "our-ct",
         "source_ct": SPINAI_ROOT / "data" / "cat_F_opensource" / "TotalSegmentator_v2" / "s0174" / "ct.nii.gz",
     },
+    "mri": {
+        "atlas_output": PROJECT_ROOT / "public" / "data" / "our-lumbar-mri",
+        "source_mri": SPINAI_ROOT / "data" / "cat_F_opensource" / "SPIDER_lumbar" / "images" / "1_t2.mha",
+    },
+    "xray": {
+        "atlas_output": PROJECT_ROOT / "public" / "data" / "our-xray",
+        "max_cases": 10,
+    },
 }
 
 
@@ -262,6 +270,52 @@ print("Atlas rebuild complete")
     script_path.write_text(code, encoding="utf-8")
 
 
+def run_mri_rebuild(model_info: dict) -> bool:
+    """Run MRI atlas rebuild using gen_our_lumbar_mri_atlas.py."""
+    ckpt = Path(model_info["model_dir"]) / "best_model.pth"
+    if not ckpt.exists():
+        log(f"  [FAIL] MRI checkpoint not found: {ckpt}")
+        return False
+
+    script = PROJECT_ROOT / "scripts" / "gen_our_lumbar_mri_atlas.py"
+    log(f"  Running MRI rebuild: {model_info['name']} (Dice={model_info['best_dice']:.4f})...")
+    result = subprocess.run(
+        [PYTHON_SPINAI, str(script), "--checkpoint", str(ckpt),
+         "--out", str(MODEL_ATLAS_MAP["mri"]["atlas_output"])],
+        capture_output=True, text=True, timeout=1800,
+        cwd=str(PROJECT_ROOT),
+    )
+    if result.returncode != 0:
+        log(f"  [FAIL] MRI rebuild failed: {result.stderr[-500:]}")
+        return False
+    log(f"  [OK] MRI atlas rebuilt")
+    return True
+
+
+def run_xray_rebuild(model_info: dict) -> bool:
+    """Run X-ray atlas rebuild using gen_our_xray_atlas.py."""
+    ckpt = Path(model_info["model_dir"]) / "best_model.pth"
+    if not ckpt.exists():
+        log(f"  [FAIL] X-ray checkpoint not found: {ckpt}")
+        return False
+
+    script = PROJECT_ROOT / "scripts" / "gen_our_xray_atlas.py"
+    max_cases = MODEL_ATLAS_MAP["xray"].get("max_cases", 10)
+    log(f"  Running X-ray rebuild: {model_info['name']} (Dice={model_info['best_dice']:.4f})...")
+    result = subprocess.run(
+        [PYTHON_SPINAI, str(script), "--checkpoint", str(ckpt),
+         "--out", str(MODEL_ATLAS_MAP["xray"]["atlas_output"]),
+         "--max-cases", str(max_cases)],
+        capture_output=True, text=True, timeout=1800,
+        cwd=str(PROJECT_ROOT),
+    )
+    if result.returncode != 0:
+        log(f"  [FAIL] X-ray rebuild failed: {result.stderr[-500:]}")
+        return False
+    log(f"  [OK] X-ray atlas rebuilt")
+    return True
+
+
 def git_commit_and_push(message: str) -> bool:
     try:
         os.chdir(str(PROJECT_ROOT))
@@ -329,6 +383,10 @@ def main():
         success = False
         if modality == "ct" and modality in MODEL_ATLAS_MAP:
             success = run_ct_inference_and_rebuild(best)
+        elif modality == "mri" and modality in MODEL_ATLAS_MAP:
+            success = run_mri_rebuild(best)
+        elif modality == "xray" and modality in MODEL_ATLAS_MAP:
+            success = run_xray_rebuild(best)
         else:
             log(f"  [SKIP] {modality} atlas auto-rebuild not yet implemented")
             continue

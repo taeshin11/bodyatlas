@@ -386,3 +386,58 @@
 ### Git Commits
 - 7d852d25 auto: update ct atlas from SPINAI models (자동)
 - f5350b6f chore: add auto model monitor + Kaggle integration (Session 10)
+
+## Session 12
+- Date: 2026-04-18
+- Focus: X-ray + MRI atlas 파이프라인 구현, chest-ct 라이선스 검증, 자동화 확장
+
+### 주요 성과
+1. **MRI 모델이 자동으로 기준 통과 (Dice 0.7016)** — Session 11 이후 재학습된 `unet_mri_c26_20260417_212345`
+2. **X-ray atlas 자동 파이프라인 구현** — `gen_our_xray_atlas.py` (unet_xray_c34 기반 Apache 2.0)
+   - AP 10 + Lateral 10 case, 21 structures 자동 생성
+   - 소스: cat_A_ap_xray, cat_B_lat_xray (자체 수집 데이터)
+3. **MRI atlas 자동 파이프라인 구현** — `gen_our_lumbar_mri_atlas.py`
+   - SPIDER_lumbar T2 → unet_mri_c26 → our-lumbar-mri/
+   - **이슈:** 모델이 axial slice 기대 vs SPIDER는 sagittal — 7 classes만 검출됨 (정상 26 중)
+4. **auto_model_monitor.py 확장:**
+   - `MODEL_ATLAS_MAP`에 mri + xray 추가
+   - `run_mri_rebuild` / `run_xray_rebuild` 핸들러 구현
+   - 자동 실행 성공: git commit df7b59a2 (mri + xray atlas) 푸시 완료
+5. **chest-ct 라이선스 재검증:**
+   - 기존 HANDOVER: "VISTA3D 비상업 포함" (레거시 정보)
+   - 실제 확인: chest-ct 108 structures 전부 TotalSegmentator 출처
+   - **chest-ct는 이미 Apache 2.0 (VISTA3D 실제로 머지 안 됨)**
+
+### 발견된 이슈
+- **MRI atlas orientation mismatch:**
+  - unet_mri_c26은 axial slice 단위 학습
+  - SPIDER_lumbar는 sagittal 저장 (shape Z=50, XY=448x578)
+  - 결과: 26 classes 중 7개만 검출 (false positive 포함 가능)
+  - 해결책: axial-reformatted MRI 소스 사용 or volume permutation 테스트
+- **head-ct 학술 라이선스 (brain_structures)**: TotalSegmentator academic key 사용 중 — 상업 배포 시 재검토 필요
+- **brain-mri (Original)**: OpenMAP-T1 CC BY-NC 여전히 사용 중 — brain-mri-commercial로 전환 검토
+
+### Frontend 통합 미완
+- our-xray atlas 데이터 생성됨 but UI 미연결 (SpineXrayViewer는 dead code, main page에 미탑재)
+- our-lumbar-mri 생성됨 but RegionSelector.lumbar_mri는 여전히 /data/lumbar-mri 사용
+- 다음 세션 작업: RegionSelector + page.tsx에 xray/new-mri 연결
+
+### 다음 세션 우선순위
+1. **MRI 모델 재학습 or orientation fix**
+   - axial MRI 데이터셋 추가 or SPIDER를 axial-reformat
+   - sagittal-trained 모델 별도 학습 검토
+2. **Frontend 통합** (아무리 atlas 있어도 사용자가 못 봄)
+   - SpineXrayViewer를 main page에 wire up
+   - lumbar_mri dataPath 전환 (our-lumbar-mri이 더 다양한 구조 생성되면)
+3. **head-ct / brain-mri 라이선스 정리**
+   - Original group 내 비상업 데이터 제거 전략
+   - 또는 Original 그룹 자체 제거
+
+### 사용자 수작업 TODO (변화 없음)
+- setup_scheduler.bat 관리자 권한 실행
+- Google/Naver/Bing/Yandex/Baidu 포털 등록 + .env.local 인증코드
+- (선택) 커스텀 도메인 구매
+
+### Git Commits (Session 12)
+- df7b59a2 auto: update mri, xray atlas from SPINAI models (자동 모니터)
+- (이 세션 수동 commit: 스크립트 + HANDOVER 업데이트)
