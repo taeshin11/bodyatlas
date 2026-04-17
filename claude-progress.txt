@@ -295,3 +295,53 @@
   - head-ct: 66 structures (orientation+crop fixed), 130/311/311 slices
   - chest-ct: 122 structures (orientation fixed), 431/311/311 slices
 - git commit fb8ac1b6 + push
+
+## Session 9 — 2026-04-08
+
+### 완료
+- SPINAI atlas 탭 5개 추가 (Head CT, Chest CT, Abdomen CT, Pelvis CT, Lumbar MRI)
+- RegionSelector.tsx 2행 구조: Original / SPINAI 그룹 분리
+- SPINAI Brain MRI 탭 추가 → FastSurfer+MedSAM hybrid로 교체 (commercial)
+- git commit:
+  - feat: SPINAI atlas tabs (Head/Chest/Abdomen/Pelvis CT, Lumbar MRI)
+  - feat: Replace SPINAI Brain MRI with FastSurfer (commercial license)
+  - feat: hybrid Brain MRI atlas with MedSAM subcortical refinement (083f50c3)
+
+## Session 10 — 2026-04-17
+
+### 완료
+- **SPINAI 모델 자동 모니터링 시스템 구축**:
+  - `scripts/auto_model_monitor.py` (Windows cp949 대응, UTF-8 강제)
+  - D:\ImageLabelAPI_SPINAI\outputs\models\ 전체 train.log 파싱 → Dice 기준 체크
+  - 기준 초과 시: inference → per-class NIfTI 생성 → gen_our_ct_atlas 재실행 → git push
+  - 기준: CT ≥ 0.85, MRI ≥ 0.70, X-ray ≥ 0.90
+- `scripts/auto_monitor.bat` + `scripts/setup_scheduler.bat` 추가
+  - Windows Task Scheduler에 매일 09:00 자동 실행 등록용 (관리자 권한 필요)
+- `scripts/monitor_status.json` 첫 실행 생성: 7개 모델 스냅샷 저장
+- **Kaggle API 연동**:
+  - KAGGLE_API_TOKEN Windows 전역 환경변수 영구 설정
+  - 정책 확립: 다운로드 전용, 업로드 금지 (의료 데이터 유출 방지)
+  - 학습은 전부 D:\ImageLabelAPI_SPINAI\ 로컬 RTX 4090에서만
+- **SEO 다국어 포털 대응 검증**:
+  - robots.ts에 Naver(Yeti), Daum, Baidu, Yandex, Seznam 명시 허용 확인
+  - layout.tsx 인증 메타태그: google/naver/bing/yandex/baidu env 변수 대응
+  - IndexNow postbuild 자동 제출 작동 중
+  - 사용자 수작업 안내: 각 포털 등록 → 인증코드 발급 → .env.local 입력
+- 메모리 추가:
+  - feedback_check_spinai_models.md (세션 시작 시 모델 체크 규칙)
+  - feedback_no_data_upload.md (외부 업로드 금지 규칙)
+
+### 현재 모델 상태 (2026-04-17)
+- unet_ct_c65_v2 (EfficientUNet 20M): Dice 0.8505, epoch 78/80, **기준 통과**
+- unet_ct_c65 v1: Dice 0.8083 (미달)
+- unet_xray_c34: Dice 0.9042, 완료, **기준 통과**
+- unet_mri_c26: Dice 0.5191, 완료, 미달 (추가 학습 필요)
+
+### 다음
+- CT v2 학습 완료 대기 → 자동 monitor가 VISTA3D 대체 atlas 생성
+- 사용자 수작업: setup_scheduler.bat 관리자 권한 실행
+- 사용자 수작업: 포털 등록 + .env.local 인증코드 입력
+- 사용자 수작업: 커스텀 도메인 구매 검토 (SEO 장기 효과)
+
+### Git Commits (예정)
+- chore: add auto model monitor + Kaggle integration (Session 10)

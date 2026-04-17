@@ -1,0 +1,33 @@
+{
+  "last_check": "2026-04-16T15:05:06.698685",
+  "models": {
+    "unet_ct_c65_20260407_122225": {
+      "dice": 0.8083,
+      "modality": "ct"
+    },
+    "unet_ct_c65_20260415_061935": {
+      "dice": 0.0,
+      "modality": "ct"
+    },
+    "unet_ct_c65_20260415_062520": {
+      "dice": 0.0,
+      "modality": "ct"
+    },
+    "unet_ct_c65_20260415_064501": {
+      "dice": 0.8466,
+      "modality": "ct"
+    },
+    "unet_mri_c26_20260409_140851": {
+      "dice": 0.5191,
+      "modality": "mri"
+    },
+    "unet_xray_c34_20260411_232821": {
+      "dice": 0.0,
+      "modality": "xray"
+    },
+    "unet_xray_c34_20260412_154159": {
+      "dice": 0.9042,
+      "modality": "xray"
+    }
+  }
+}

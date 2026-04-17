@@ -36,3 +36,9 @@ next-env.d.ts
 .vercel
 data_pipeline/
 *.nii.gz
+
+# Python cache
+scripts/__pycache__/
+
+# Monitor logs (keep status.json but ignore logs)
+scripts/monitor_log.txt
