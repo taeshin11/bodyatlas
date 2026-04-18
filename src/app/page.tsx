@@ -8,6 +8,7 @@ import FeedbackButton from '@/components/FeedbackButton';
 import InstallPrompt from '@/components/InstallPrompt';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import AtlasViewer from '@/components/AtlasViewer';
+import SpineXrayViewer from '@/components/SpineXrayViewer';
 import StructurePanel from '@/components/StructurePanel';
 import RegionSelector, { BODY_REGIONS, type BodyRegion } from '@/components/RegionSelector';
 import AuthGate from '@/components/AuthGate';
@@ -55,6 +56,7 @@ export default function Home() {
 
   const currentRegion = BODY_REGIONS.find(r => r.id === activeRegion)!;
   const dataPath = currentRegion.dataPath;
+  const isXray = activeRegion === 'our_xray';
 
   return (
     <ErrorBoundary>
@@ -91,15 +93,24 @@ export default function Home() {
             <>
                 {/* Desktop Layout */}
                 <div className="hidden lg:grid lg:grid-cols-[1fr_280px] gap-4">
-                  <AtlasViewer
-                    onStructureSelect={handleStructureSelect}
-                    selectedStructure={selectedStructure}
-                    locale={locale}
-                    dataPath={dataPath}
-                    regionAxialRange={currentRegion.axialRange}
-                    regionDefaultSlice={currentRegion.defaultSlice}
-                    forceAxial={forceAxial}
-                  />
+                  {isXray ? (
+                    <SpineXrayViewer
+                      onStructureSelect={handleStructureSelect}
+                      selectedStructure={selectedStructure}
+                      locale={locale}
+                      dataPath={dataPath}
+                    />
+                  ) : (
+                    <AtlasViewer
+                      onStructureSelect={handleStructureSelect}
+                      selectedStructure={selectedStructure}
+                      locale={locale}
+                      dataPath={dataPath}
+                      regionAxialRange={currentRegion.axialRange}
+                      regionDefaultSlice={currentRegion.defaultSlice}
+                      forceAxial={forceAxial}
+                    />
+                  )}
                   <StructurePanel
                     selectedStructure={selectedStructure}
                     onStructureSelect={handleStructureSelect}
@@ -111,15 +122,24 @@ export default function Home() {
 
                 {/* Mobile Layout — viewer on top, search below */}
                 <div className="lg:hidden space-y-3">
-                  <AtlasViewer
-                    onStructureSelect={handleStructureSelect}
-                    selectedStructure={selectedStructure}
-                    locale={locale}
-                    dataPath={dataPath}
-                    regionAxialRange={currentRegion.axialRange}
-                    regionDefaultSlice={currentRegion.defaultSlice}
-                    forceAxial={forceAxial}
-                  />
+                  {isXray ? (
+                    <SpineXrayViewer
+                      onStructureSelect={handleStructureSelect}
+                      selectedStructure={selectedStructure}
+                      locale={locale}
+                      dataPath={dataPath}
+                    />
+                  ) : (
+                    <AtlasViewer
+                      onStructureSelect={handleStructureSelect}
+                      selectedStructure={selectedStructure}
+                      locale={locale}
+                      dataPath={dataPath}
+                      regionAxialRange={currentRegion.axialRange}
+                      regionDefaultSlice={currentRegion.defaultSlice}
+                      forceAxial={forceAxial}
+                    />
+                  )}
                   <StructurePanel
                     selectedStructure={selectedStructure}
                     onStructureSelect={handleStructureSelect}

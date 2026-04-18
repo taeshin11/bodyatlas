@@ -5,10 +5,10 @@
       "slices": 578
     },
     "sagittal": {
-      "slices": 448
+      "slices": 50
     },
     "coronal": {
-      "slices": 50
+      "slices": 448
     }
   },
   "window": {

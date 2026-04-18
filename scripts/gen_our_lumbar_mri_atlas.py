@@ -60,24 +60,30 @@ def mri_to_png_slice(sl: np.ndarray) -> Image.Image:
 
 
 def load_mri_volume(mha_path: Path):
+    """Load SPIDER MRI. SPIDER is sagittal-acquired: sitk Z axis = HF, sitk X = LR (slice thickness).
+
+    Returns vol in (X, Y, Z) = (AP=448, LR=50, HF=578) convention for atlas builder.
+    """
     import SimpleITK as sitk
     img = sitk.ReadImage(str(mha_path))
-    arr = sitk.GetArrayFromImage(img)  # (Z,Y,X) for sitk
-    # SPIDER: shape (H_disp, W_disp, N_slices) via direct read - confirmed sagittal
-    spacing = img.GetSpacing()  # (sx, sy, sz)
-    # Return as (X, Y, Z) to match existing atlas convention
-    vol = np.moveaxis(arr, 0, 2)
+    arr = sitk.GetArrayFromImage(img)  # sitk gives (Z, Y, X) = (HF=578, AP=448, LR=50)
+    spacing = img.GetSpacing()  # (sx, sy, sz) = (LR_spacing=3.32, AP_spacing=0.625, HF_spacing=0.5)
+    vol = np.transpose(arr, (1, 2, 0))  # (AP=448, LR=50, HF=578)
     return vol, spacing, img
 
 
 def run_inference(vol: np.ndarray, ckpt: Path) -> np.ndarray:
-    """Run unet_mri_c26 on (X,Y,Z) volume, return (X,Y,Z) mask."""
+    """Run unet_mri_c26 along sagittal slice direction.
+
+    vol shape: (AP=448, LR=50, HF=578). For SPIDER (sagittal MRI), the ACQUIRED slice
+    plane is sagittal = through LR. Model was trained on sagittal slices too (via SPIDER
+    data). So predict_volume must see (LR, HF, AP) = 50 sagittal slices of 578x448.
+    """
     from inference.predictor import SpinAIPredictor
     predictor = SpinAIPredictor(checkpoints={"mri": str(ckpt)})
-    # predict_volume expects (Z,H,W)
-    vol_zhw = np.moveaxis(vol, 2, 0)
-    mask_zhw = predictor.predict_volume(vol_zhw, "mri", batch_size=4)
-    return np.moveaxis(mask_zhw, 0, 2)
+    vol_zhw = np.transpose(vol, (1, 2, 0))  # (LR=50, HF=578, AP=448)
+    mask_zhw = predictor.predict_volume(vol_zhw, "mri", batch_size=2)
+    return np.transpose(mask_zhw, (2, 0, 1))  # back to (AP, LR, HF)
 
 
 def build_atlas(vol: np.ndarray, mask: np.ndarray, spacing: tuple, class_names: dict, out_dir: Path):
@@ -101,10 +107,14 @@ def build_atlas(vol: np.ndarray, mask: np.ndarray, spacing: tuple, class_names: 
 
     print(f"Active classes: {len(merged)}")
 
+    # vol shape: (AP=448, LR=50, HF=578)
+    # axial = perpendicular to HF -> slice along axis 2 (578 slices)
+    # sagittal = perpendicular to LR -> slice along axis 1 (50 slices, but anatomically correct)
+    # coronal = perpendicular to AP -> slice along axis 0 (448 slices)
     planes = {
         "axial":    (2, vol.shape[2]),
-        "sagittal": (0, vol.shape[0]),
-        "coronal":  (1, vol.shape[1]),
+        "sagittal": (1, vol.shape[1]),
+        "coronal":  (0, vol.shape[0]),
     }
 
     structures = []

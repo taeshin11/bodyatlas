@@ -23,6 +23,7 @@ interface SpineXrayViewerProps {
   onStructureSelect?: (structure: Structure | null) => void;
   selectedStructure?: Structure | null;
   locale: string;
+  dataPath?: string;
 }
 
 type XrayView = 'lateral' | 'ap';
@@ -32,7 +33,7 @@ const VIEW_LABELS: Record<XrayView, { en: string; ko: string }> = {
   ap:      { en: 'AP',      ko: '전후면' },
 };
 
-export default function SpineXrayViewer({ onStructureSelect, selectedStructure, locale }: SpineXrayViewerProps) {
+export default function SpineXrayViewer({ onStructureSelect, selectedStructure, locale, dataPath = '/data/spine-xray' }: SpineXrayViewerProps) {
   const [structures, setStructures] = useState<Structure[]>([]);
   const [labels, setLabels] = useState<Record<XrayView, SliceLabel[]>>({ lateral: [], ap: [] });
   const [hoveredStructure, setHoveredStructure] = useState<string | null>(null);
@@ -43,14 +44,12 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
   const canvasRefs = useRef<Record<XrayView, HTMLCanvasElement | null>>({ lateral: null, ap: null });
   const imgRefs   = useRef<Record<XrayView, HTMLImageElement | null>>({ lateral: null, ap: null });
 
-  const dataPath = '/data/spine-xray';
-
   // Load structures
   useEffect(() => {
     fetch(`${dataPath}/structures.json`)
       .then(r => r.json())
       .then((d: { structures: Structure[] }) => setStructures(d.structures));
-  }, []);
+  }, [dataPath]);
 
   // Load images and labels for both views
   useEffect(() => {
@@ -69,7 +68,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     fetch(`${dataPath}/labels/ap/0000.json`).then(r => r.ok ? r.json() : []).then(d =>
       setLabels(prev => ({ ...prev, ap: d }))
     );
-  }, []);
+  }, [dataPath]);
 
   const renderView = useCallback((view: XrayView) => {
     const canvas = canvasRefs.current[view];

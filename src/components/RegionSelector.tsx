@@ -3,8 +3,8 @@
 import { Lock } from 'lucide-react';
 
 export type BodyRegion =
-  | 'head_neck' | 'chest' | 'abdomen' | 'pelvis' | 'brain_mri'
-  | 'our_head' | 'our_chest' | 'our_abdomen' | 'our_pelvis' | 'our_brain_mri' | 'lumbar_mri';
+  | 'head_neck' | 'chest' | 'abdomen' | 'pelvis'
+  | 'our_head' | 'our_chest' | 'our_abdomen' | 'our_pelvis' | 'our_brain_mri' | 'lumbar_mri' | 'our_xray';
 
 interface RegionConfig {
   id: BodyRegion;
@@ -36,10 +36,6 @@ export const BODY_REGIONS: RegionConfig[] = [
     id: 'pelvis', label: 'Pelvis', labelKo: '골반', icon: '🦴',
     dataPath: '/data/chest-ct', axialRange: [0, 80], defaultSlice: 40, free: true, group: 'original',
   },
-  {
-    id: 'brain_mri', label: 'Brain MRI', labelKo: '뇌 MRI', icon: '🧲',
-    dataPath: '/data/brain-mri', defaultSlice: 91, free: true, group: 'original',
-  },
   // ── SPINAI atlas ──
   {
     id: 'our_head', label: 'Head CT', labelKo: '두부 CT', icon: '🧠',
@@ -63,7 +59,11 @@ export const BODY_REGIONS: RegionConfig[] = [
   },
   {
     id: 'lumbar_mri', label: 'Lumbar MRI', labelKo: '요추 MRI', icon: '💿',
-    dataPath: '/data/lumbar-mri', defaultSlice: 25, free: true, group: 'spinai',
+    dataPath: '/data/our-lumbar-mri', defaultSlice: 25, free: true, group: 'spinai',
+  },
+  {
+    id: 'our_xray', label: 'Spine X-ray', labelKo: '척추 X-ray', icon: '📷',
+    dataPath: '/data/our-xray', defaultSlice: 0, free: true, group: 'spinai',
   },
 ];
 

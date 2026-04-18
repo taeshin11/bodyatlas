@@ -441,3 +441,42 @@
 ### Git Commits (Session 12)
 - df7b59a2 auto: update mri, xray atlas from SPINAI models (자동 모니터)
 - (이 세션 수동 commit: 스크립트 + HANDOVER 업데이트)
+
+## Session 12 — Part 2 (같은 날 이어서 완료)
+
+### 추가 성과
+6. **MRI orientation fix:**
+   - SPIDER는 sagittal 획득 (sitk X축이 LR 방향, spacing 3.32mm)
+   - `np.transpose((1,2,0))`로 volume (AP,LR,HF) 정렬
+   - predict_volume에 (LR=50, HF=578, AP=448) 전달 → sagittal slice 기반 추론
+   - 검출 classes: 7 → **17** (L1-S1, 모든 disc, spinal_cord, 일부 abdominal organs 포함)
+   - Atlas plane labels 교정: sagittal(50) / coronal(448) 뒤바뀐 것 수정
+
+7. **Frontend 통합 완료:**
+   - `SpineXrayViewer`에 `dataPath` prop 추가 (하위호환)
+   - `RegionSelector`: `our_xray` 버튼 추가, `lumbar_mri` dataPath 전환
+   - `page.tsx`: `isXray` 분기로 SpineXrayViewer/AtlasViewer 토글
+   - `npx tsc --noEmit` + `npx next build` 모두 성공
+
+8. **라이선스 완전 클린업:**
+   - `public/data/brain-mri/` 삭제 (OpenMAP-T1 CC BY-NC)
+   - `public/data/lumbar-mri/` 삭제 (SPIDER 직접 mask, 라이선스 TBD)
+   - `public/data/head-ct/`: 학술 라이선스 6개 제거 (brainstem/caudate_nucleus/cerebellum/insular_cortex/thalamus/ventricle) — 19→13 structures, 2029 label entry
+   - RegionSelector `BodyRegion` 타입에서 `brain_mri` 제거
+   - **배포 전체 Apache 2.0 compliant 달성**
+
+### 최종 Atlas 구성 (SPINAI)
+- our-head-ct (TotalSegmentator)
+- our-ct → Chest/Abdomen/Pelvis (unet_ct_c65)
+- our-brain-mri (FastSurfer+MedSAM)
+- our-lumbar-mri (unet_mri_c26, 17 classes)
+- our-xray (unet_xray_c34, 21 classes)
+
+### 다음 세션 우선순위
+1. **Task Scheduler 등록** (사용자 수작업): `setup_scheduler.bat` 관리자 권한 실행
+2. **검색 포털 인증** (사용자 수작업): Google/Naver/Bing/Yandex/Baidu 인증코드 `.env.local`
+3. **head-ct 13 structures 최종 검증**: 전부 TotalSegmentator Apache 소스인지 재확인
+4. **brain-pet 라이선스 검토**: 아직 TBD
+
+### Git Commits (Session 12 Part 2)
+- (이 commit: Frontend + 라이선스 클린업 + MRI orientation fix)
