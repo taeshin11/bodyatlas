@@ -27,33 +27,78 @@ const body = {
 
 const endpoints = [
   { name: 'IndexNow', url: 'https://api.indexnow.org/IndexNow' },
-  { name: 'Bing', url: 'https://www.bing.com/indexnow' },
-  { name: 'Yandex', url: 'https://yandex.com/indexnow' },
+  { name: 'Bing',     url: 'https://www.bing.com/indexnow' },
+  { name: 'Yandex',   url: 'https://yandex.com/indexnow' },
 ];
 
-// Only run on Vercel production builds
+function ts() {
+  return new Date().toISOString().replace('T', ' ').replace('Z', '');
+}
+function log(level, msg, extra) {
+  const line = `[${ts()}] [${level}] [indexnow] ${msg}`;
+  if (level === 'ERR' || level === 'WRN') console.warn(line, extra ?? '');
+  else console.log(line, extra ?? '');
+}
+
+const runStart = Date.now();
+log('STG', '============================================================');
+log('STG', 'IndexNow submission START');
+log('INF', `HOST=${HOST}`);
+log('INF', `VERCEL=${process.env.VERCEL || '(unset)'} VERCEL_ENV=${process.env.VERCEL_ENV || '(unset)'}`);
+log('INF', `urls=${urls.length} endpoints=${endpoints.length}`);
+
 if (!process.env.VERCEL || process.env.VERCEL_ENV !== 'production') {
-  console.log('[indexnow] Skipped (not a Vercel production build)');
+  log('SKP', 'not a Vercel production build; skipping');
   process.exit(0);
 }
 
-async function submit() {
-  for (const ep of endpoints) {
+async function submitOne(ep) {
+  const t0 = Date.now();
+  log('INF', `POST -> ${ep.name} ${ep.url}`);
+  let res;
+  try {
+    res = await fetch(ep.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify(body),
+    });
+  } catch (err) {
+    const dt = Date.now() - t0;
+    log('ERR', `${ep.name} network error after ${dt}ms: ${err.message}`);
+    return false;
+  }
+
+  const dt = Date.now() - t0;
+  const ok = res.status >= 200 && res.status < 300;
+  log(ok ? 'OK ' : 'WRN', `${ep.name}: HTTP ${res.status} ${res.statusText} (${dt}ms)`);
+
+  if (!ok) {
     try {
-      const res = await fetch(ep.url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify(body),
-      });
-      console.log(`[indexnow] ${ep.name}: HTTP ${res.status}`);
-    } catch (err) {
-      console.warn(`[indexnow] ${ep.name} failed:`, err.message);
+      const text = (await res.text()).slice(0, 500);
+      log('WRN', `  body: ${text || '(empty)'}`);
+    } catch (e) {
+      log('WRN', `  body read failed: ${e.message}`);
     }
   }
+  return ok;
+}
+
+async function submit() {
+  const results = [];
+  for (const ep of endpoints) {
+    results.push({ name: ep.name, ok: await submitOne(ep) });
+  }
+  const okCount = results.filter(r => r.ok).length;
+  const elapsed = Date.now() - runStart;
+  log('STG', `submit summary: ${okCount}/${results.length} OK, ${elapsed}ms total`);
+  for (const r of results) log('INF', `  ${r.name}: ${r.ok ? 'OK' : 'FAIL'}`);
+  log('STG', 'IndexNow submission END');
+  log('STG', '============================================================');
 }
 
 submit().catch((e) => {
-  console.warn('[indexnow] error:', e.message);
+  log('ERR', `submit() crashed: ${e.message}`);
+  if (e.stack) log('ERR', e.stack);
   // Never fail the build
   process.exit(0);
 });

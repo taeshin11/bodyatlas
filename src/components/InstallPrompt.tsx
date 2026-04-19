@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, X } from 'lucide-react';
 import { useI18n } from '@/lib/i18n-context';
+import { createLogger } from '@/lib/logger';
+
+const log = createLogger('install');
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -17,13 +20,15 @@ export default function InstallPrompt() {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // Don't show if already installed or previously dismissed this session
-    if (window.matchMedia('(display-mode: standalone)').matches) return;
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      log.debug('already installed (standalone display-mode); skipping prompt');
+      return;
+    }
 
     const handler = (e: Event) => {
       e.preventDefault();
+      log.info('beforeinstallprompt received; prompt will show after 30s');
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      // Show after 30 seconds so it doesn't interrupt initial use
       setTimeout(() => setShow(true), 30000);
     };
 
@@ -32,16 +37,24 @@ export default function InstallPrompt() {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setShow(false);
+    if (!deferredPrompt) {
+      log.warn('handleInstall called with no deferred prompt');
+      return;
+    }
+    log.info('install prompt shown to user');
+    try {
+      await deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      log.info(`user choice: ${outcome}`);
+      if (outcome === 'accepted') setShow(false);
+    } catch (e) {
+      log.error('install prompt failed', e);
     }
     setDeferredPrompt(null);
   };
 
   const handleDismiss = () => {
+    log.info('install prompt dismissed by user');
     setShow(false);
     setDismissed(true);
   };

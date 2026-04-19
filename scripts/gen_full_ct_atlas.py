@@ -47,36 +47,50 @@ CATEGORY_COLORS = {
 }
 
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+from _log_utils import Logger, Stage, install_excepthook
 from gen_head_ct_atlas import (
     get_category, mask_to_contours, build_display_name, CATEGORY_COLORS
 )
 
+log = Logger("gen_full_ct", log_file=PROJECT_ROOT / "scripts" / "monitor_log.txt")
+install_excepthook(log)
+
 
 def merge_all_segs(seg_dir: Path, vista_dir: Path) -> dict:
-    """Merge TotalSegmentator task dirs + VISTA3D flat dir.
-
-    Returns {name: (array, affine)}.
-    """
+    """Merge TotalSegmentator task dirs. VISTA3D intentionally excluded (non-commercial)."""
     import nibabel as nib
 
     merged = {}
+    dup_count = 0
+    empty_count = 0
+    load_fail = 0
+    task_dirs = [d for d in seg_dir.iterdir() if d.is_dir()]
+    log.info(f"merge_all_segs: scanning {len(task_dirs)} task dirs under {seg_dir}")
 
-    # TotalSegmentator task subdirs
-    for task_dir in seg_dir.iterdir():
-        if not task_dir.is_dir(): continue
-        for f in task_dir.glob("*.nii.gz"):
+    for task_dir in task_dirs:
+        files = list(task_dir.glob("*.nii.gz"))
+        for f in files:
             name = f.stem.replace(".nii", "")
-            if name in merged: continue
-            img = nib.load(f)
-            data = img.get_fdata(dtype=np.float32)
+            if name in merged:
+                dup_count += 1
+                continue
+            try:
+                img = nib.load(f)
+                data = img.get_fdata(dtype=np.float32)
+            except Exception:
+                load_fail += 1
+                log.error(f"  load failed: {f}", exc=True)
+                continue
             if data.max() > 0:
                 merged[name] = (data, img.affine)
+            else:
+                empty_count += 1
+        log.debug(f"  {task_dir.name}: {len(files)} files")
 
-    # VISTA3D removed: had Z-flip issues, noisy segmentations, and
-    # non-commercial license (NVIDIA NCLS v1). TotalSegmentator alone
-    # provides 117 structures with Apache 2.0 license.
-
-    print(f"Merged {len(merged)} structures total")
+    log.info(
+        f"merged {len(merged)} structures (dup: {dup_count}, empty: {empty_count}, "
+        f"load_fail: {load_fail}); VISTA3D excluded (non-commercial)"
+    )
     return merged
 
 
@@ -91,17 +105,19 @@ def ct_to_png_slice(ct_slice: np.ndarray, wc: int, ww: int):
 
 def build_atlas(ct_path: Path, merged: dict, out_dir: Path):
     import nibabel as nib
-
-    print(f"\nBuilding full-CT atlas -> {out_dir}")
-    # Clean output directory to remove stale files from previous runs
     import shutil
+
+    log.info(f"build_atlas (full-ct) -> {out_dir}")
+    log.kv("merged structures", len(merged))
     for sub in ["axial", "sagittal", "coronal", "labels"]:
         p = out_dir / sub
         if p.exists():
             shutil.rmtree(p)
+    log.debug("cleaned plane subdirs")
+
     ct_img  = nib.load(ct_path)
     ct_data = ct_img.get_fdata(dtype=np.float32)
-    print(f"CT shape: {ct_data.shape}")
+    log.kv("CT shape", ct_data.shape)
 
     planes = {
         "axial":    (2, ct_data.shape[2]),
@@ -123,69 +139,90 @@ def build_atlas(ct_path: Path, merged: dict, out_dir: Path):
         structures.append(s)
         struct_by_name[name] = s
 
+    total_png = 0
+    total_json = 0
+    total_failed = 0
+
     for plane_name, (axis, n_slices) in planes.items():
-        img_dir   = out_dir / plane_name
-        label_dir = out_dir / "labels" / plane_name
-        img_dir.mkdir(parents=True, exist_ok=True)
-        label_dir.mkdir(parents=True, exist_ok=True)
-        print(f"  {plane_name}: {n_slices} slices...")
+        with Stage(log, f"render {plane_name} ({n_slices} slices)"):
+            img_dir   = out_dir / plane_name
+            label_dir = out_dir / "labels" / plane_name
+            img_dir.mkdir(parents=True, exist_ok=True)
+            label_dir.mkdir(parents=True, exist_ok=True)
 
-        for si in range(n_slices):
-            if axis == 0:   ct_sl = ct_data[si, :, :]
-            elif axis == 1: ct_sl = ct_data[:, si, :]
-            else:           ct_sl = ct_data[:, :, si]
+            plane_png = 0
+            plane_json = 0
+            plane_failed = 0
 
-            # Standard display orientation: transpose + flipud
-            # RAS axial(x,y)→(AP,LR), sagittal(y,z)→(SI,AP), coronal(x,z)→(SI,LR)
-            ct_disp = np.flipud(ct_sl.T)
-            ct_to_png_slice(ct_disp, WINDOW_CENTER, WINDOW_WIDTH).save(
-                img_dir / f"{si:04d}.png"
-            )
+            for si in range(n_slices):
+                try:
+                    if axis == 0:   ct_sl = ct_data[si, :, :]
+                    elif axis == 1: ct_sl = ct_data[:, si, :]
+                    else:           ct_sl = ct_data[:, :, si]
 
-            slice_labels = []
-            for name, (seg_full, _) in merged.items():
-                if axis == 0:   seg_sl = seg_full[si, :, :]
-                elif axis == 1: seg_sl = seg_full[:, si, :]
-                else:           seg_sl = seg_full[:, :, si]
+                    ct_disp = np.flipud(ct_sl.T)
+                    ct_to_png_slice(ct_disp, WINDOW_CENTER, WINDOW_WIDTH).save(
+                        img_dir / f"{si:04d}.png"
+                    )
+                    plane_png += 1
 
-                if seg_sl.max() < 0.5: continue
+                    slice_labels = []
+                    for name, (seg_full, _) in merged.items():
+                        if axis == 0:   seg_sl = seg_full[si, :, :]
+                        elif axis == 1: seg_sl = seg_full[:, si, :]
+                        else:           seg_sl = seg_full[:, :, si]
 
-                # Same display transform as CT image
-                seg_sl = np.flipud(seg_sl.T)
+                        if seg_sl.max() < 0.5: continue
 
-                contours = mask_to_contours(seg_sl)
-                if not contours: continue
+                        seg_sl = np.flipud(seg_sl.T)
 
-                struct = struct_by_name[name]
-                slice_labels.append({"id": struct["id"], "name": name, "contours": contours})
+                        contours = mask_to_contours(seg_sl)
+                        if not contours: continue
 
-                r = struct["sliceRange"].setdefault(plane_name, [si, si])
-                r[0] = min(r[0], si)
-                r[1] = max(r[1], si)
+                        struct = struct_by_name[name]
+                        slice_labels.append({"id": struct["id"], "name": name, "contours": contours})
 
-            with open(label_dir / f"{si:04d}.json", "w") as f:
-                json.dump(slice_labels, f)
+                        r = struct["sliceRange"].setdefault(plane_name, [si, si])
+                        r[0] = min(r[0], si)
+                        r[1] = max(r[1], si)
 
-        for s in structures:
-            r = s["sliceRange"].get(plane_name)
-            s["bestSlice"][plane_name] = (r[0] + r[1]) // 2 if r else n_slices // 2
+                    with open(label_dir / f"{si:04d}.json", "w") as f:
+                        json.dump(slice_labels, f)
+                    plane_json += 1
+                except Exception:
+                    plane_failed += 1
+                    log.error(f"  {plane_name} slice {si} failed", exc=True)
 
-        print(f"    Done")
+            for s in structures:
+                r = s["sliceRange"].get(plane_name)
+                s["bestSlice"][plane_name] = (r[0] + r[1]) // 2 if r else n_slices // 2
 
+            log.info(f"  {plane_name}: wrote {plane_png} PNG + {plane_json} JSON, failed={plane_failed}")
+            total_png += plane_png
+            total_json += plane_json
+            total_failed += plane_failed
+
+    info_path = out_dir / "info.json"
     info = {
         "planes": {p: {"slices": int(n)} for p, (_, n) in planes.items()},
         "window": {"center": WINDOW_CENTER, "width": WINDOW_WIDTH},
         "voxelSpacing": [1.5, 1.5, 1.5],
     }
-    with open(out_dir / "info.json", "w") as f:
+    with open(info_path, "w") as f:
         json.dump(info, f, indent=2)
+    log.debug(f"wrote {info_path}")
 
     active = [s for s in structures if s.get("sliceRange")]
-    with open(out_dir / "structures.json", "w", encoding="utf-8") as f:
+    structures_path = out_dir / "structures.json"
+    with open(structures_path, "w", encoding="utf-8") as f:
         json.dump({"totalStructures": len(active), "structures": active},
                   f, ensure_ascii=False)
+    log.debug(f"wrote {structures_path} ({len(active)} active structures)")
 
-    print(f"\nAtlas complete: {len(active)} structures -> {out_dir}")
+    log.ok(
+        f"atlas complete (full-ct): {len(active)} structures, "
+        f"{total_png} PNG + {total_json} JSON, failed={total_failed} -> {out_dir}"
+    )
 
 
 def main():

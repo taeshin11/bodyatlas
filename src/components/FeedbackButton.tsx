@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send, Check } from 'lucide-react';
 import { useI18n } from '@/lib/i18n-context';
+import { createLogger } from '@/lib/logger';
+
+const log = createLogger('feedback');
 
 export default function FeedbackButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,10 +20,18 @@ export default function FeedbackButton() {
     if (!message.trim()) return;
 
     setStatus('sending');
+    const t0 = performance.now();
+    const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID || '';
+    log.info('feedback submit START', {
+      hasEmail: !!email,
+      messageLen: message.length,
+      transport: formspreeId ? 'formspree' : 'mailto',
+    });
+
     try {
-      const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID || '';
       if (formspreeId) {
-        const res = await fetch(`https://formspree.io/f/${formspreeId}`, {
+        const url = `https://formspree.io/f/${formspreeId}`;
+        const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -29,10 +40,17 @@ export default function FeedbackButton() {
             _subject: `BodyAtlas Feedback: ${message.slice(0, 50)}`,
           }),
         });
-        if (!res.ok) throw new Error('Failed');
+        const dt = Math.round(performance.now() - t0);
+        if (!res.ok) {
+          log.error('formspree POST non-OK', new Error(`HTTP ${res.status}`), {
+            url, status: res.status, statusText: res.statusText, ms: dt,
+          });
+          throw new Error('Failed');
+        }
+        log.info('formspree POST OK', { status: res.status, ms: dt });
       } else {
-        // Fallback: open mailto link
         const mailto = `mailto:taeshinkim11@gmail.com?subject=${encodeURIComponent('BodyAtlas Feedback')}&body=${encodeURIComponent(`${message}\n\nFrom: ${email || 'Anonymous'}`)}`;
+        log.info('falling back to mailto', { mailtoLen: mailto.length });
         window.location.href = mailto;
       }
       setStatus('sent');
@@ -42,8 +60,9 @@ export default function FeedbackButton() {
         setEmail('');
         setStatus('idle');
       }, 2000);
-    } catch {
-      // On failure, revert to idle so user can retry
+    } catch (err) {
+      const dt = Math.round(performance.now() - t0);
+      log.error('feedback submit failed', err, { ms: dt });
       setStatus('idle');
     }
   };

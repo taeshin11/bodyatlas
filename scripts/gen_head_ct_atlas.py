@@ -25,10 +25,17 @@ import argparse
 import json
 import os
 import shutil
+import sys
 import zipfile
 from pathlib import Path
 
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _log_utils import Logger, Stage, install_excepthook
+
+log = Logger("gen_head_ct", log_file=Path(__file__).resolve().parent.parent / "scripts" / "monitor_log.txt")
+install_excepthook(log)
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 PROJECT_ROOT  = Path(__file__).parent.parent
@@ -259,21 +266,23 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
     """Generate atlas PNG slices + JSON labels for all 3 planes."""
     import nibabel as nib
 
-    print(f"\nBuilding atlas → {out_dir}")
-    # Clean output directory to remove stale files from previous runs
+    log.info(f"build_atlas (head-ct) -> {out_dir}")
+    log.kv("merged_segs", len(merged_segs))
     for sub in ["axial", "sagittal", "coronal", "labels"]:
         p = out_dir / sub
         if p.exists():
             shutil.rmtree(p)
+    log.debug("cleaned plane subdirs")
+
     ct_img = nib.load(ct_path)
     ct_data = ct_img.get_fdata(dtype=np.float32)
-    print(f"CT shape: {ct_data.shape}, voxel: {ct_img.header.get_zooms()}")
+    log.kv("CT shape", ct_data.shape)
+    log.kv("voxel zooms", ct_img.header.get_zooms())
 
-    # Crop to head region
     head_z_start = HEAD_Z_START
     head_z_end = min(HEAD_Z_END, ct_data.shape[2])
     ct_head = ct_data[:, :, head_z_start:head_z_end]
-    print(f"Head crop: Z[{head_z_start}:{head_z_end}] → {ct_head.shape}")
+    log.kv("head crop", f"Z[{head_z_start}:{head_z_end}] -> {ct_head.shape}")
 
     planes = {
         "axial":    (2, ct_head.shape[2]),
@@ -300,12 +309,18 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
         struct_by_name[name] = s
 
     # Process each plane
+    total_png = 0
+    total_json = 0
+    total_failed = 0
     for plane_name, (axis, n_slices) in planes.items():
         img_dir   = out_dir / plane_name
         label_dir = out_dir / "labels" / plane_name
         img_dir.mkdir(parents=True, exist_ok=True)
         label_dir.mkdir(parents=True, exist_ok=True)
-        print(f"\n  Plane: {plane_name} ({n_slices} slices)...")
+        plane_png = 0
+        plane_json = 0
+        plane_failed = 0
+        log.info(f"plane {plane_name}: {n_slices} slices")
 
         # For each structure, compute its slice range in this plane
         struct_ranges = {}
@@ -330,10 +345,15 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
             # RAS: axial (x,y)→(AP,LR), sagittal (y,z)→(SI,AP), coronal (x,z)→(SI,LR)
             ct_disp = np.flipud(ct_slice.T)
 
-            # Save PNG
-            img = ct_to_png_slice(ct_disp, WINDOW_CENTER, WINDOW_WIDTH)
-            img_path = img_dir / f"{si:04d}.png"
-            img.save(img_path)
+            try:
+                img = ct_to_png_slice(ct_disp, WINDOW_CENTER, WINDOW_WIDTH)
+                img_path = img_dir / f"{si:04d}.png"
+                img.save(img_path)
+                plane_png += 1
+            except Exception:
+                plane_failed += 1
+                log.error(f"  {plane_name} slice {si} PNG save failed", exc=True)
+                continue
 
             # Build labels for this slice
             slice_labels = []
@@ -371,9 +391,14 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
                         struct["sliceRange"][plane_name][1] = max(struct["sliceRange"][plane_name][1], si)
 
             # Write label JSON
-            label_path = label_dir / f"{si:04d}.json"
-            with open(label_path, "w") as f:
-                json.dump(slice_labels, f)
+            try:
+                label_path = label_dir / f"{si:04d}.json"
+                with open(label_path, "w") as f:
+                    json.dump(slice_labels, f)
+                plane_json += 1
+            except Exception:
+                plane_failed += 1
+                log.error(f"  {plane_name} slice {si} JSON save failed", exc=True)
 
         # Compute bestSlice for each structure
         for s in structures:
@@ -383,7 +408,10 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
             else:
                 s.setdefault("bestSlice", {})[plane_name] = n_slices // 2
 
-        print(f"    Saved {n_slices} PNGs + labels")
+        log.info(f"  {plane_name}: wrote {plane_png} PNG + {plane_json} JSON, failed={plane_failed}")
+        total_png += plane_png
+        total_json += plane_json
+        total_failed += plane_failed
 
     # Write info.json
     info = {
@@ -395,16 +423,23 @@ def build_atlas(ct_path: Path, merged_segs: dict, out_dir: Path):
         "window": {"center": WINDOW_CENTER, "width": WINDOW_WIDTH},
         "voxelSpacing": [VOXEL_TARGET, VOXEL_TARGET, VOXEL_TARGET],
     }
-    with open(out_dir / "info.json", "w") as f:
+    info_path = out_dir / "info.json"
+    with open(info_path, "w") as f:
         json.dump(info, f, indent=2)
+    log.debug(f"wrote {info_path}")
 
     # Filter structures that appear in at least one plane
     active = [s for s in structures if s.get("sliceRange")]
     structures_out = {"totalStructures": len(active), "structures": active}
-    with open(out_dir / "structures.json", "w") as f:
+    structures_path = out_dir / "structures.json"
+    with open(structures_path, "w") as f:
         json.dump(structures_out, f, indent=2)
+    log.debug(f"wrote {structures_path} ({len(active)} active structures)")
 
-    print(f"\nAtlas complete: {len(active)} structures, {out_dir}")
+    log.ok(
+        f"atlas complete (head-ct): {len(active)} structures, "
+        f"{total_png} PNG + {total_json} JSON, failed={total_failed} -> {out_dir}"
+    )
 
 
 def build_display_name(name: str) -> dict:

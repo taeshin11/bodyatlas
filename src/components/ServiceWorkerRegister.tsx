@@ -1,12 +1,37 @@
 'use client';
 
 import { useEffect } from 'react';
+import { createLogger } from '@/lib/logger';
+
+const log = createLogger('sw');
 
 export default function ServiceWorkerRegister() {
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    if (!('serviceWorker' in navigator)) {
+      log.debug('serviceWorker not supported in this browser');
+      return;
     }
+    log.info('registering /sw.js');
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((reg) => {
+        log.info('service worker registered', {
+          scope: reg.scope,
+          state: reg.active?.state,
+        });
+        reg.addEventListener('updatefound', () => {
+          log.info('service worker update found');
+          const installing = reg.installing;
+          if (installing) {
+            installing.addEventListener('statechange', () => {
+              log.info('sw state change', { state: installing.state });
+            });
+          }
+        });
+      })
+      .catch((e) => {
+        log.error('service worker registration failed', e);
+      });
   }, []);
 
   return null;

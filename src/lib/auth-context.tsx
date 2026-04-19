@@ -2,7 +2,10 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase, isSupabaseConfigured } from './supabase';
+import { createLogger } from './logger';
 import type { User } from '@supabase/supabase-js';
+
+const log = createLogger('auth');
 
 interface AuthContextType {
   user: User | null;
@@ -37,21 +40,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check trial status
-    setTrialUsed(localStorage.getItem(TRIAL_KEY) === '1');
+    let trialFromStorage = false;
+    try {
+      trialFromStorage = localStorage.getItem(TRIAL_KEY) === '1';
+      log.debug('localStorage read', { key: TRIAL_KEY, value: trialFromStorage ? '1' : null });
+    } catch (e) {
+      log.error('localStorage read failed', e, { key: TRIAL_KEY });
+    }
+    setTrialUsed(trialFromStorage);
 
     if (!isSupabaseConfigured) {
+      log.warn('supabase not configured; skipping session restore');
       setLoading(false);
       return;
     }
 
-    // Check current session
+    log.info('restoring supabase session');
     supabase.auth.getSession().then(({ data: { session } }) => {
+      log.info('session restored', { userId: session?.user?.id ?? null });
       setUser(session?.user ?? null);
+      setLoading(false);
+    }).catch((e) => {
+      log.error('getSession failed', e);
       setLoading(false);
     });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      log.info('auth state change', { event, userId: session?.user?.id ?? null });
       setUser(session?.user ?? null);
     });
 
@@ -59,35 +74,56 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const markTrialUsed = () => {
-    localStorage.setItem(TRIAL_KEY, '1');
+    try {
+      localStorage.setItem(TRIAL_KEY, '1');
+      log.info('localStorage write: trial marked used', { key: TRIAL_KEY });
+    } catch (e) {
+      log.error('localStorage write failed', e, { key: TRIAL_KEY });
+    }
     setTrialUsed(true);
   };
 
   const needsAuth = trialUsed && !user;
 
   const signInWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin },
-    });
+    log.info('signInWithGoogle: redirecting to OAuth');
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin },
+      });
+    } catch (e) {
+      log.error('signInWithGoogle failed', e);
+    }
   };
 
   const signInWithEmail = async (email: string) => {
+    log.info('signInWithEmail: sending OTP', { email });
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: window.location.origin },
     });
+    if (error) log.error('signInWithOtp returned error', error, { email });
+    else log.info('OTP sent', { email });
     return { error: error?.message ?? null };
   };
 
   const signInWithPassword = async (email: string, password: string) => {
+    log.info('signInWithPassword: attempting', { email });
     const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) log.warn('signInWithPassword failed', { email, error: error.message });
+    else log.info('signInWithPassword OK', { email });
     return { error: error?.message ?? null };
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
+    log.info('signOut');
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+    } catch (e) {
+      log.error('signOut failed', e);
+    }
   };
 
   return (
