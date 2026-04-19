@@ -3,7 +3,9 @@
 > ⚠️ **의무 갱신 규칙 (MANDATORY)**
 > 기능을 **추가 / 삭제 / 리네임 / 이동**할 때마다 이 파일을 같은 커밋에서 수정해야 한다.
 > 예: 새 region 추가 → 해당 표에 행 추가 / 새 plane 도입 → AtlasViewer 섹션 갱신 / 새 페이지 추가 → "Routes" 섹션에 추가.
-> 세션 종료 체크리스트(HANDOVER.md)에도 이 규칙이 포함되어 있다.
+> `.githooks/commit-msg` 가 feature 코드 변경 + FEATURES.md 미갱신 커밋을 자동 차단한다.
+> 예외: 순수 리팩터링일 때 커밋 메시지에 `[skip-features-check]` 포함.
+> 리포 clone 직후 `scripts/install-hooks.bat` (또는 `.sh`) 한 번 실행하여 훅 활성화.
 > **기능 코드가 바뀌었는데 FEATURES.md가 안 바뀌었으면 커밋이 누락된 것이다.**
 
 ---

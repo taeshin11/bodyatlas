@@ -8,7 +8,7 @@
 
 1. **세션 종료 시 이 HANDOVER.md 덮어쓰기** (현재 상태 스냅샷)
 2. **`claude-progress.txt`에 Session 추가** (append-only)
-3. **기능 추가/변경 시 반드시 같은 커밋에서 `FEATURES.md` 수정** — pre-commit hook이 `src/components/**` 또는 `src/app/**/page.tsx` 변경을 감지하면 FEATURES.md 동시 수정을 요구함
+3. **기능 추가/변경 시 반드시 같은 커밋에서 `FEATURES.md` 수정** — `.githooks/commit-msg` 가 feature 코드 변경 + FEATURES.md 미갱신을 차단함 (escape hatch: 커밋 메시지에 `[skip-features-check]`)
 4. **git commit + push**
 
 ---
