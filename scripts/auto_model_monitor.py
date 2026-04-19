@@ -7,7 +7,7 @@ Flow:
   1. Parse D:\ImageLabelAPI_SPINAI\outputs\models\ train.log files
   2. If Best Dice >= threshold -> inference -> atlas rebuild
   3. Git commit + push if changed
-  4. Log to scripts/monitor_log.txt
+  4. Log to scripts/monitor_log.txt (structured: timestamps, stages, full traceback on errors)
 """
 
 import json
@@ -16,12 +16,12 @@ import re
 import subprocess
 import sys
 import datetime
+import time
 from pathlib import Path
 
-# Force UTF-8 stdout on Windows
-if sys.platform == "win32":
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+THIS_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(THIS_DIR))
+from _log_utils import Logger, Stage, install_excepthook
 
 # -- paths --
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -31,6 +31,10 @@ STATUS_FILE = PROJECT_ROOT / "scripts" / "monitor_status.json"
 LOG_FILE = PROJECT_ROOT / "scripts" / "monitor_log.txt"
 
 PYTHON_SPINAI = "C:/Users/taesh/Anaconda3/python.exe"
+
+# Single shared logger instance
+log = Logger("auto_monitor", log_file=LOG_FILE)
+install_excepthook(log)
 
 # -- Dice thresholds --
 THRESHOLDS = {
@@ -56,35 +60,37 @@ MODEL_ATLAS_MAP = {
 }
 
 
-def log(msg: str):
-    ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    line = f"[{ts}] {msg}"
-    print(line)
-    with open(LOG_FILE, "a", encoding="utf-8") as f:
-        f.write(line + "\n")
-
-
 def load_status() -> dict:
     if STATUS_FILE.exists():
-        return json.loads(STATUS_FILE.read_text(encoding="utf-8"))
+        try:
+            return json.loads(STATUS_FILE.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            log.error(f"monitor_status.json malformed; treating as empty", exc=True)
+            return {}
     return {}
 
 
 def save_status(status: dict):
-    STATUS_FILE.write_text(json.dumps(status, indent=2, ensure_ascii=False), encoding="utf-8")
+    try:
+        STATUS_FILE.write_text(json.dumps(status, indent=2, ensure_ascii=False), encoding="utf-8")
+    except OSError:
+        log.error(f"failed to write {STATUS_FILE}", exc=True)
 
 
 def parse_train_logs() -> list:
     """Parse all model train.log files and extract best Dice."""
     results = []
     if not MODELS_DIR.exists():
+        log.error(f"MODELS_DIR does not exist: {MODELS_DIR}")
         return results
 
-    for model_dir in sorted(MODELS_DIR.iterdir()):
-        if not model_dir.is_dir():
-            continue
-        log_file = model_dir / "train.log"
-        if not log_file.exists():
+    model_dirs = sorted([d for d in MODELS_DIR.iterdir() if d.is_dir()])
+    log.debug(f"scanning {len(model_dirs)} model directories")
+
+    for model_dir in model_dirs:
+        log_path = model_dir / "train.log"
+        if not log_path.exists():
+            log.debug(f"  skip {model_dir.name}: no train.log")
             continue
 
         name = model_dir.name
@@ -95,6 +101,7 @@ def parse_train_logs() -> list:
         elif "_xray_" in name:
             modality = "xray"
         else:
+            log.debug(f"  skip {name}: cannot infer modality")
             continue
 
         best_dice = 0.0
@@ -103,17 +110,20 @@ def parse_train_logs() -> list:
         total_epochs = 0
         has_best_model = (model_dir / "best_model.pth").exists()
 
-        text = log_file.read_text(encoding="utf-8", errors="ignore")
+        try:
+            text = log_path.read_text(encoding="utf-8", errors="ignore")
+        except OSError as e:
+            log.error(f"  failed to read {log_path}: {e}")
+            continue
+
         for line in text.splitlines():
             m = re.search(r"Training complete\.\s*Best Dice:\s*([\d.]+)", line)
             if m:
                 training_complete = True
                 best_dice = max(best_dice, float(m.group(1)))
-
             m = re.search(r"New best Dice:\s*([\d.]+)", line)
             if m:
                 best_dice = max(best_dice, float(m.group(1)))
-
             m = re.search(r"Epoch\s+(\d+)/(\d+)", line)
             if m:
                 last_epoch = int(m.group(1))
@@ -145,51 +155,52 @@ def find_best_model(models: list, modality: str):
 
 def run_ct_inference_and_rebuild(model_info: dict) -> bool:
     """Run CT model inference then rebuild atlas."""
-    model_dir = Path(model_info["model_dir"])
-    ckpt = model_dir / "best_model.pth"
-    source_ct = MODEL_ATLAS_MAP["ct"]["source_ct"]
-    atlas_out = MODEL_ATLAS_MAP["ct"]["atlas_output"]
+    with Stage(log, f"CT inference+rebuild for {model_info['name']}"):
+        model_dir = Path(model_info["model_dir"])
+        ckpt = model_dir / "best_model.pth"
+        source_ct = MODEL_ATLAS_MAP["ct"]["source_ct"]
+        atlas_out = MODEL_ATLAS_MAP["ct"]["atlas_output"]
 
-    if not source_ct.exists():
-        log(f"  [FAIL] Source CT not found: {source_ct}")
-        return False
-    if not ckpt.exists():
-        log(f"  [FAIL] Checkpoint not found: {ckpt}")
-        return False
+        log.kv("checkpoint", ckpt)
+        log.kv("source CT", source_ct)
+        log.kv("atlas output", atlas_out)
 
-    # Step 1: SPINAI inference -> per-class NIfTI masks
-    inference_out = PROJECT_ROOT / "data_pipeline" / "spinai_ct_seg"
-    inference_out.mkdir(parents=True, exist_ok=True)
+        if not source_ct.exists():
+            log.error(f"source CT missing: {source_ct}")
+            return False
+        if not ckpt.exists():
+            log.error(f"checkpoint missing: {ckpt}")
+            return False
 
-    inference_script = PROJECT_ROOT / "scripts" / "_spinai_ct_inference.py"
-    _write_ct_inference_script(inference_script, ckpt, source_ct, inference_out)
+        # Step 1: SPINAI inference -> per-class NIfTI masks
+        with Stage(log, "step 1/2: SPINAI CT inference"):
+            inference_out = PROJECT_ROOT / "data_pipeline" / "spinai_ct_seg"
+            inference_out.mkdir(parents=True, exist_ok=True)
+            inference_script = PROJECT_ROOT / "scripts" / "_spinai_ct_inference.py"
+            _write_ct_inference_script(inference_script, ckpt, source_ct, inference_out)
 
-    log(f"  Running CT inference: {model_info['name']} (Dice={model_info['best_dice']:.4f})...")
-    result = subprocess.run(
-        [PYTHON_SPINAI, str(inference_script)],
-        capture_output=True, text=True, timeout=1800,
-        cwd=str(PROJECT_ROOT),
-    )
-    if result.returncode != 0:
-        log(f"  [FAIL] Inference failed: {result.stderr[-500:]}")
-        return False
-    log(f"  [OK] Inference complete")
+            ok = log.run_subprocess(
+                [PYTHON_SPINAI, str(inference_script)],
+                timeout=1800, cwd=PROJECT_ROOT,
+                label=f"CT inference (Dice={model_info['best_dice']:.4f})",
+            )
+            if not ok:
+                return False
 
-    # Step 2: rebuild atlas from inference results
-    rebuild_script = PROJECT_ROOT / "scripts" / "_spinai_ct_rebuild.py"
-    _write_ct_rebuild_script(rebuild_script, source_ct, inference_out, atlas_out)
+        # Step 2: rebuild atlas from inference results
+        with Stage(log, "step 2/2: atlas rebuild"):
+            rebuild_script = PROJECT_ROOT / "scripts" / "_spinai_ct_rebuild.py"
+            _write_ct_rebuild_script(rebuild_script, source_ct, inference_out, atlas_out)
+            ok = log.run_subprocess(
+                [PYTHON_SPINAI, str(rebuild_script)],
+                timeout=3600, cwd=PROJECT_ROOT,
+                label="atlas rebuild from segmentations",
+            )
+            if not ok:
+                return False
 
-    log(f"  Rebuilding atlas -> {atlas_out}...")
-    result = subprocess.run(
-        [PYTHON_SPINAI, str(rebuild_script)],
-        capture_output=True, text=True, timeout=3600,
-        cwd=str(PROJECT_ROOT),
-    )
-    if result.returncode != 0:
-        log(f"  [FAIL] Atlas rebuild failed: {result.stderr[-500:]}")
-        return False
-    log(f"  [OK] Atlas rebuilt")
-    return True
+        log.ok(f"CT atlas rebuilt -> {atlas_out}")
+        return True
 
 
 def _write_ct_inference_script(script_path: Path, ckpt: Path, ct_path: Path, out_dir: Path):
@@ -272,148 +283,218 @@ print("Atlas rebuild complete")
 
 def run_mri_rebuild(model_info: dict) -> bool:
     """Run MRI atlas rebuild using gen_our_lumbar_mri_atlas.py."""
-    ckpt = Path(model_info["model_dir"]) / "best_model.pth"
-    if not ckpt.exists():
-        log(f"  [FAIL] MRI checkpoint not found: {ckpt}")
-        return False
+    with Stage(log, f"MRI rebuild for {model_info['name']}"):
+        ckpt = Path(model_info["model_dir"]) / "best_model.pth"
+        log.kv("checkpoint", ckpt)
+        log.kv("atlas output", MODEL_ATLAS_MAP["mri"]["atlas_output"])
 
-    script = PROJECT_ROOT / "scripts" / "gen_our_lumbar_mri_atlas.py"
-    log(f"  Running MRI rebuild: {model_info['name']} (Dice={model_info['best_dice']:.4f})...")
-    result = subprocess.run(
-        [PYTHON_SPINAI, str(script), "--checkpoint", str(ckpt),
-         "--out", str(MODEL_ATLAS_MAP["mri"]["atlas_output"])],
-        capture_output=True, text=True, timeout=1800,
-        cwd=str(PROJECT_ROOT),
-    )
-    if result.returncode != 0:
-        log(f"  [FAIL] MRI rebuild failed: {result.stderr[-500:]}")
-        return False
-    log(f"  [OK] MRI atlas rebuilt")
-    return True
+        if not ckpt.exists():
+            log.error(f"MRI checkpoint missing: {ckpt}")
+            return False
+
+        script = PROJECT_ROOT / "scripts" / "gen_our_lumbar_mri_atlas.py"
+        ok = log.run_subprocess(
+            [PYTHON_SPINAI, str(script), "--checkpoint", str(ckpt),
+             "--out", str(MODEL_ATLAS_MAP["mri"]["atlas_output"])],
+            timeout=1800, cwd=PROJECT_ROOT,
+            label=f"MRI atlas builder (Dice={model_info['best_dice']:.4f})",
+        )
+        if not ok:
+            return False
+        log.ok(f"MRI atlas rebuilt -> {MODEL_ATLAS_MAP['mri']['atlas_output']}")
+        return True
 
 
 def run_xray_rebuild(model_info: dict) -> bool:
     """Run X-ray atlas rebuild using gen_our_xray_atlas.py."""
-    ckpt = Path(model_info["model_dir"]) / "best_model.pth"
-    if not ckpt.exists():
-        log(f"  [FAIL] X-ray checkpoint not found: {ckpt}")
-        return False
+    with Stage(log, f"X-ray rebuild for {model_info['name']}"):
+        ckpt = Path(model_info["model_dir"]) / "best_model.pth"
+        log.kv("checkpoint", ckpt)
+        log.kv("atlas output", MODEL_ATLAS_MAP["xray"]["atlas_output"])
 
-    script = PROJECT_ROOT / "scripts" / "gen_our_xray_atlas.py"
-    max_cases = MODEL_ATLAS_MAP["xray"].get("max_cases", 10)
-    log(f"  Running X-ray rebuild: {model_info['name']} (Dice={model_info['best_dice']:.4f})...")
-    result = subprocess.run(
-        [PYTHON_SPINAI, str(script), "--checkpoint", str(ckpt),
-         "--out", str(MODEL_ATLAS_MAP["xray"]["atlas_output"]),
-         "--max-cases", str(max_cases)],
-        capture_output=True, text=True, timeout=1800,
-        cwd=str(PROJECT_ROOT),
-    )
-    if result.returncode != 0:
-        log(f"  [FAIL] X-ray rebuild failed: {result.stderr[-500:]}")
-        return False
-    log(f"  [OK] X-ray atlas rebuilt")
-    return True
+        if not ckpt.exists():
+            log.error(f"X-ray checkpoint missing: {ckpt}")
+            return False
+
+        script = PROJECT_ROOT / "scripts" / "gen_our_xray_atlas.py"
+        max_cases = MODEL_ATLAS_MAP["xray"].get("max_cases", 10)
+        ok = log.run_subprocess(
+            [PYTHON_SPINAI, str(script), "--checkpoint", str(ckpt),
+             "--out", str(MODEL_ATLAS_MAP["xray"]["atlas_output"]),
+             "--max-cases", str(max_cases)],
+            timeout=1800, cwd=PROJECT_ROOT,
+            label=f"X-ray atlas builder (Dice={model_info['best_dice']:.4f})",
+        )
+        if not ok:
+            return False
+        log.ok(f"X-ray atlas rebuilt -> {MODEL_ATLAS_MAP['xray']['atlas_output']}")
+        return True
 
 
 def git_commit_and_push(message: str) -> bool:
-    try:
-        os.chdir(str(PROJECT_ROOT))
-
-        result = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
-        if not result.stdout.strip():
-            log("  No changes to commit")
+    with Stage(log, "git commit + push"):
+        try:
+            os.chdir(str(PROJECT_ROOT))
+        except OSError as e:
+            log.error(f"cannot chdir to {PROJECT_ROOT}: {e}")
             return False
 
-        subprocess.run(["git", "add", "public/data/"], check=True, capture_output=True)
-        subprocess.run(["git", "add", "scripts/monitor_status.json"], check=False, capture_output=True)
+        try:
+            result = subprocess.run(
+                ["git", "status", "--porcelain"],
+                capture_output=True, text=True, encoding="utf-8", errors="replace",
+            )
+        except Exception:
+            log.error("git status failed", exc=True)
+            return False
 
-        subprocess.run(
-            ["git", "commit", "-m", message],
-            check=True, capture_output=True, text=True,
-        )
-        subprocess.run(
-            ["git", "push"],
-            check=True, capture_output=True, text=True, timeout=120,
-        )
-        log("  [OK] Git commit + push done")
+        if not result.stdout.strip():
+            log.skip("no changes to commit")
+            return False
+
+        changed_count = len(result.stdout.strip().splitlines())
+        log.info(f"{changed_count} changed paths")
+
+        try:
+            subprocess.run(["git", "add", "public/data/"], check=True, capture_output=True)
+            subprocess.run(["git", "add", "scripts/monitor_status.json"], check=False, capture_output=True)
+        except subprocess.CalledProcessError as e:
+            log.error(f"git add failed: rc={e.returncode}")
+            log.error(f"  stderr: {(e.stderr or b'').decode('utf-8', 'replace')[:500]}")
+            return False
+
+        try:
+            res = subprocess.run(
+                ["git", "commit", "-m", message],
+                check=True, capture_output=True, text=True, encoding="utf-8", errors="replace",
+            )
+            log.debug(f"commit stdout tail: {res.stdout.rstrip().splitlines()[-1] if res.stdout.strip() else ''}")
+        except subprocess.CalledProcessError as e:
+            log.error(f"git commit failed: rc={e.returncode}")
+            log.error(f"  stderr: {(e.stderr or '')[:500]}")
+            return False
+
+        try:
+            res = subprocess.run(
+                ["git", "push"],
+                check=True, capture_output=True, text=True, timeout=120, encoding="utf-8", errors="replace",
+            )
+            log.debug(f"push stderr (info): {(res.stderr or '').rstrip()[:300]}")
+        except subprocess.TimeoutExpired:
+            log.error("git push timed out (120s)")
+            return False
+        except subprocess.CalledProcessError as e:
+            log.error(f"git push failed: rc={e.returncode}")
+            log.error(f"  stderr: {(e.stderr or '')[:500]}")
+            return False
+
+        log.ok("git commit + push complete")
         return True
-    except subprocess.CalledProcessError as e:
-        log(f"  [FAIL] Git error: {e}")
-        return False
 
 
 def main():
-    log("=" * 60)
-    log("SPINAI Model Monitor START")
-    log("=" * 60)
+    overall_start = time.perf_counter()
+    log.banner("SPINAI Model Monitor START")
+    log.info(f"PROJECT_ROOT: {PROJECT_ROOT}")
+    log.info(f"SPINAI_ROOT:  {SPINAI_ROOT}")
+    log.info(f"PYTHON:       {PYTHON_SPINAI}")
+    log.info(f"thresholds:   {THRESHOLDS}")
 
-    # 1. Scan all models
-    models = parse_train_logs()
-    if not models:
-        log("No models found.")
-        return
+    # Stage 1: scan models
+    with Stage(log, "1/4 scan models"):
+        models = parse_train_logs()
+        if not models:
+            log.error("no models found in MODELS_DIR")
+            return
+        log.info(f"found {len(models)} models")
+        for m in models:
+            status = "PASS" if m["passed"] else "FAIL"
+            train = "done" if m["training_complete"] else f"epoch {m['last_epoch']}/{m['total_epochs']}"
+            ckpt = "ckpt" if m["has_checkpoint"] else "NO-CKPT"
+            log.info(
+                f"  [{status}] {m['name']}: Dice={m['best_dice']:.4f} "
+                f"(threshold {m['threshold']}) [{train}] [{ckpt}]"
+            )
 
-    log(f"Found {len(models)} models:")
-    for m in models:
-        status = "PASS" if m["passed"] else "FAIL"
-        train = "done" if m["training_complete"] else f"epoch {m['last_epoch']}/{m['total_epochs']}"
-        log(f"  {m['name']}: Dice={m['best_dice']:.4f} (threshold {m['threshold']}) [{status}] [{train}]")
-
-    # 2. Compare with previous state
+    # Stage 2: rebuild atlases for new/improved models
     prev_status = load_status()
     updated_atlases = []
 
-    for modality in ["ct", "mri", "xray"]:
-        best = find_best_model(models, modality)
-        if not best:
-            continue
+    with Stage(log, "2/4 evaluate + rebuild per modality"):
+        for modality in ["ct", "mri", "xray"]:
+            best = find_best_model(models, modality)
+            if not best:
+                log.skip(f"[{modality.upper()}] no passing model with checkpoint")
+                continue
 
-        prev_key = f"applied_{modality}"
-        prev_model = prev_status.get(prev_key, {}).get("name")
-        prev_dice = prev_status.get(prev_key, {}).get("dice", 0)
+            prev_key = f"applied_{modality}"
+            prev_model = prev_status.get(prev_key, {}).get("name")
+            prev_dice = prev_status.get(prev_key, {}).get("dice", 0)
 
-        if best["name"] == prev_model and best["best_dice"] <= prev_dice:
-            log(f"[{modality.upper()}] Already up to date: {best['name']} (Dice={best['best_dice']:.4f})")
-            continue
+            if best["name"] == prev_model and best["best_dice"] <= prev_dice:
+                log.skip(
+                    f"[{modality.upper()}] up to date: {best['name']} (Dice={best['best_dice']:.4f})"
+                )
+                continue
 
-        log(f"[{modality.upper()}] New model detected: {best['name']} Dice={best['best_dice']:.4f}")
+            log.info(
+                f"[{modality.upper()}] new model: {best['name']} "
+                f"Dice={best['best_dice']:.4f} (was: {prev_model}@{prev_dice:.4f})"
+            )
 
-        # 3. Rebuild atlas
-        success = False
-        if modality == "ct" and modality in MODEL_ATLAS_MAP:
-            success = run_ct_inference_and_rebuild(best)
-        elif modality == "mri" and modality in MODEL_ATLAS_MAP:
-            success = run_mri_rebuild(best)
-        elif modality == "xray" and modality in MODEL_ATLAS_MAP:
-            success = run_xray_rebuild(best)
+            success = False
+            t0 = time.perf_counter()
+            try:
+                if modality == "ct" and modality in MODEL_ATLAS_MAP:
+                    success = run_ct_inference_and_rebuild(best)
+                elif modality == "mri" and modality in MODEL_ATLAS_MAP:
+                    success = run_mri_rebuild(best)
+                elif modality == "xray" and modality in MODEL_ATLAS_MAP:
+                    success = run_xray_rebuild(best)
+                else:
+                    log.skip(f"  no rebuild handler for {modality}")
+                    continue
+            except Exception:
+                log.error(f"[{modality.upper()}] rebuild crashed", exc=True)
+                continue
+
+            elapsed = time.perf_counter() - t0
+            if success:
+                log.ok(f"[{modality.upper()}] rebuild complete in {elapsed:.1f}s")
+                prev_status[prev_key] = {
+                    "name": best["name"],
+                    "dice": best["best_dice"],
+                    "applied_at": datetime.datetime.now().isoformat(),
+                }
+                updated_atlases.append(modality)
+            else:
+                log.error(f"[{modality.upper()}] rebuild FAILED after {elapsed:.1f}s")
+
+    # Stage 3: persist status
+    with Stage(log, "3/4 save monitor_status.json"):
+        prev_status["last_check"] = datetime.datetime.now().isoformat()
+        prev_status["models"] = {m["name"]: {"dice": m["best_dice"], "modality": m["modality"]} for m in models}
+        save_status(prev_status)
+        log.info(f"updated_atlases this run: {updated_atlases or 'none'}")
+
+    # Stage 4: git commit + push
+    with Stage(log, "4/4 git commit + push"):
+        if updated_atlases:
+            msg = f"auto: update {', '.join(updated_atlases)} atlas from SPINAI models\n\n"
+            for mod in updated_atlases:
+                info = prev_status[f"applied_{mod}"]
+                msg += f"- {mod}: {info['name']} (Dice={info['dice']:.4f})\n"
+            git_commit_and_push(msg)
         else:
-            log(f"  [SKIP] {modality} atlas auto-rebuild not yet implemented")
-            continue
+            log.skip("no atlases changed; skipping git operations")
 
-        if success:
-            prev_status[prev_key] = {
-                "name": best["name"],
-                "dice": best["best_dice"],
-                "applied_at": datetime.datetime.now().isoformat(),
-            }
-            updated_atlases.append(modality)
-
-    # 4. Save status
-    prev_status["last_check"] = datetime.datetime.now().isoformat()
-    prev_status["models"] = {m["name"]: {"dice": m["best_dice"], "modality": m["modality"]} for m in models}
-    save_status(prev_status)
-
-    # 5. Git commit + push (only if atlas changed)
-    if updated_atlases:
-        msg = f"auto: update {', '.join(updated_atlases)} atlas from SPINAI models\n\n"
-        for mod in updated_atlases:
-            info = prev_status[f"applied_{mod}"]
-            msg += f"- {mod}: {info['name']} (Dice={info['dice']:.4f})\n"
-        git_commit_and_push(msg)
-
-    log("Monitor complete\n")
+    total = time.perf_counter() - overall_start
+    log.banner(f"Monitor complete (total {total:.1f}s)")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        log.fatal("Monitor crashed in main()")
+        sys.exit(1)

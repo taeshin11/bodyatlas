@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { createLogger, loggedFetch } from '@/lib/logger';
+
+const log = createLogger('SpineXrayViewer');
 
 interface Structure {
   id: number;
@@ -46,28 +49,52 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
 
   // Load structures
   useEffect(() => {
-    fetch(`${dataPath}/structures.json`)
-      .then(r => r.json())
-      .then((d: { structures: Structure[] }) => setStructures(d.structures));
+    log.info('loading X-ray atlas', { dataPath });
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await loggedFetch(log, `${dataPath}/structures.json`);
+        if (!res.ok) return;
+        const d = await res.json() as { structures: Structure[] };
+        if (cancelled) return;
+        log.debug('structures loaded', { count: d.structures?.length });
+        setStructures(d.structures);
+      } catch (e) {
+        log.error('failed to load X-ray structures.json', e, { dataPath });
+      }
+    })();
+    return () => { cancelled = true; };
   }, [dataPath]);
 
   // Load images and labels for both views
   useEffect(() => {
     (['lateral', 'ap'] as XrayView[]).forEach(view => {
       const img = new Image();
-      img.src = `${dataPath}/${view}/0000.png`;
+      const url = `${dataPath}/${view}/0000.png`;
       img.onload = () => {
+        log.debug(`image loaded: ${view}`, { url, width: img.naturalWidth, height: img.naturalHeight });
         imgRefs.current[view] = img;
         renderView(view);
       };
+      img.onerror = () => {
+        log.error(`image failed to load: ${view}`, undefined, { url });
+      };
+      img.src = url;
     });
 
-    fetch(`${dataPath}/labels/lateral/0000.json`).then(r => r.ok ? r.json() : []).then(d =>
-      setLabels(prev => ({ ...prev, lateral: d }))
-    );
-    fetch(`${dataPath}/labels/ap/0000.json`).then(r => r.ok ? r.json() : []).then(d =>
-      setLabels(prev => ({ ...prev, ap: d }))
-    );
+    (['lateral', 'ap'] as XrayView[]).forEach(view => {
+      const url = `${dataPath}/labels/${view}/0000.json`;
+      fetch(url)
+        .then(r => {
+          if (!r.ok) {
+            log.warn(`label fetch non-OK: ${view}`, { url, status: r.status });
+            return [];
+          }
+          return r.json();
+        })
+        .then(d => setLabels(prev => ({ ...prev, [view]: d })))
+        .catch(e => log.fetchError(url, e, { view }));
+    });
   }, [dataPath]);
 
   const renderView = useCallback((view: XrayView) => {

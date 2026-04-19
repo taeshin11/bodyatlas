@@ -24,6 +24,11 @@ from PIL import Image
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SPINAI_ROOT = Path("D:/ImageLabelAPI_SPINAI")
 sys.path.insert(0, str(SPINAI_ROOT / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _log_utils import Logger, Stage, install_excepthook
+
+log = Logger("gen_our_xray", log_file=PROJECT_ROOT / "scripts" / "monitor_log.txt")
+install_excepthook(log)
 
 AP_SOURCES = [
     SPINAI_ROOT / "data" / "cat_A_ap_xray" / "0006_scoliosis_labeled",
@@ -88,15 +93,18 @@ def collect_cases(sources, max_cases: int):
     cases = []
     for src in sources:
         if not src.exists():
-            print(f"  SKIP {src}")
+            log.warn(f"source dir missing: {src}")
             continue
+        n_before = len(cases)
         for ext in ("*.jpg", "*.png"):
             for img in sorted(src.glob(ext)):
                 if "_mask" in img.name:
                     continue
                 cases.append(img)
                 if len(cases) >= max_cases:
+                    log.debug(f"  reached max_cases={max_cases}, stopping collection")
                     return cases
+        log.debug(f"  collected {len(cases) - n_before} from {src.name}")
     return cases
 
 
@@ -106,10 +114,12 @@ def run_inference(predictor, img_path: Path, target_h: int):
 
     img_gray = cv2.imread(str(img_path), cv2.IMREAD_GRAYSCALE)
     if img_gray is None:
+        log.error(f"cv2.imread returned None for {img_path}")
         return None, None, None, None
     orig_h, orig_w = img_gray.shape
     scale = target_h / orig_h
     new_w = round(orig_w * scale)
+    log.debug(f"  inference: {img_path.name} orig={orig_w}x{orig_h} -> {new_w}x{target_h}")
 
     img_resized = cv2.resize(img_gray, (new_w, target_h), interpolation=cv2.INTER_LANCZOS4)
 
@@ -123,7 +133,12 @@ def run_inference(predictor, img_path: Path, target_h: int):
 
 
 def convert_case(predictor, img_path: Path, out_img: Path, out_lbl: Path, target_h: int):
-    img_resized, mask_resized, class_names, dims = run_inference(predictor, img_path, target_h)
+    try:
+        img_resized, mask_resized, class_names, dims = run_inference(predictor, img_path, target_h)
+    except Exception:
+        log.error(f"run_inference crashed for {img_path}", exc=True)
+        return None, set()
+
     if img_resized is None:
         return None, set()
 
@@ -133,6 +148,7 @@ def convert_case(predictor, img_path: Path, out_img: Path, out_lbl: Path, target
     unique = np.unique(mask_resized)
     labels = []
     seen_names = set()
+    skipped_empty = 0
     for cid in unique:
         if cid == 0:
             continue
@@ -142,9 +158,13 @@ def convert_case(predictor, img_path: Path, out_img: Path, out_lbl: Path, target
         binary = (mask_resized == cid).astype(np.uint8)
         contours = mask_to_contours(binary)
         if not contours:
+            skipped_empty += 1
             continue
         labels.append({"id": -1, "name": name, "contours": contours})
         seen_names.add(name)
+
+    if skipped_empty:
+        log.debug(f"  {img_path.name}: {skipped_empty} classes had no usable contours")
 
     out_lbl.parent.mkdir(parents=True, exist_ok=True)
     with open(out_lbl, "w") as f:
@@ -160,101 +180,127 @@ def main():
     parser.add_argument("--checkpoint", type=Path, default=CHECKPOINT_XRAY)
     args = parser.parse_args()
 
-    print(f"Output: {args.out}")
-    print(f"Checkpoint: {args.checkpoint}")
+    log.banner("X-ray atlas builder")
+    log.kv("output", args.out)
+    log.kv("checkpoint", args.checkpoint)
+    log.kv("max_cases", args.max_cases)
+    log.kv("target_h", TARGET_H)
+
     if not args.checkpoint.exists():
-        print(f"[FAIL] Checkpoint missing: {args.checkpoint}")
+        log.fatal(f"checkpoint missing: {args.checkpoint}", exc=False)
         sys.exit(1)
 
-    from inference.predictor import SpinAIPredictor
-    predictor = SpinAIPredictor(checkpoints={"xray": str(args.checkpoint)})
+    with Stage(log, "1/4 load predictor"):
+        from inference.predictor import SpinAIPredictor
+        predictor = SpinAIPredictor(checkpoints={"xray": str(args.checkpoint)})
+        log.ok("predictor loaded")
 
-    print("\nCollecting AP cases...")
-    ap_cases = collect_cases(AP_SOURCES, args.max_cases)
-    print(f"  Found {len(ap_cases)}")
-    print("Collecting Lat cases...")
-    lat_cases = collect_cases(LAT_SOURCES, args.max_cases)
-    print(f"  Found {len(lat_cases)}")
+    with Stage(log, "2/4 collect cases"):
+        log.info("collecting AP cases")
+        ap_cases = collect_cases(AP_SOURCES, args.max_cases)
+        log.info(f"  AP: {len(ap_cases)} cases")
+        log.info("collecting Lat cases")
+        lat_cases = collect_cases(LAT_SOURCES, args.max_cases)
+        log.info(f"  Lat: {len(lat_cases)} cases")
 
-    if not ap_cases and not lat_cases:
-        print("No cases found!")
-        sys.exit(1)
+        if not ap_cases and not lat_cases:
+            log.fatal("no cases found in any source dir", exc=False)
+            sys.exit(1)
 
     for sub in ["ap", "lateral", "labels"]:
         d = args.out / sub
         if d.exists():
             shutil.rmtree(d)
+    log.debug("cleaned existing output subdirs")
 
     all_names = set()
     ap_dims = (0, 0)
     lat_dims = (0, 0)
+    failed_cases = []
 
-    print("\nRunning AP inference...")
-    for i, img in enumerate(ap_cases):
-        out_img = args.out / "ap" / f"{i:04d}.png"
-        out_lbl = args.out / "labels" / "ap" / f"{i:04d}.json"
-        dims, names = convert_case(predictor, img, out_img, out_lbl, TARGET_H)
-        if dims:
-            ap_dims = dims
-            all_names.update(names)
-            print(f"  [AP {i}] {img.name} -> {len(names)} classes")
+    with Stage(log, "3/4 inference + label generation"):
+        log.info(f"AP inference ({len(ap_cases)} cases)")
+        for i, img in enumerate(ap_cases):
+            out_img = args.out / "ap" / f"{i:04d}.png"
+            out_lbl = args.out / "labels" / "ap" / f"{i:04d}.json"
+            dims, names = convert_case(predictor, img, out_img, out_lbl, TARGET_H)
+            if dims:
+                ap_dims = dims
+                all_names.update(names)
+                log.info(f"  [AP {i:02d}] {img.name} -> {len(names)} classes")
+            else:
+                failed_cases.append(("AP", i, str(img)))
+                log.warn(f"  [AP {i:02d}] FAILED: {img.name}")
 
-    print("\nRunning Lateral inference...")
-    for i, img in enumerate(lat_cases):
-        out_img = args.out / "lateral" / f"{i:04d}.png"
-        out_lbl = args.out / "labels" / "lateral" / f"{i:04d}.json"
-        dims, names = convert_case(predictor, img, out_img, out_lbl, TARGET_H)
-        if dims:
-            lat_dims = dims
-            all_names.update(names)
-            print(f"  [LAT {i}] {img.name} -> {len(names)} classes")
+        log.info(f"Lateral inference ({len(lat_cases)} cases)")
+        for i, img in enumerate(lat_cases):
+            out_img = args.out / "lateral" / f"{i:04d}.png"
+            out_lbl = args.out / "labels" / "lateral" / f"{i:04d}.json"
+            dims, names = convert_case(predictor, img, out_img, out_lbl, TARGET_H)
+            if dims:
+                lat_dims = dims
+                all_names.update(names)
+                log.info(f"  [LAT {i:02d}] {img.name} -> {len(names)} classes")
+            else:
+                failed_cases.append(("LAT", i, str(img)))
+                log.warn(f"  [LAT {i:02d}] FAILED: {img.name}")
 
-    # Build structures.json
-    sorted_names = sorted(all_names)
-    structures = []
-    for idx, name in enumerate(sorted_names):
-        cat, color = CATEGORY_MAP.get(name, ("other", "#64748B"))
-        dn = DISPLAY_NAMES.get(name, {"en": name.replace("_", " ").title(), "ko": name.replace("_", " ")})
-        display = {lang: dn.get(lang, dn["en"]) for lang in ["en","ko","ja","zh","es","de","fr"]}
-        structures.append({
-            "id": idx,
-            "name": name,
-            "displayName": display,
-            "category": cat,
-            "color": color,
-            "bestSlice": {"ap": 0, "lateral": 0},
-            "sliceRange": {
-                "ap": [0, max(0, len(ap_cases) - 1)],
-                "lateral": [0, max(0, len(lat_cases) - 1)],
+        if failed_cases:
+            log.warn(f"{len(failed_cases)} cases failed inference (continuing)")
+
+    with Stage(log, "4/4 write structures.json + info.json + relabel"):
+        sorted_names = sorted(all_names)
+        structures = []
+        for idx, name in enumerate(sorted_names):
+            cat, color = CATEGORY_MAP.get(name, ("other", "#64748B"))
+            dn = DISPLAY_NAMES.get(name, {"en": name.replace("_", " ").title(), "ko": name.replace("_", " ")})
+            display = {lang: dn.get(lang, dn["en"]) for lang in ["en","ko","ja","zh","es","de","fr"]}
+            structures.append({
+                "id": idx,
+                "name": name,
+                "displayName": display,
+                "category": cat,
+                "color": color,
+                "bestSlice": {"ap": 0, "lateral": 0},
+                "sliceRange": {
+                    "ap": [0, max(0, len(ap_cases) - 1)],
+                    "lateral": [0, max(0, len(lat_cases) - 1)],
+                },
+            })
+
+        name_to_id = {s["name"]: s["id"] for s in structures}
+        relabeled = 0
+        for jp in sorted((args.out / "labels").rglob("*.json")):
+            try:
+                with open(jp) as f:
+                    labels = json.load(f)
+                for label in labels:
+                    label["id"] = name_to_id.get(label["name"], -1)
+                with open(jp, "w") as f:
+                    json.dump(labels, f, separators=(",", ":"))
+                relabeled += 1
+            except Exception:
+                log.error(f"relabel failed for {jp}", exc=True)
+        log.debug(f"relabeled {relabeled} JSON files")
+
+        with open(args.out / "structures.json", "w", encoding="utf-8") as f:
+            json.dump({"totalStructures": len(structures), "structures": structures},
+                      f, indent=2, ensure_ascii=False)
+
+        info = {
+            "modality": "X-Ray",
+            "planes": {
+                "ap":      {"slices": len(ap_cases), "width": ap_dims[0], "height": ap_dims[1]},
+                "lateral": {"slices": len(lat_cases), "width": lat_dims[0], "height": lat_dims[1]},
             },
-        })
+        }
+        with open(args.out / "info.json", "w") as f:
+            json.dump(info, f, indent=2)
 
-    # Assign correct IDs in label JSONs
-    name_to_id = {s["name"]: s["id"] for s in structures}
-    for jp in sorted((args.out / "labels").rglob("*.json")):
-        with open(jp) as f:
-            labels = json.load(f)
-        for label in labels:
-            label["id"] = name_to_id.get(label["name"], -1)
-        with open(jp, "w") as f:
-            json.dump(labels, f, separators=(",", ":"))
-
-    with open(args.out / "structures.json", "w", encoding="utf-8") as f:
-        json.dump({"totalStructures": len(structures), "structures": structures},
-                  f, indent=2, ensure_ascii=False)
-
-    info = {
-        "modality": "X-Ray",
-        "planes": {
-            "ap":      {"slices": len(ap_cases), "width": ap_dims[0], "height": ap_dims[1]},
-            "lateral": {"slices": len(lat_cases), "width": lat_dims[0], "height": lat_dims[1]},
-        },
-    }
-    with open(args.out / "info.json", "w") as f:
-        json.dump(info, f, indent=2)
-
-    print(f"\nDone! AP: {len(ap_cases)}, Lateral: {len(lat_cases)}")
-    print(f"Structures: {len(structures)}")
+    log.banner(
+        f"Done. AP: {len(ap_cases)}, Lat: {len(lat_cases)}, "
+        f"structures: {len(structures)}, failed_cases: {len(failed_cases)}"
+    )
 
 
 if __name__ == "__main__":

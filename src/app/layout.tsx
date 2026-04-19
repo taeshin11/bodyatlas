@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { I18nProvider } from '@/lib/i18n-context';
 import './globals.css';
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
+import GlobalErrorListener from '@/components/GlobalErrorListener';
 import { AuthProvider } from '@/lib/auth-context';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -199,6 +200,7 @@ export default function RootLayout({
           </AuthProvider>
         </I18nProvider>
         <ServiceWorkerRegister />
+        <GlobalErrorListener />
       </body>
     </html>
   );

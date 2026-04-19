@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { createLogger, loggedFetch } from '@/lib/logger';
+
+const log = createLogger('AtlasViewer');
 
 // Increment to force CDN cache refresh
 const CACHE_V = 'v3';
@@ -63,9 +66,36 @@ export default function AtlasViewer({
 
   // ── Data loading ──────────────────────────────────────────────────────────
   useEffect(() => {
-    fetch(`${dataPath}/info.json?${CACHE_V}`).then(r => r.json()).then(setInfo);
-    fetch(`${dataPath}/structures.json?${CACHE_V}`).then(r => r.json())
-      .then((d: { structures: Structure[] }) => setStructures(d.structures));
+    log.info('loading atlas data', { dataPath });
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const res = await loggedFetch(log, `${dataPath}/info.json?${CACHE_V}`);
+        if (!res.ok) return;
+        const data = await res.json() as AtlasInfo;
+        if (cancelled) return;
+        log.debug('info.json loaded', { planes: Object.keys(data.planes) });
+        setInfo(data);
+      } catch (e) {
+        log.error('failed to load info.json', e, { dataPath });
+      }
+    })();
+
+    (async () => {
+      try {
+        const res = await loggedFetch(log, `${dataPath}/structures.json?${CACHE_V}`);
+        if (!res.ok) return;
+        const data = await res.json() as { structures: Structure[] };
+        if (cancelled) return;
+        log.debug('structures.json loaded', { count: data.structures?.length });
+        setStructures(data.structures);
+      } catch (e) {
+        log.error('failed to load structures.json', e, { dataPath });
+      }
+    })();
+
+    return () => { cancelled = true; };
   }, [dataPath]);
 
   useEffect(() => {
@@ -103,10 +133,20 @@ export default function AtlasViewer({
   useEffect(() => {
     if (!info) return;
     const padded = String(currentSlice).padStart(4, '0');
-    fetch(`${dataPath}/labels/${activeTab}/${padded}.json?${CACHE_V}`)
-      .then(r => r.ok ? r.json() : [])
+    const url = `${dataPath}/labels/${activeTab}/${padded}.json?${CACHE_V}`;
+    fetch(url)
+      .then(r => {
+        if (!r.ok) {
+          log.warn('label fetch returned non-OK', { url, status: r.status });
+          return [];
+        }
+        return r.json();
+      })
       .then(setLabels)
-      .catch(() => setLabels([]));
+      .catch((e) => {
+        log.fetchError(url, e, { plane: activeTab, slice: currentSlice });
+        setLabels([]);
+      });
   }, [activeTab, currentSlice, info, dataPath]);
 
   // Jump to structure's best slice
