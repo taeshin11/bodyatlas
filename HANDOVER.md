@@ -4,6 +4,15 @@
 
 ---
 
+## 📋 세션 의무 규칙
+
+1. **세션 종료 시 이 HANDOVER.md 덮어쓰기** (현재 상태 스냅샷)
+2. **`claude-progress.txt`에 Session 추가** (append-only)
+3. **기능 추가/변경 시 반드시 같은 커밋에서 `FEATURES.md` 수정** — pre-commit hook이 `src/components/**` 또는 `src/app/**/page.tsx` 변경을 감지하면 FEATURES.md 동시 수정을 요구함
+4. **git commit + push**
+
+---
+
 ## 🏃 지금 바로 할 일
 
 - **현재 상태:** 3-modality 파이프라인 완성 (CT/MRI/X-ray) + Frontend 통합 + 라이선스 클린업 완료. **전체 배포 데이터가 Apache 2.0 compliant**.

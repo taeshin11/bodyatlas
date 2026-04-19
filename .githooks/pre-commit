@@ -1,0 +1,68 @@
+#!/bin/sh
+# Enforce FEATURES.md updates whenever user-facing feature code changes.
+#
+# Install (one-time, per clone):
+#   bash scripts/install-hooks.sh       # Unix / Git Bash
+#   scripts\install-hooks.bat            # cmd.exe (Windows)
+# Both just run: git config core.hooksPath .githooks
+#
+# Bypass in emergency (strongly discouraged):
+#   git commit --no-verify
+#   or prefix commit message with [skip-features-check]
+
+# Paths we consider "feature code" — adding/removing files or changing behavior
+# in any of these must be reflected in FEATURES.md.
+FEATURE_PATTERNS='^(src/components/.+\.(tsx|ts)|src/app/.+/page\.tsx|src/app/layout\.tsx|src/lib/(auth-context|i18n|logger)\.(ts|tsx)|public/data/[^/]+/(info|structures)\.json|scripts/gen_.+\.py|scripts/auto_model_monitor\.py|package\.json)$'
+
+# Collect staged files
+staged="$(git diff --cached --name-only --diff-filter=ACMRD)"
+
+# Any feature files touched?
+feature_changes="$(printf '%s\n' "$staged" | grep -E "$FEATURE_PATTERNS" || true)"
+
+if [ -z "$feature_changes" ]; then
+  exit 0
+fi
+
+# Was FEATURES.md updated in this commit?
+features_md="$(printf '%s\n' "$staged" | grep -E '^FEATURES\.md$' || true)"
+
+# Escape hatch: if commit message mentions [skip-features-check], allow it
+# (only works for `git commit -m`; warns and passes)
+msg_file="$(git rev-parse --git-path COMMIT_EDITMSG 2>/dev/null || true)"
+skip=""
+if [ -n "$msg_file" ] && [ -f "$msg_file" ]; then
+  if grep -q '\[skip-features-check\]' "$msg_file"; then
+    skip=1
+  fi
+fi
+
+if [ -n "$features_md" ] || [ -n "$skip" ]; then
+  if [ -n "$skip" ]; then
+    echo "[pre-commit] [skip-features-check] detected in commit message; allowing"
+  fi
+  exit 0
+fi
+
+# ── Block ────────────────────────────────────────────────────────────────
+cat >&2 <<'EOF'
+
+────────────────────────────────────────────────────────────────────────
+❌ FEATURES.md 갱신 누락
+
+다음 파일을 변경하면서 FEATURES.md를 같이 수정하지 않았습니다:
+EOF
+printf '  - %s\n' $feature_changes >&2
+cat >&2 <<'EOF'
+
+대응 방법 (택 1):
+  1) FEATURES.md를 갱신한 뒤 `git add FEATURES.md` 하고 다시 커밋
+  2) 기능 변화 없음이 확실하면 commit message에
+     [skip-features-check] 를 포함 (예: "chore: rename var [skip-features-check]")
+  3) 비상시: git commit --no-verify (강력 비추천)
+
+의무 규칙은 HANDOVER.md + FEATURES.md 상단에 문서화되어 있습니다.
+────────────────────────────────────────────────────────────────────────
+EOF
+
+exit 1
