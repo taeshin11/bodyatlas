@@ -1075,25 +1075,45 @@
 - 운영 복구 기록만 남김. 다음 세션에서 dev 재기동 시 `PORT=3500` 사용 권장.
 
 
-## Session 18 — Round 19
-### Real Optimization Found
-- **PWA 서비스워커 캐시 문제**: `public/sw.js`에 `Cache-Control` 헤더 없음 → Vercel/브라우저가 기본값(보통 긴 TTL)으로 캐시하면 새 sw.js 버전이 사용자에게 전달되지 않아 PWA 업데이트가 멈춤. 알려진 PWA antipattern.
-- Fix: `next.config.js` `headers()`에 추가.
-  - `/sw.js` → `Cache-Control: no-cache, no-store, must-revalidate` + `Content-Type: application/javascript; charset=utf-8` (일부 CDN이 .js를 잘못 처리하는 경우 방어).
-  - `/manifest.json` → `Cache-Control: public, max-age=3600` (1시간 짧은 캐시).
-- AtlasViewer.tsx에 이전 라운드에서 놓친 개선 포함:
-  - `contourPath` 함수를 컴포넌트 렌더 블록 바깥(module scope)으로 이동 + `for` 루프로 바꿔 매 렌더마다 클로저 재할당 제거.
-  - `<img>`에 `decoding="async"` + `fetchPriority="high"` 추가 (LCP 후보 이미지).
+## Session 19 (2026-04-22) — Round 19: data cache + decode hint + contourPath hoist
+- Phase: perf round 19 (HTTP cache, image decode, latent TDZ fix, PWA sw cache)
 
-### Verification
-- `tsc --noEmit` clean (type 에러 0).
-- dev restart 후 `curl -I /sw.js`로 헤더 확인:
-  - `Cache-Control: no-cache, no-store, must-revalidate` ✓
-  - `Content-Type: application/javascript; charset=utf-8` ✓
-- `GET /` 200 in 121ms.
+### 라이브 테스트
+- 시작 시점: 모든 node 프로세스(R18 dev 3500/3777 포함)가 죽어있는 상태로 발견.
+  netstat은 LISTENING 표시했으나 connect 시 refused — Windows TCP 잔존만 있고 user-space는 죽음. 별도 zombie 5개 kill.
+- `PORT=3500 npx next dev -p 3500` 새로 띄움 → 9 라우트 전부 200 (`/`, `/about`, `/how-to-use`, `/download`, `/privacy`, `/terms`, `/sitemap.xml`, `/robots.txt`, `/opengraph-image`).
+- 9개 atlas dataPath `structures.json` + `info.json` 검증 시 `/data/our-brain-mri` 404 — 실제 dataPath는 `/data/brain-mri-commercial`로 RegionSelector에서 확인되어 false alarm. 9 atlas 전부 200.
 
-### Deploy Plan
-- 커밋: `perf(pwa): no-cache sw.js, AtlasViewer contourPath hoist + img priority hints [skip-features-check]`
-- 푸시: origin/master
-- 빌드: dev 중지 → `.next` 삭제 → `next build` → dev 재기동 (R2 incident 규칙).
-- 배포: Vercel prod는 현재 다운(사용자 미결정) → 빌드 검증까지만.
+### 발견한 버그/개선점
+1. **`AtlasViewer.tsx`의 `contourPath` 함수 latent TDZ 위험:**
+   - `useMemo([labels])` 콜백이 첫 렌더 시 동기 실행되는데 `contourPath`가 그 아래 라인에서 선언됨 → ReferenceError 위험.
+   - 현재 첫 렌더 `labels=[]`라 우연히 안 터짐. SSR rehydrate 등 동기 경로 추가 시 즉시 크래시.
+2. **메인 viewer `<img>`에 decode hint 없음** — LCP 후보인데 `decoding`/`fetchPriority` 미설정 → 메인스레드 디코드.
+3. **`/data/*` 경로 long-cache 헤더 부재** — 슬라이스 PNG 평균 ~15 kB × 200~512 슬라이스 × 9 atlas = 수십 MB. URL `?v3` cache-busting 이미 있어 immutable 안전.
+4. **PWA 서비스워커 캐시 antipattern** — `/sw.js`/`/manifest.json` 명시적 `Cache-Control` 부재.
+
+### 수정
+- `AtlasViewer.tsx`:
+  - `contourPath` 모듈 스코프 hoist + `for` 루프로 단순화.
+  - 메인 `<img>`에 `decoding="async"` + `fetchPriority="high"`.
+- `next.config.js` `headers()` 신규:
+  - `/data/:path*` → `Cache-Control: public, max-age=31536000, immutable`
+  - `/sw.js` → `no-cache, no-store, must-revalidate` + `Content-Type: application/javascript; charset=utf-8`
+  - `/manifest.json` → `public, max-age=3600`
+
+### 빌드 (safe mode)
+- dev 5개 kill → `.next` clean → `npx next build` → dev 재기동
+- 결과: `/` **9.03 kB / 210 kB** First Load (R11 baseline 8.99 kB 대비 +0.04 kB — contourPath top-level 비용)
+- 11 pages 모두 성공
+- HTTP `Cache-Control: public, max-age=31536000, immutable` 헤더 `/data/our-ct/info.json` curl 직접 확인 ✓
+
+### 검증
+- `tsc --noEmit` clean
+- 9 라우트 재테스트 200
+- Cache-Control 헤더 curl 확인
+
+### Git Commits (Session 19)
+- (이 commit: contourPath hoist + img decode hint + /data immutable + sw.js no-cache + R18 log finalization)
+
+### 배포 상태
+- Vercel prod는 Session 15부터 다운 — 사용자 결정 대기 (이 라운드도 빌드 검증까지만, 푸시는 GitHub만).
