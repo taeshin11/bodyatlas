@@ -731,3 +731,24 @@
 
 ### Git Commits (Session 17 Round 3)
 - (이 commit: bbox early-reject + slice prefetch)
+
+## Session 17 — Round 4 (2026-04-22)
+- Phase: perf round 4 (search precompute)
+
+### 라이브 테스트
+- 8 라우트 전부 200, 좀비 없음. dev 3-proc (PID 62544/73452/46780) + python 2개 (학습/API) 전부 활성.
+- prod `bodyatlas-ten.vercel.app` 여전히 404 (Session 15 블록, 사용자 결정 필요).
+
+### 성능 최적화 (R4)
+- **`StructurePanel.tsx` 검색 인덱스 precompute:**
+  - 이전: 키스트로크마다 각 구조체에 대해 `s.name.replace(/_/g,' ').toLowerCase()` + `Object.values(s.displayName).map(v=>v.toLowerCase())` 재할당 (브레인 MRI 275 × 8 문자열).
+  - 지금: `regionStructures` 변경 시 `useMemo`로 `searchIndex: {s, haystack}[]` 1회 precompute, 필터는 토큰별 `haystack.includes()`만 수행.
+  - 핫패스에서 `Object.values` / `.map` / `toLowerCase` / 배열 할당 전부 제거.
+  - 의미 동일 (token AND × haystack OR across fields — joined string이 semantically equivalent, space 구분자로 단어 경계 매치 보존).
+
+### 검증
+- `npx tsc --noEmit` clean
+- HMR 반영 후 3 라우트 curl 200
+
+### Git Commits (Session 17 Round 4)
+- (이 commit: StructurePanel 검색 인덱스 precompute)

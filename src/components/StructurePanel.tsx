@@ -53,21 +53,27 @@ export default function StructurePanel({ selectedStructure, onStructureSelect, l
     });
   }, [structures, regionAxialRange]);
 
+  // Precompute lowercase haystack per structure once — avoids re-allocating
+  // arrays + toLowerCase calls on every keystroke (275 structs × 8 strings).
+  const searchIndex = useMemo(() => regionStructures.map(s => ({
+    s,
+    haystack: (
+      s.name.replace(/_/g, ' ') + ' ' +
+      Object.values(s.displayName).filter(Boolean).join(' ')
+    ).toLowerCase(),
+  })), [regionStructures]);
+
   const filtered = useMemo(() => {
     if (!search.trim()) return regionStructures;
-    const q = search.toLowerCase();
-    const tokens = q.split(/\s+/).filter(Boolean);
-
-    return regionStructures.filter(s => {
-      const targets = [
-        s.name.replace(/_/g, ' ').toLowerCase(),
-        ...Object.values(s.displayName).map(v => (v || '').toLowerCase()),
-      ];
-      return tokens.every(token =>
-        targets.some(t => t.includes(token))
-      );
-    });
-  }, [regionStructures, search]);
+    const tokens = search.toLowerCase().split(/\s+/).filter(Boolean);
+    const out: Structure[] = [];
+    for (const { s, haystack } of searchIndex) {
+      let ok = true;
+      for (const t of tokens) { if (!haystack.includes(t)) { ok = false; break; } }
+      if (ok) out.push(s);
+    }
+    return out;
+  }, [searchIndex, regionStructures, search]);
 
   const grouped = useMemo(() => {
     const groups: Record<string, Structure[]> = {};
