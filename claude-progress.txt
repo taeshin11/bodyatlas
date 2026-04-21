@@ -1117,3 +1117,44 @@
 
 ### 배포 상태
 - Vercel prod는 Session 15부터 다운 — 사용자 결정 대기 (이 라운드도 빌드 검증까지만, 푸시는 GitHub만).
+
+## Session 20 (2026-04-22) — Round 20: drift correction + dead atlas 삭제
+- Phase: discipline reset (per user iter rules)
+
+### Drift 신호 점검 (사용자 규칙 적용)
+- (1) 같은 모듈 영역 3+ iter 연속: AtlasViewer.tsx → R3, R5, R8, R9, R11, R13, R19. **HIT.**
+- (2) primary metric 정체: `/` First Load JS R11~R19 8.99~9.03 kB, 4 iter 정체. **HIT.**
+- (3) 3+ "나중에" 미뤄진 항목: Vercel(5 iter), quizMode(20 iter+ flag만), custom domain(8 iter). **HIT.**
+- (4) 환경 블로커 2+ iter "재시도만": Vercel 404 status check 5 iter. **HIT.**
+- 4개 신호 전부 firing → discipline reset 라운드.
+
+### 공식 선언 (이 iter)
+1. **공식 종료: 번들 사이즈 추적** — `/` First Load JS 9.03 kB가 floor. 3 iter 동일. 의미 있는 변동 없음. 다음 라운드부터 *번들 kB 변동 보고 중단*. tsc/build PASS만 verify.
+2. **공식 포기: Vercel prod 자동 복구** — 자격증명·URL·도메인 결정 전부 사용자 영역. 5 iter "재시도만"으로 시그널 노이즈만 누적. 다음 라운드부터 *prod URL 헬스 체크 중단*. 사용자가 deploy 액션 취하면 그때 다시 다룸. (HANDOVER에 별도 기록 권장.)
+3. **이번 iter primary outcome (20자 이내)**: `Dead atlas 데이터 삭제` (12자)
+
+### 산출물 (rule 3 — 삭제/단순화 + 핵심 숫자 이동)
+1. **`public/data/brain-pet/` 삭제** (3.3 MB)
+   - FEATURES.md에서 "(미사용)" 표기, RegionSelector 미등록, 코드 0 참조 → 진짜 dead.
+2. **`public/data/spine-xray/` 삭제** (49 KB)
+   - FEATURES.md에서 "(레거시, 미연결)", RegionSelector 미등록, `SpineXrayViewer.tsx`의 default prop만 참조.
+3. **`SpineXrayViewer.tsx` default `dataPath`**: `/data/spine-xray` → `/data/our-xray`로 교체 (dangling reference 제거).
+4. **`FEATURES.md` 갱신**: brain-pet, spine-xray 행 삭제.
+
+### Impact (핵심 숫자)
+- `public/data/`: 284 MB → **281 MB** (−3.35 MB, −1.18%)
+- Vercel deploy bundle: 동일 -3.35 MB
+- 9개 등록 atlas (head-ct, chest-ct, our-head-ct, our-ct, brain-mri-commercial, our-lumbar-mri, our-xray, our-hand-xray, our-foot-xray) 영향 0 — 라이브 200 검증.
+
+### 검증
+- `tsc --noEmit` clean
+- `next build` PASS — 11 pages, `/` 9.03 kB / 210 kB (이번 iter는 data 삭제만, code 변경은 default prop 1줄 → 번들 영향 0)
+- `next dev` 재기동 → 9 라우트 200, 9 atlas 200, 삭제된 2 atlas 404 (의도대로)
+
+### Next iter 가이드
+- 같은 perf 폴리싱 영역 회피 (AtlasViewer.tsx, layout.tsx, page.tsx의 micro-opt 금지)
+- 측정 대상 변경 후보: atlas structure 수, 사용자 가치 metric, content quality, accessibility score
+- 자유 실험 가능 영역: quizMode flag 실제 구현, 다국어 cover율, atlas 추가/품질, README/about 콘텐츠
+
+### Git Commits (Session 20)
+- (이 commit: dead atlas 삭제 + SpineXrayViewer dangling fix + FEATURES 갱신 + drift discipline 로그)

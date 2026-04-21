@@ -227,8 +227,6 @@
 | `our-hand-xray/` | our_hand_xray | ap | 1 (binary) | Apache 2.0 (`unet_hand_ANON_v3_c2`) |
 | `our-foot-xray/` | our_foot_xray | ap | 1 (binary) | Apache 2.0 (`unet_foot_ANON_v2_c2`) |
 | `brain-mri-commercial/` | our_brain_mri | 3-plane | - | Apache 2.0 (FastSurfer+MedSAM) |
-| `brain-pet/` | (미사용) | axial/sagittal | - | (검토 필요) |
-| `spine-xray/` | (레거시, 미연결) | ap/lateral | - | 자체 polygon 데이터 |
 
 **각 폴더 공통 구조:**
 - `info.json`: `{ planes: { <name>: { slices: N } }, window?, voxelSpacing? }`

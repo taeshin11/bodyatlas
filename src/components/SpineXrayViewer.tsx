@@ -36,7 +36,7 @@ const VIEW_LABELS: Record<XrayView, { en: string; ko: string }> = {
   ap:      { en: 'AP',      ko: '전후면' },
 };
 
-export default function SpineXrayViewer({ onStructureSelect, selectedStructure, locale, dataPath = '/data/spine-xray' }: SpineXrayViewerProps) {
+export default function SpineXrayViewer({ onStructureSelect, selectedStructure, locale, dataPath = '/data/our-xray' }: SpineXrayViewerProps) {
   const [structures, setStructures] = useState<Structure[]>([]);
   const [labels, setLabels] = useState<Record<XrayView, SliceLabel[]>>({ lateral: [], ap: [] });
   const [availableViews, setAvailableViews] = useState<XrayView[]>(['lateral', 'ap']);
