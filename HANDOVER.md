@@ -48,7 +48,11 @@ Vercel 프로젝트(`prj_WcoBLejQU7ddyGPpu24PVusSk84h`, team `team_Ku8jPGlrgClTA
   - `structures.find(s => s.id === label.id)` 루프 안에서 선형 탐색 → `useMemo`로 `structuresById` / `structuresByName` Map 구성, O(1) lookup.
   - brain-mri 275 구조 × 라벨/contour 반복당 호출되던 find 제거 → 마우스 hover 프레임에서 체감 개선 기대.
 - **`next.config.js` 강화:** `poweredByHeader: false`, `compress: true`, `productionBrowserSourceMaps: false`, `compiler.removeConsole` (prod에서 `error`/`warn` 외 console 스트립).
-- **검증:** `npx tsc --noEmit` clean, `npx next build` 성공 (`/` 15.8 kB / 212 kB First Load — 회귀 없음).
+- **Round 2 — `src/app/page.tsx` 초기 번들 다이어트 (lazy-load):**
+  - `SpineXrayViewer` (3개 X-ray 리전에서만 사용), `AuthGate` (locked region 클릭 시만), `FeedbackButton` / `InstallPrompt` (defer) → `next/dynamic({ ssr: false })`.
+  - `BODY_REGIONS.find()` → `useMemo`로 `regionsById` Map 교체.
+  - **빌드 결과:** `/` 15.8 → **12.5 kB** (−21 %), First Load JS 212 → **209 kB**. 조건부/지연 컴포넌트는 on-demand chunk.
+- **검증:** `npx tsc --noEmit` clean, `npx next build` 성공 (11 pages, 회귀 없음).
 
 ## 📝 Session 14 (2026-04-22) 주요 결정사항
 

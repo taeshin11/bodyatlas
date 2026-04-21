@@ -1,19 +1,25 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import FeedbackButton from '@/components/FeedbackButton';
-import InstallPrompt from '@/components/InstallPrompt';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import AtlasViewer from '@/components/AtlasViewer';
-import SpineXrayViewer from '@/components/SpineXrayViewer';
 import StructurePanel from '@/components/StructurePanel';
 import RegionSelector, { BODY_REGIONS, type BodyRegion } from '@/components/RegionSelector';
-import AuthGate from '@/components/AuthGate';
 import { useI18n } from '@/lib/i18n-context';
 import { useAuth } from '@/lib/auth-context';
+
+// Lazy-load components that are either conditional or deferred.
+// SpineXrayViewer: only rendered for 3 X-ray regions (not the default).
+// AuthGate: only shown after user clicks a locked region.
+// FeedbackButton / InstallPrompt: defer until after initial paint.
+const SpineXrayViewer = dynamic(() => import('@/components/SpineXrayViewer'), { ssr: false });
+const AuthGate = dynamic(() => import('@/components/AuthGate'), { ssr: false });
+const FeedbackButton = dynamic(() => import('@/components/FeedbackButton'), { ssr: false });
+const InstallPrompt = dynamic(() => import('@/components/InstallPrompt'), { ssr: false });
 
 interface Structure {
   id: number;
@@ -35,12 +41,18 @@ export default function Home() {
 
   const isAuthenticated = !!user;
 
+  const regionsById = useMemo(() => {
+    const m = new Map<BodyRegion, typeof BODY_REGIONS[number]>();
+    for (const r of BODY_REGIONS) m.set(r.id, r);
+    return m;
+  }, []);
+
   const handleStructureSelect = useCallback((s: Structure | null) => {
     setSelectedStructure(s);
   }, []);
 
   const handleRegionSelect = useCallback((region: BodyRegion) => {
-    const regionConfig = BODY_REGIONS.find(r => r.id === region);
+    const regionConfig = regionsById.get(region);
     if (regionConfig && !regionConfig.free && !isAuthenticated) {
       setShowAuth(true);
       return;
@@ -48,13 +60,13 @@ export default function Home() {
     setActiveRegion(region);
     setSelectedStructure(null);
     setForceAxial(prev => prev + 1);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, regionsById]);
 
   const handleAuthDismiss = useCallback(() => {
     setShowAuth(false);
   }, []);
 
-  const currentRegion = BODY_REGIONS.find(r => r.id === activeRegion)!;
+  const currentRegion = regionsById.get(activeRegion)!;
   const dataPath = currentRegion.dataPath;
   const isXray = activeRegion === 'our_xray' || activeRegion === 'our_hand_xray' || activeRegion === 'our_foot_xray';
 

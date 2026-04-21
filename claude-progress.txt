@@ -685,3 +685,21 @@
 
 ### Git Commits (Session 17)
 - (이 commit: hot-path perf + next.config 강화)
+
+## Session 17 — Round 2 (2026-04-22)
+- Phase: perf round 2 (lazy-load)
+- Completed: `/` 초기 번들 12.5 kB (−21%) / First Load 209 kB (−3 kB)
+- Incident: `next build`를 dev 서버 활성 상태에서 실행 → `.next` 디렉터리 공유로 HMR webpack-runtime이 `Cannot find module './682.js'` 500 발생. 해결: dev 프로세스 4개 kill + `.next` 삭제 + dev 재기동.
+- Rule (future sessions): **dev 서버가 떠 있는 동안 `next build` 금지.** Verification은 별도 폴더/프로세스에서 or dev 중단 후 실행.
+
+### 추가 최적화 (`src/app/page.tsx`)
+- `SpineXrayViewer`, `AuthGate`, `FeedbackButton`, `InstallPrompt` → `next/dynamic({ ssr:false })` 로 lazy 로드. 초기 페이지 번들에서 제거.
+- `BODY_REGIONS.find()` 2곳 → `useMemo`로 `regionsById: Map` 생성, O(1) lookup.
+
+### 검증
+- `npx tsc --noEmit` clean
+- `npx next build` 성공 — `/` 15.8 → **12.5 kB**, First Load 212 → **209 kB**
+- dev 재기동 후 6 라우트 전수 200
+
+### Git Commits (Session 17 Round 2)
+- (이 commit: lazy-load + regionsById memo + incident 로그)
