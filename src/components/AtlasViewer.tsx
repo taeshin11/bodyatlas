@@ -129,12 +129,14 @@ export default function AtlasViewer({
     ? `${dataPath}/${activeTab}/${String(currentSlice).padStart(4, '0')}.png?${CACHE_V}`
     : '';
 
-  // Load labels for current slice
+  // Load labels for current slice — aborts stale fetches so fast scrubs
+  // don't let an older response clobber the current slice's labels.
   useEffect(() => {
     if (!info) return;
     const padded = String(currentSlice).padStart(4, '0');
     const url = `${dataPath}/labels/${activeTab}/${padded}.json?${CACHE_V}`;
-    fetch(url)
+    const ctrl = new AbortController();
+    fetch(url, { signal: ctrl.signal })
       .then(r => {
         if (!r.ok) {
           log.warn('label fetch returned non-OK', { url, status: r.status });
@@ -144,9 +146,11 @@ export default function AtlasViewer({
       })
       .then(setLabels)
       .catch((e) => {
+        if (e?.name === 'AbortError') return;
         log.fetchError(url, e, { plane: activeTab, slice: currentSlice });
         setLabels([]);
       });
+    return () => ctrl.abort();
   }, [activeTab, currentSlice, info, dataPath]);
 
   // Prefetch adjacent slices (±1) — warms HTTP cache so scrubbing is smooth.

@@ -108,9 +108,12 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
       img.src = url;
     });
 
+    const ctrls: AbortController[] = [];
     availableViews.forEach(view => {
       const url = `${dataPath}/labels/${view}/${caseId}.json`;
-      fetch(url)
+      const ctrl = new AbortController();
+      ctrls.push(ctrl);
+      fetch(url, { signal: ctrl.signal })
         .then(r => {
           if (!r.ok) {
             log.warn(`label fetch non-OK: ${view}`, { url, status: r.status, caseIndex });
@@ -119,8 +122,12 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
           return r.json();
         })
         .then(d => setLabels(prev => ({ ...prev, [view]: d })))
-        .catch(e => log.fetchError(url, e, { view, caseIndex }));
+        .catch(e => {
+          if (e?.name === 'AbortError') return;
+          log.fetchError(url, e, { view, caseIndex });
+        });
     });
+    return () => { for (const c of ctrls) c.abort(); };
   }, [dataPath, availableViews, caseIndex]);
 
   const structuresById = useMemo(() => {

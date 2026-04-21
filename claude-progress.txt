@@ -752,3 +752,29 @@
 
 ### Git Commits (Session 17 Round 4)
 - (이 commit: StructurePanel 검색 인덱스 precompute)
+
+## Session 17 — Round 5 (2026-04-22)
+- Phase: correctness + build verify (label race fix)
+
+### 라이브 테스트
+- 6 라우트 전부 200, dev 3-proc + python 2개 활성, 좀비 없음
+- 학습 프로세스 (PID 74996) 3h21m+ 진행 중
+
+### 버그 수정 (race condition)
+- **`AtlasViewer.tsx`**: `currentSlice`/`activeTab` 빠르게 연속 변경 시 이전 슬라이스의 `fetch(labels.json)` 응답이 **나중에** 도착해 현재 슬라이스 라벨을 덮어쓸 수 있는 race. `AbortController`로 cleanup 시 abort, `AbortError` 무시 처리.
+- **`SpineXrayViewer.tsx`**: `caseIndex` 변경 시 lateral/ap 2개 라벨 fetch 동일한 race 가능성. 동일 패턴으로 수정 (각 view별 `AbortController` 배열로 일괄 abort).
+
+### 빌드 (safe mode — R2 교훈 준수)
+- dev 3-proc kill (PID 62544/73452/46780) → `.next` 삭제 → `npx next build` clean → dev 재기동 (새 PID)
+- 결과: `/` **12.9 kB** / 209 kB First Load (AbortController 코드 +0.4 kB), 11 pages 전부 성공
+- R1 기준 (15.8 kB) 대비 **−18%** 유지
+
+### 누적 Session 17 최적화 요약
+- R1: structures.find→Map, next.config 강화
+- R2: page.tsx 조건부 컴포넌트 lazy-load
+- R3: hit-test bbox early-reject, slice ±1 idle prefetch
+- R4: StructurePanel 검색 haystack precompute
+- R5: label fetch race AbortController
+
+### Git Commits (Session 17 Round 5)
+- (이 commit: label race AbortController + build verify)
