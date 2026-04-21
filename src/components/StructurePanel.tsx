@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback, memo } from 'react';
 import { Search, Eye, EyeOff } from 'lucide-react';
 
 interface Structure {
@@ -30,6 +30,35 @@ const CATEGORY_LABELS: Record<string, Record<string, string>> = {
   gland: { en: 'Glands', ko: '분비선' },
   other: { en: 'Other', ko: '기타' },
 };
+
+interface ItemProps {
+  s: Structure;
+  selected: boolean;
+  locale: string;
+  onSelect: (s: Structure) => void;
+}
+
+// Memoized button row. With a stable onSelect (useCallback) and primitive selected/locale,
+// selection change re-renders only the previously-selected + newly-selected items,
+// not all 275 entries (brain-mri).
+const StructureItem = memo(function StructureItem({ s, selected, locale, onSelect }: ItemProps) {
+  const enName = s.displayName.en || s.name.replace(/_/g, ' ');
+  const localName = locale !== 'en' && s.displayName[locale] ? s.displayName[locale] : null;
+  return (
+    <button
+      onClick={() => onSelect(s)}
+      className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all ${
+        selected ? 'bg-indigo-100 text-indigo-800 font-medium' : 'text-slate-700 hover:bg-slate-100'
+      }`}
+    >
+      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: s.color }} />
+      <div className="min-w-0 flex-1">
+        <span className="block truncate">{enName}</span>
+        {localName && <span className="block truncate text-[10px] text-slate-400">{localName}</span>}
+      </div>
+    </button>
+  );
+});
 
 export default function StructurePanel({ selectedStructure, onStructureSelect, locale, dataPath = '/data/chest-ct', regionAxialRange }: StructurePanelProps) {
   const [structures, setStructures] = useState<Structure[]>([]);
@@ -91,6 +120,9 @@ export default function StructurePanel({ selectedStructure, onStructureSelect, l
   const getLocalName = (s: Structure) =>
     locale !== 'en' && s.displayName[locale] ? s.displayName[locale] : null;
 
+  // Stable reference so memoized items don't re-render just because parent re-renders.
+  const stableSelect = useCallback((s: Structure) => onStructureSelect(s), [onStructureSelect]);
+
   return (
     <div className="bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-2xl shadow-lg shadow-slate-200/50 flex flex-col overflow-hidden" style={{ maxHeight: '80vh' }}>
       {/* Search */}
@@ -143,23 +175,13 @@ export default function StructurePanel({ selectedStructure, onStructureSelect, l
               {CATEGORY_LABELS[cat]?.[locale] || CATEGORY_LABELS[cat]?.en || cat} ({items.length})
             </div>
             {items.map(s => (
-              <button
+              <StructureItem
                 key={s.id}
-                onClick={() => onStructureSelect(s)}
-                className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all ${
-                  selectedStructure?.id === s.id
-                    ? 'bg-indigo-100 text-indigo-800 font-medium'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: s.color }} />
-                <div className="min-w-0 flex-1">
-                  <span className="block truncate">{getEnName(s)}</span>
-                  {getLocalName(s) && (
-                    <span className="block truncate text-[10px] text-slate-400">{getLocalName(s)}</span>
-                  )}
-                </div>
-              </button>
+                s={s}
+                selected={selectedStructure?.id === s.id}
+                locale={locale}
+                onSelect={stableSelect}
+              />
             ))}
           </div>
         ))}

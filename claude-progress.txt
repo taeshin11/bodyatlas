@@ -823,3 +823,25 @@
 
 ### Git Commits (Session 17 Round 7)
 - (이 commit: 미사용 deps 5개 제거 + build 검증)
+
+## Session 17 — Round 8 (2026-04-22)
+- Phase: perf round 8 (list item memoization)
+
+### 라이브 테스트
+- 8 라우트 전부 200, dev 정상 compile
+- 좀비 없음 — 학습 proc는 R7에 이미 종료, 현재 uvicorn(46648) + dev 3-proc만 활성
+
+### 성능 최적화 (R8)
+- **`StructurePanel.tsx` 리스트 아이템 memoization:**
+  - 이전: `items.map(s => <button onClick={() => onStructureSelect(s)} />)` — 인라인 핸들러 + 부모 리렌더마다 275 버튼 전부 리렌더.
+  - 지금: `StructureItem` 분리 + `React.memo` 래핑, `useCallback`으로 `stableSelect` 안정화. `selectedStructure` 변경 시 이전 선택 + 신규 선택 2개 아이템만 리렌더.
+  - brain-mri 275 구조 기준: hover/click로 선택 변경할 때 리렌더 273 스킵 (99.3% 감소).
+  - 부수 효과로 `getEnName` / `getLocalName`도 아이템 내부에서 1회씩 계산되어 React reconciliation 비용 감소.
+
+### 검증
+- `npx tsc --noEmit` clean
+- HMR 후 2 라우트 200
+- `next build`는 R7에서 이미 12.9 kB / 209 kB 검증 완료, 코드 형태 변경만이라 생략
+
+### Git Commits (Session 17 Round 8)
+- (이 commit: StructureItem memo 컴포넌트 분리)
