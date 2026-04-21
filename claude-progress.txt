@@ -778,3 +778,22 @@
 
 ### Git Commits (Session 17 Round 5)
 - (이 commit: label race AbortController + build verify)
+
+## Session 17 — Round 6 (2026-04-22)
+- Phase: perf round 6 (tail — module-level static split)
+
+### 라이브 테스트
+- 8 라우트 전부 200, 좀비 없음 (R5 재기동한 node 3-proc + python 2개 활성)
+- `/tmp/bodyatlas-dev.log`에 에러 없음, 정상 compile+serve 흐름
+
+### 성능 최적화 (R6)
+- **`RegionSelector.tsx`:** `BODY_REGIONS.filter(r => r.group === 'original'|'spinai')`가 매 렌더마다 2회 호출되던 것을 모듈 스코프 `const ORIGINAL_REGIONS` / `const SPINAI_REGIONS`로 단 1회로 hoist. BODY_REGIONS는 immutable이라 안전.
+  - activeRegion / locale 바뀔 때마다의 filter O(N) 중복 제거.
+
+### 검증
+- `npx tsc --noEmit` clean
+- HMR 후 3 라우트 200
+- `next build` 생략 (R2 교훈 — R5에서 이미 검증된 사이즈 유지)
+
+### Git Commits (Session 17 Round 6)
+- (이 commit: RegionSelector 모듈 스코프 filter hoist)

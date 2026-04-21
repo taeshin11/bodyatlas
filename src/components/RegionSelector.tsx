@@ -83,11 +83,12 @@ interface RegionSelectorProps {
   isAuthenticated: boolean;
 }
 
+// Split once at module load — BODY_REGIONS is immutable.
+const ORIGINAL_REGIONS = BODY_REGIONS.filter(r => r.group === 'original');
+const SPINAI_REGIONS = BODY_REGIONS.filter(r => r.group === 'spinai');
+
 export default function RegionSelector({ activeRegion, onRegionSelect, locale, isAuthenticated }: RegionSelectorProps) {
   const getLabel = (r: RegionConfig) => locale === 'ko' ? r.labelKo : r.label;
-
-  const original = BODY_REGIONS.filter(r => r.group === 'original');
-  const spinai = BODY_REGIONS.filter(r => r.group === 'spinai');
 
   const renderRow = (regions: RegionConfig[]) => (
     <div className="flex rounded-xl bg-white/70 backdrop-blur-xl border border-slate-200/60 p-1 gap-1">
@@ -120,11 +121,11 @@ export default function RegionSelector({ activeRegion, onRegionSelect, locale, i
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">Original</span>
-        {renderRow(original)}
+        {renderRow(ORIGINAL_REGIONS)}
       </div>
       <div className="flex items-center gap-2">
         <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider whitespace-nowrap">SPINAI</span>
-        {renderRow(spinai)}
+        {renderRow(SPINAI_REGIONS)}
       </div>
     </div>
   );
