@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 import { supabase, isSupabaseConfigured } from './supabase';
 import { createLogger } from './logger';
 import type { User } from '@supabase/supabase-js';
@@ -73,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const markTrialUsed = () => {
+  const markTrialUsed = useCallback(() => {
     try {
       localStorage.setItem(TRIAL_KEY, '1');
       log.info('localStorage write: trial marked used', { key: TRIAL_KEY });
@@ -81,11 +81,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       log.error('localStorage write failed', e, { key: TRIAL_KEY });
     }
     setTrialUsed(true);
-  };
+  }, []);
 
-  const needsAuth = trialUsed && !user;
-
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = useCallback(async () => {
     log.info('signInWithGoogle: redirecting to OAuth');
     try {
       await supabase.auth.signInWithOAuth({
@@ -95,9 +93,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       log.error('signInWithGoogle failed', e);
     }
-  };
+  }, []);
 
-  const signInWithEmail = async (email: string) => {
+  const signInWithEmail = useCallback(async (email: string) => {
     log.info('signInWithEmail: sending OTP', { email });
     const { error } = await supabase.auth.signInWithOtp({
       email,
@@ -106,17 +104,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) log.error('signInWithOtp returned error', error, { email });
     else log.info('OTP sent', { email });
     return { error: error?.message ?? null };
-  };
+  }, []);
 
-  const signInWithPassword = async (email: string, password: string) => {
+  const signInWithPassword = useCallback(async (email: string, password: string) => {
     log.info('signInWithPassword: attempting', { email });
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) log.warn('signInWithPassword failed', { email, error: error.message });
     else log.info('signInWithPassword OK', { email });
     return { error: error?.message ?? null };
-  };
+  }, []);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     log.info('signOut');
     try {
       await supabase.auth.signOut();
@@ -124,13 +122,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       log.error('signOut failed', e);
     }
-  };
+  }, []);
+
+  const needsAuth = trialUsed && !user;
+
+  // Stable value — consumers re-render only when one of these actually changes.
+  const value = useMemo(() => ({
+    user, loading, trialUsed, markTrialUsed, needsAuth,
+    signInWithGoogle, signInWithEmail, signInWithPassword, signOut,
+  }), [user, loading, trialUsed, needsAuth, markTrialUsed, signInWithGoogle, signInWithEmail, signInWithPassword, signOut]);
 
   return (
-    <AuthContext.Provider value={{
-      user, loading, trialUsed, markTrialUsed, needsAuth,
-      signInWithGoogle, signInWithEmail, signInWithPassword, signOut,
-    }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
