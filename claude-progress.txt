@@ -797,3 +797,29 @@
 
 ### Git Commits (Session 17 Round 6)
 - (이 commit: RegionSelector 모듈 스코프 filter hoist)
+
+## Session 17 — Round 7 (2026-04-22)
+- Phase: dep cleanup + security note
+
+### 라이브 테스트
+- 8 라우트 전부 200, dev 로그 clean, 좀비 없음
+- **변화:** 이전 라운드까지 떠있던 학습 프로세스 (PID 74996, pseudo_xray34c_anon.py) 종료됨 — 완료/정리 여부는 D:/ImageLabelAPI_SPINAI 측에서 확인 필요 (auto_model_monitor 대상)
+
+### dep 청소 (`package.json`)
+- **미사용 5개 제거:** `@radix-ui/react-dialog`, `@radix-ui/react-slider`, `@radix-ui/react-tabs`, `@radix-ui/react-tooltip`, `@supabase/auth-helpers-nextjs`.
+- 확인 방법: `grep -r "@radix-ui\|@supabase/auth-helpers-nextjs" src/` → 0 히트. package.json/lock에만 존재.
+- 결과: `npm uninstall` 5개 + transitive 40개 = 총 45 packages 제거 (node_modules slim).
+- 번들 크기 변화 없음 (tree-shaking으로 이미 미포함이었음) — `/` 12.9 kB / 209 kB First Load 유지.
+
+### ⚠️ 보안 점검 (결정 보류 — 사용자 확인 필요)
+- `npm audit`: next@14.2.35에 **1 high severity** (Image Optimizer DoS, RSC DoS, HTTP smuggling 등 5종 CVE 누적)
+- fix: `next@16.2.4` (major upgrade, breaking change)
+- **자동 실행 안 함** — major upgrade는 app layer 영향 크므로 사용자 승인 필요
+- 권장: 별도 세션에서 `next@16` migration (App Router 변경점 검토 필수)
+
+### 빌드 (safe mode)
+- dev 전체 kill → `.next` 삭제 → `npx next build` → dev 재기동
+- 결과: 11 pages 모두 성공, `/` 12.9 kB, First Load 209 kB (기준선 유지)
+
+### Git Commits (Session 17 Round 7)
+- (이 commit: 미사용 deps 5개 제거 + build 검증)
