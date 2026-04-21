@@ -928,3 +928,22 @@
 
 ### Git Commits (Session 17 Round 11)
 - (이 commit: dead state/ref 제거 + build)
+
+## Session 17 — Round 12 (2026-04-22)
+- Phase: 마이너 cleanup (dead imports)
+
+### 라이브 테스트
+- 6 라우트 200, 좀비 없음
+
+### Cleanup (R12)
+- **`StructurePanel.tsx`**: `import { Search, Eye, EyeOff }`에서 `Eye`, `EyeOff` 미사용 확인 → 제거. 
+- 전체 lucide-react import 스캔 결과 다른 컴포넌트는 모두 사용 중 (AuthGate, Header, FeedbackButton, InstallPrompt, ErrorBoundary, RegionSelector, not-found 전부 clean).
+- 번들 영향: lucide-react는 개별 import 트리셰이킹이라 bundle-level 효과는 미미, 코드 hygiene 관점의 정리.
+
+### 검증
+- `npx tsc --noEmit` clean
+- HMR 후 `/` 200
+- `next build`는 R11에서 8.99 kB 검증되어 생략 (import만 줄이는 변경)
+
+### Git Commits (Session 17 Round 12)
+- (이 commit: Eye/EyeOff 미사용 import 제거)

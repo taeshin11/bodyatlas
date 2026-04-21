@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useCallback, memo } from 'react';
-import { Search, Eye, EyeOff } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 interface Structure {
   id: number;
