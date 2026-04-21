@@ -897,3 +897,34 @@
 
 ### Git Commits (Session 17 Round 10)
 - (이 commit: context value useMemo + useCallback)
+
+## Session 17 — Round 11 (2026-04-22)
+- Phase: dead state removal + build (큰 번들 감소)
+
+### 라이브 테스트
+- 6 라우트 200, 좀비 없음 (uvicorn + dev 3-proc 재기동)
+
+### 발견한 dead state / dead ref
+- **`AtlasViewer.tsx`**: `imgRef = useRef<HTMLImageElement>(null)` — `<img ref={imgRef}>`로 set되지만 **어디에서도 read 안 함**. 완전 dead ref.
+- **`SpineXrayViewer.tsx`**: `[hoveredView, setHoveredView]` state — `setHoveredView(view)`가 **매 mouseMove마다** 호출되지만 어디에서도 read 안 함. mouseMove 프레임당 불필요한 setState → re-render 유발.
+
+### 수정
+- `imgRef` 선언 + `<img ref={imgRef}>` 제거.
+- `hoveredView` state 선언 + `setHoveredView(...)` 2곳 전부 제거.
+
+### 빌드 결과 (!)
+- dev kill → `.next` clean → `npx next build`
+- `/` 13 kB → **8.99 kB** (−31% 이번 라운드, R1 baseline 15.8 kB 대비 **−44%**)
+- First Load JS 210 kB (shared 87.4 kB + page-specific 감소)
+- 11 pages 모두 성공
+- 이 정도 감소는 R10 context memo + R11 dead state 조합이 트리셰이킹에 영향을 준 듯 (NextJS가 더 aggressively prune)
+
+### 세션 17 누적 번들 추이 (`/` 라우트)
+- R0 baseline: 15.8 kB
+- R2 (lazy-load): 12.5 kB (−21%)
+- R5 (+AbortController): 12.9 kB
+- R9 (+memoization): 13.0 kB
+- R11 (dead state prune): **8.99 kB** (−44% from baseline)
+
+### Git Commits (Session 17 Round 11)
+- (이 commit: dead state/ref 제거 + build)

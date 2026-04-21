@@ -43,7 +43,6 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
   const [caseCount, setCaseCount] = useState(1);
   const [caseIndex, setCaseIndex] = useState(0);
   const [hoveredStructure, setHoveredStructure] = useState<string | null>(null);
-  const [hoveredView, setHoveredView] = useState<XrayView | null>(null);
   const [showOverlay, setShowOverlay] = useState(true);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number; view: XrayView } | null>(null);
 
@@ -260,7 +259,6 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     }
 
     setHoveredStructure(found);
-    setHoveredView(view);
 
     if (found) {
       const rawX = e.clientX - rect.left + 12;
@@ -360,7 +358,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
               ref={el => { canvasRefs.current[view] = el; }}
               style={{ width: '100%', height: 'auto', display: 'block' }}
               onMouseMove={e => handleCanvasMouseMove(e, view)}
-              onMouseLeave={() => { setHoveredStructure(null); setHoveredView(null); setTooltipPos(null); }}
+              onMouseLeave={() => { setHoveredStructure(null); setTooltipPos(null); }}
               onClick={handleCanvasClick}
             />
 

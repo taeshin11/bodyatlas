@@ -58,7 +58,6 @@ export default function AtlasViewer({
   const [imgNatural, setImgNatural] = useState<{ w: number; h: number } | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
 
   // Derive available planes from info or prop
   const availablePlanes = planesProp || (info ? Object.keys(info.planes) : ['axial', 'sagittal', 'coronal']);
@@ -334,7 +333,6 @@ export default function AtlasViewer({
         <div style={{ display: 'inline-block', position: 'relative', lineHeight: 0, fontSize: 0, verticalAlign: 'top' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              ref={imgRef}
               src={imagePath}
               alt={`Cross-sectional anatomy ${activeTab} view, slice ${currentSlice - minSlice + 1} of ${maxSlice - minSlice + 1}`}
               style={{ display: 'block', maxHeight: 'calc(100vh - 280px)', maxWidth: '100%', width: 'auto', height: 'calc(100vh - 280px)' }}
