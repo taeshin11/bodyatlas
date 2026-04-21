@@ -135,6 +135,22 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     return m;
   }, [structures]);
 
+  // Precompute bboxes per contour per view — hover path skips isPointInPolygon
+  // for any contour whose bbox does not contain the cursor.
+  const labelIndex = useMemo(() => {
+    const out: Record<XrayView, Array<{ label: SliceLabel; bboxes: [number, number, number, number][] }>> = {
+      lateral: [],
+      ap: [],
+    };
+    for (const view of availableViews) {
+      out[view] = labels[view].map(l => ({
+        label: l,
+        bboxes: l.contours.map(contourBBox),
+      }));
+    }
+    return out;
+  }, [labels, availableViews]);
+
   const renderView = useCallback((view: XrayView) => {
     const canvas = canvasRefs.current[view];
     const img = imgRefs.current[view];
@@ -225,9 +241,13 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     const y = (e.clientY - rect.top) * scaleY;
 
     let found: string | null = null;
-    for (const label of labels[view]) {
-      for (const contour of label.contours) {
-        if (isPointInPolygon(x, y, contour)) { found = label.name; break; }
+    const entries = labelIndex[view];
+    for (const { label, bboxes } of entries) {
+      const contours = label.contours;
+      for (let ci = 0; ci < contours.length; ci++) {
+        const b = bboxes[ci];
+        if (x < b[0] || x > b[2] || y < b[1] || y > b[3]) continue;
+        if (isPointInPolygon(x, y, contours[ci])) { found = label.name; break; }
       }
       if (found) break;
     }
@@ -244,7 +264,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     } else {
       setTooltipPos(null);
     }
-  }, [labels]);
+  }, [labelIndex]);
 
   const handleCanvasClick = useCallback(() => {
     if (hoveredStructure) {
@@ -375,4 +395,16 @@ function isPointInPolygon(x: number, y: number, polygon: number[][]): boolean {
     if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
   }
   return inside;
+}
+
+function contourBBox(polygon: number[][]): [number, number, number, number] {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (let i = 0; i < polygon.length; i++) {
+    const p = polygon[i];
+    if (p[0] < minX) minX = p[0];
+    if (p[0] > maxX) maxX = p[0];
+    if (p[1] < minY) minY = p[1];
+    if (p[1] > maxY) maxY = p[1];
+  }
+  return [minX, minY, maxX, maxY];
 }

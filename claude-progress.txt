@@ -703,3 +703,31 @@
 
 ### Git Commits (Session 17 Round 2)
 - (이 commit: lazy-load + regionsById memo + incident 로그)
+
+## Session 17 — Round 3 (2026-04-22)
+- Phase: perf round 3 (hit-test bbox + slice prefetch)
+- Completed: AtlasViewer/SpineXrayViewer hover hit-test bbox 조기 기각, AtlasViewer ±1 slice idle-prefetch
+
+### 라이브 테스트
+- 8 라우트 전부 200, 좀비 없음 (node 3-proc dev chain 정상 + python 2개 활성)
+
+### 성능 최적화 (R3)
+1. **Bbox early-reject in hit-testing** (`AtlasViewer.tsx` + `SpineXrayViewer.tsx`):
+   - `useMemo`로 `labelIndex` 생성 — 각 contour의 `[minX,minY,maxX,maxY]` bbox를 라벨 로드 시점에 1회 계산.
+   - hover handler에서 contour마다 `isPointInPolygon` 호출 전 bbox 검사로 조기 기각 → brain-mri 275 구조 × 다수 contour 환경에서 마우스 프레임당 ray-casting 호출 수 대폭 감소.
+   - `contourBBox` 헬퍼 추가.
+2. **Adjacent-slice prefetch** (`AtlasViewer.tsx`):
+   - 현재 슬라이스 변경 시 `requestIdleCallback` (없으면 `setTimeout(0)`)로 ±1 슬라이스의 image + labels.json을 HTTP 캐시에 warm.
+   - 컴포넌트 언마운트 / 슬라이스 재변경 시 pending idle task cancel.
+   - 스크럽/키보드 내비 시 체감 지연 감소 예상.
+
+### 검증
+- `npx tsc --noEmit` clean (prefetch의 fetch then 타입 에러 1건 수정 후)
+- `next build`는 **일부러 생략** (R2의 dev/.next 충돌 교훈). HMR로 dev 서버 자동 반영, 4 라우트 curl 200.
+
+### 안 한 것 (대안 평가 끝)
+- `StructurePanel` 검색 debounce: UX 트레이드오프(느린 타자 지연)라 패스. 현재 useMemo로 이미 필터 재계산 방지.
+- 검색 타깃 문자열 precompute: 미세 최적화라 패스.
+
+### Git Commits (Session 17 Round 3)
+- (이 commit: bbox early-reject + slice prefetch)

@@ -129,7 +129,7 @@ export default function AtlasViewer({
     ? `${dataPath}/${activeTab}/${String(currentSlice).padStart(4, '0')}.png?${CACHE_V}`
     : '';
 
-  // Load labels
+  // Load labels for current slice
   useEffect(() => {
     if (!info) return;
     const padded = String(currentSlice).padStart(4, '0');
@@ -148,6 +148,38 @@ export default function AtlasViewer({
         setLabels([]);
       });
   }, [activeTab, currentSlice, info, dataPath]);
+
+  // Prefetch adjacent slices (±1) — warms HTTP cache so scrubbing is smooth.
+  // Both image + labels since labels block overlay render.
+  useEffect(() => {
+    if (!info || typeof window === 'undefined') return;
+    const handle = window.requestIdleCallback
+      ? window.requestIdleCallback(() => prefetch(), { timeout: 500 })
+      : window.setTimeout(prefetch, 0);
+
+    function prefetch() {
+      for (const delta of [-1, 1]) {
+        const target = currentSlice + delta;
+        if (target < minSlice || target > maxSlice) continue;
+        const padded = String(target).padStart(4, '0');
+        const imgUrl = `${dataPath}/${activeTab}/${padded}.png?${CACHE_V}`;
+        const labelUrl = `${dataPath}/labels/${activeTab}/${padded}.json?${CACHE_V}`;
+        // Image: new Image().src hits the browser cache
+        const img = new Image();
+        img.src = imgUrl;
+        // Label: fetch with default cache — drop the body, HTTP cache is enough
+        fetch(labelUrl).then(r => { if (r.ok) return r.text(); }).catch(() => {});
+      }
+    }
+
+    return () => {
+      if (window.cancelIdleCallback && typeof handle === 'number') {
+        window.cancelIdleCallback(handle);
+      } else {
+        window.clearTimeout(handle as number);
+      }
+    };
+  }, [activeTab, currentSlice, info, dataPath, minSlice, maxSlice]);
 
   // Jump to structure's best slice
   useEffect(() => {
@@ -208,18 +240,28 @@ export default function AtlasViewer({
     return m;
   }, [structures]);
 
+  // Precompute bboxes per contour once per label-set — cheap O(N) at load,
+  // lets every mousemove skip O(N) point-in-polygon when the point is outside.
+  const labelIndex = useMemo(() => labels.map(l => ({
+    label: l,
+    bboxes: l.contours.map(contourBBox),
+  })), [labels]);
+
   // ── SVG hover/click ───────────────────────────────────────────────────────
   const handleSvgMove = useCallback((e: React.MouseEvent<SVGSVGElement>) => {
-    if (!imgNatural || labels.length === 0) { setHoveredStructure(null); setTooltipPos(null); return; }
+    if (!imgNatural || labelIndex.length === 0) { setHoveredStructure(null); setTooltipPos(null); return; }
     const svg = e.currentTarget;
     const rect = svg.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width * imgNatural.w;
     const y = (e.clientY - rect.top) / rect.height * imgNatural.h;
 
     let found: string | null = null;
-    for (const label of labels) {
-      for (const contour of label.contours) {
-        if (isPointInPolygon(x, y, contour)) { found = label.name; break; }
+    for (const { label, bboxes } of labelIndex) {
+      const contours = label.contours;
+      for (let ci = 0; ci < contours.length; ci++) {
+        const b = bboxes[ci];
+        if (x < b[0] || x > b[2] || y < b[1] || y > b[3]) continue;
+        if (isPointInPolygon(x, y, contours[ci])) { found = label.name; break; }
       }
       if (found) break;
     }
@@ -231,7 +273,7 @@ export default function AtlasViewer({
     } else {
       setTooltipPos(null);
     }
-  }, [imgNatural, labels]);
+  }, [imgNatural, labelIndex]);
 
   const handleSvgClick = useCallback(() => {
     if (hoveredStructure) {
@@ -380,4 +422,17 @@ function isPointInPolygon(x: number, y: number, polygon: number[][]): boolean {
     }
   }
   return inside;
+}
+
+// [minX, minY, maxX, maxY]
+function contourBBox(polygon: number[][]): [number, number, number, number] {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (let i = 0; i < polygon.length; i++) {
+    const p = polygon[i];
+    if (p[0] < minX) minX = p[0];
+    if (p[0] > maxX) maxX = p[0];
+    if (p[1] < minY) minY = p[1];
+    if (p[1] > maxY) maxY = p[1];
+  }
+  return [minX, minY, maxX, maxY];
 }

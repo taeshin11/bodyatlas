@@ -52,7 +52,11 @@ Vercel 프로젝트(`prj_WcoBLejQU7ddyGPpu24PVusSk84h`, team `team_Ku8jPGlrgClTA
   - `SpineXrayViewer` (3개 X-ray 리전에서만 사용), `AuthGate` (locked region 클릭 시만), `FeedbackButton` / `InstallPrompt` (defer) → `next/dynamic({ ssr: false })`.
   - `BODY_REGIONS.find()` → `useMemo`로 `regionsById` Map 교체.
   - **빌드 결과:** `/` 15.8 → **12.5 kB** (−21 %), First Load JS 212 → **209 kB**. 조건부/지연 컴포넌트는 on-demand chunk.
-- **검증:** `npx tsc --noEmit` clean, `npx next build` 성공 (11 pages, 회귀 없음).
+  - **Incident:** `next build` + dev 동시 실행 → `.next` 공유 충돌로 dev 500 마비, 복구에 proc kill + `.next` 삭제 필요. 교훈 메모리 저장(`feedback_no_build_during_dev.md`).
+- **Round 3 — hit-test bbox + slice prefetch:**
+  - `AtlasViewer` / `SpineXrayViewer`: contour bbox를 `useMemo`로 precompute → hover handler에서 `isPointInPolygon` 전 bbox 조기 기각.
+  - `AtlasViewer`: `requestIdleCallback`로 ±1 slice image + label prefetch, 스크럽 체감 개선.
+  - 검증: `tsc --noEmit` clean, HMR 라이브 200. `next build`는 R2 교훈으로 생략.
 
 ## 📝 Session 14 (2026-04-22) 주요 결정사항
 
