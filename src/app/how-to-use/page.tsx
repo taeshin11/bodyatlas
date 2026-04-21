@@ -106,33 +106,34 @@ const faqs = [
   },
 ];
 
+// Derived from static steps/faqs — pre-stringify once at module load.
+const FAQ_JSON_LD = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+
+const HOWTO_JSON_LD = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Use BodyAtlas Free Anatomy Atlas',
+  description: 'Learn how to use the free interactive cross-sectional anatomy atlas to study CT and MRI anatomy.',
+  step: steps.map((s) => ({
+    '@type': 'HowToStep',
+    name: s.title,
+    text: s.desc,
+  })),
+});
+
 export default function HowToUsePage() {
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((f) => ({
-      '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a },
-    })),
-  };
-
-  const howToJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'HowTo',
-    name: 'How to Use BodyAtlas Free Anatomy Atlas',
-    description: 'Learn how to use the free interactive cross-sectional anatomy atlas to study CT and MRI anatomy.',
-    step: steps.map((s) => ({
-      '@type': 'HowToStep',
-      name: s.title,
-      text: s.desc,
-    })),
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: FAQ_JSON_LD }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: HOWTO_JSON_LD }} />
       <Header />
       <main className="flex-1">
         {/* Hero */}

@@ -1020,3 +1020,22 @@
 
 ### Git Commits (Session 17 Round 16)
 - (이 commit: Wifi 미사용 import 제거)
+
+## Session 17 — Round 17 (2026-04-22)
+- Phase: JSON-LD 호이스팅 2차 (how-to-use)
+
+### 라이브 테스트
+- 6 라우트 200, dev 3-proc + uvicorn 활성, 좀비 없음
+
+### 최적화 (R17)
+- **`src/app/how-to-use/page.tsx`**: `faqJsonLd` / `howToJsonLd`이 컴포넌트 내부에서 선언 + `JSON.stringify(...)` 렌더 시마다 실행. `faqs`, `steps`는 이미 모듈 스코프 상수라 JSON-LD도 결정론적.
+  - 모듈 스코프 `FAQ_JSON_LD` / `HOWTO_JSON_LD`로 hoist + **이미 직렬화된 문자열 저장** (한 번만 `JSON.stringify` 실행).
+  - `dangerouslySetInnerHTML={{ __html: FAQ_JSON_LD }}` 형태로 즉시 주입.
+  - R15의 layout.tsx JSON-LD 호이스팅과 동일 패턴.
+
+### 검증
+- `tsc --noEmit` clean, HMR 후 `/how-to-use` 200
+- `next build` 생략 (R15에서 이미 검증된 8.99 kB 안정, layout 빌드 결과는 동일 레이어, how-to-use 영향은 서버 렌더 시간만)
+
+### Git Commits (Session 17 Round 17)
+- (이 commit: how-to-use JSON-LD 호이스팅)
