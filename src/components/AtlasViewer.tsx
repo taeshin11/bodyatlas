@@ -289,9 +289,6 @@ export default function AtlasViewer({
   // ── Render helpers ────────────────────────────────────────────────────────
   const hasSelection = !!selectedStructure || !!hoveredStructure;
 
-  const contourPath = (contour: number[][]) =>
-    contour.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0]},${p[1]}`).join('') + 'Z';
-
   const hoveredStruct = hoveredStructure ? structuresByName.get(hoveredStructure) : undefined;
 
   return (
@@ -336,6 +333,8 @@ export default function AtlasViewer({
               src={imagePath}
               alt={`Cross-sectional anatomy ${activeTab} view, slice ${currentSlice - minSlice + 1} of ${maxSlice - minSlice + 1}`}
               style={{ display: 'block', maxHeight: 'calc(100vh - 280px)', maxWidth: '100%', width: 'auto', height: 'calc(100vh - 280px)' }}
+              decoding="async"
+              fetchPriority="high"
               onLoad={(e) => {
                 const el = e.currentTarget;
                 setImgNatural({ w: el.naturalWidth, h: el.naturalHeight });
@@ -425,6 +424,15 @@ function isPointInPolygon(x: number, y: number, polygon: number[][]): boolean {
     }
   }
   return inside;
+}
+
+function contourPath(contour: number[][]): string {
+  let d = '';
+  for (let i = 0; i < contour.length; i++) {
+    const p = contour[i];
+    d += (i === 0 ? 'M' : 'L') + p[0] + ',' + p[1];
+  }
+  return d + 'Z';
 }
 
 // [minX, minY, maxX, maxY]

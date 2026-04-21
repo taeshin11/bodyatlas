@@ -1039,3 +1039,61 @@
 
 ### Git Commits (Session 17 Round 17)
 - (이 commit: how-to-use JSON-LD 호이스팅)
+
+
+---
+
+## Session 18
+- Date: 2026-04-22
+- Round 18 (dynamic loop continuation)
+
+### Startup State
+- Dev 서버 다운 상태로 발견 (port 3000 EACCES).
+- 원인: Windows `netsh interface ipv4 show excludedportrange protocol=tcp` 결과 포트 제외 범위에 2948-3147, 3233-3332 포함 → 3000/3001/3100 전부 차단. Hyper-V/WSL2 예약으로 추정.
+- 회피: `PORT=3500` 으로 `npm run dev` 재기동 → 정상 listen.
+
+### Live Test (port 3500)
+- GET /           → 200 (0.084s)
+- GET /how-to-use → 200 (0.037s)
+- GET /download   → 200 (0.067s)
+- GET /privacy    → 200 (0.070s)
+- GET /terms      → 200 (0.081s)
+- GET /compare/imaios → 404 (라우트 부존재 정상)
+- 전 페이지 sub-100ms, 콘솔 에러/경고 0건.
+
+### Zombie Cleanup
+- conhost/cmd 11개 점검 중 오래된 10개 종료: 6108(cmd 04-11), 4620(04-16), 17288(04-02), 25012(04-02), 43124(04-11), 46592(04-10), 48640(04-20), 51144(04-18), 55760(04-18), 60172(04-18).
+
+### Optimization Scan
+- `grep TODO|FIXME|XXX|HACK` → 0건.
+- `console.log/warn/error` 직접 사용 → logger.ts와 GlobalErrorListener 주석만 (정상).
+- sitemap/robots/layout/page 추가 호이스팅 포인트 없음.
+- R1~R17 이미 의미 있는 최적화 전부 소진. 본 라운드 코드 변경 0.
+
+### Outcome
+- 코드 커밋 없음 (기능/성능 변경 없음).
+- 운영 복구 기록만 남김. 다음 세션에서 dev 재기동 시 `PORT=3500` 사용 권장.
+
+
+## Session 18 — Round 19
+### Real Optimization Found
+- **PWA 서비스워커 캐시 문제**: `public/sw.js`에 `Cache-Control` 헤더 없음 → Vercel/브라우저가 기본값(보통 긴 TTL)으로 캐시하면 새 sw.js 버전이 사용자에게 전달되지 않아 PWA 업데이트가 멈춤. 알려진 PWA antipattern.
+- Fix: `next.config.js` `headers()`에 추가.
+  - `/sw.js` → `Cache-Control: no-cache, no-store, must-revalidate` + `Content-Type: application/javascript; charset=utf-8` (일부 CDN이 .js를 잘못 처리하는 경우 방어).
+  - `/manifest.json` → `Cache-Control: public, max-age=3600` (1시간 짧은 캐시).
+- AtlasViewer.tsx에 이전 라운드에서 놓친 개선 포함:
+  - `contourPath` 함수를 컴포넌트 렌더 블록 바깥(module scope)으로 이동 + `for` 루프로 바꿔 매 렌더마다 클로저 재할당 제거.
+  - `<img>`에 `decoding="async"` + `fetchPriority="high"` 추가 (LCP 후보 이미지).
+
+### Verification
+- `tsc --noEmit` clean (type 에러 0).
+- dev restart 후 `curl -I /sw.js`로 헤더 확인:
+  - `Cache-Control: no-cache, no-store, must-revalidate` ✓
+  - `Content-Type: application/javascript; charset=utf-8` ✓
+- `GET /` 200 in 121ms.
+
+### Deploy Plan
+- 커밋: `perf(pwa): no-cache sw.js, AtlasViewer contourPath hoist + img priority hints [skip-features-check]`
+- 푸시: origin/master
+- 빌드: dev 중지 → `.next` 삭제 → `next build` → dev 재기동 (R2 incident 규칙).
+- 배포: Vercel prod는 현재 다운(사용자 미결정) → 빌드 검증까지만.
