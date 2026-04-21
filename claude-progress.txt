@@ -965,3 +965,43 @@
 
 ### Git Commits (Session 17 Round 13)
 - (이 commit: InstallPrompt setTimeout cleanup)
+
+## Session 17 — Round 14 (2026-04-22)
+- Phase: health check + SPINAI 상태 스냅샷 (코드 변경 없음)
+
+### 라이브 테스트
+- 6 라우트 200, 좀비 없음
+
+### SPINAI 학습 상태 (user 메모 규칙에 따른 체크)
+- `D:\ImageLabelAPI_SPINAI\outputs\models\unet_xray_ANON_v1_c34_20260421/` 디렉터리 존재, `best_model.pth` + `training_history.json` 있음 (R7에서 종료된 pseudo_xray34c 프로세스의 산출물).
+- `training_history.json` 구조: `[{epoch, tr_loss, val_loss, ...}]` — epoch 0 기록 확인. 학습 완료 여부와 dice 추이는 `auto_model_monitor.py` 돌려서 dice threshold 통과 시 BodyAtlas 반영 결정 (사용자 몫).
+- `D:\ImageLabelAPI_SPINAI\data\anon_seeds\xray_lumbar_ANON_v2_20260422/` 신규 seeds 디렉터리 확인 — 오늘 날짜 기준 pseudo-label 배치 출력물.
+
+### Dead state scan (변경 없음)
+- 모든 컴포넌트의 `useState` / `useRef` 선언과 사용처 grep 검증 → R11에 발견한 `imgRef` / `hoveredView` 외 추가 dead 없음.
+- `AtlasViewer.tsx`는 10개 state + 1 ref 전부 legitimate.
+- `SpineXrayViewer.tsx`는 R11 정리 후 8 state + 2 ref 전부 legitimate.
+- `FeedbackButton.tsx`, `AuthGate.tsx`, `InstallPrompt.tsx`, `StructurePanel.tsx`도 clean.
+
+### 변경 없음
+- 코드 변경 없음 → commit 없음. 이 log만 append해도 의미 있는 feature 변동 아니라 pre-commit이 `[skip-features-check]` 없이 통과할지 애매 → 다음 변경과 함께 묶어 커밋하기로 결정.
+
+## Session 17 — Round 15 (2026-04-22)
+- Phase: perf round 15 (JSON-LD 모듈 스코프 + R14 dangling log commit 포함)
+
+### 라이브 테스트
+- 6 라우트 200, 좀비 없음 (dev 재기동 후)
+
+### 성능 최적화 (R15)
+- **`src/app/layout.tsx` JSON-LD 호이스팅:**
+  - 이전: `jsonLd` 배열 (3 schemas, 약 145줄)이 `RootLayout` 컴포넌트 내부에서 매 서버 렌더마다 재구성 + `{jsonLd.map(JSON.stringify)}` 렌더 시 3번 재직렬화.
+  - 지금: `const JSON_LD = [...]` + `const JSON_LD_STRINGS = JSON_LD.map(s => JSON.stringify(s))` 모듈 스코프로 hoist. 빌드 시 1회 직렬화, 모든 응답에서 byte-identical `<script>` 내용 재사용.
+  - static 라우트에서는 ISR cache로 대체 완화되지만, 여전히 코드 경로상 깨끗해짐.
+
+### 빌드 (safe mode)
+- dev kill → `.next` clean → `npx next build` → dev 재기동
+- 결과: `/` **8.99 kB / 210 kB** 안정 유지 (R11/R13와 동일)
+- 11 pages 모두 성공
+
+### Git Commits (Session 17 Round 15)
+- (이 commit: JSON-LD 호이스팅 + R14 no-op log를 함께 commit)

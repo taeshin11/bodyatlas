@@ -75,27 +75,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const jsonLd = [
-    {
-      '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
-      name: 'BodyAtlas',
-      applicationCategory: 'HealthApplication',
-      operatingSystem: 'Web Browser',
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-      description: 'Free interactive cross-sectional anatomy atlas. The best free alternative to IMAIOS e-Anatomy for medical students, radiologists, and anatomy learners. Browse CT and MRI with labeled anatomical structures.',
-      url: SITE_URL,
-      applicationSubCategory: 'Anatomy Atlas',
-      inLanguage: ['en', 'ko', 'ja', 'zh', 'es', 'de', 'fr'],
-      featureList: 'Cross-sectional anatomy viewer, CT/MRI labeled structures, Structure search, Offline support, Multi-language support, Free forever',
-      screenshot: OG_IMAGE,
-      author: { '@type': 'Organization', name: 'SPINAI' },
-    },
+// Built once at module load — JSON-LD is static per build, no need to
+// rebuild the array (and re-stringify 3 schemas) on every layout render.
+const JSON_LD = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'BodyAtlas',
+    applicationCategory: 'HealthApplication',
+    operatingSystem: 'Web Browser',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    description: 'Free interactive cross-sectional anatomy atlas. The best free alternative to IMAIOS e-Anatomy for medical students, radiologists, and anatomy learners. Browse CT and MRI with labeled anatomical structures.',
+    url: SITE_URL,
+    applicationSubCategory: 'Anatomy Atlas',
+    inLanguage: ['en', 'ko', 'ja', 'zh', 'es', 'de', 'fr'],
+    featureList: 'Cross-sectional anatomy viewer, CT/MRI labeled structures, Structure search, Offline support, Multi-language support, Free forever',
+    screenshot: OG_IMAGE,
+    author: { '@type': 'Organization', name: 'SPINAI' },
+  },
     {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
@@ -175,8 +172,16 @@ export default function RootLayout({
         },
       ],
     },
-  ];
+];
 
+// Pre-serialize once; every response emits byte-identical <script> content.
+const JSON_LD_STRINGS = JSON_LD.map(s => JSON.stringify(s));
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <head>
@@ -188,11 +193,11 @@ export default function RootLayout({
         <meta name="google-adsense-account" content="ca-pub-7098271335538021" />
       </head>
       <body className={inter.className}>
-        {jsonLd.map((schema, i) => (
+        {JSON_LD_STRINGS.map((json, i) => (
           <script
             key={i}
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+            dangerouslySetInnerHTML={{ __html: json }}
           />
         ))}
         <I18nProvider>
