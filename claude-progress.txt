@@ -564,3 +564,34 @@
 
 ### Git Commits (Session 14)
 - (이 commit: X-ray case navigator + FEATURES.md 동기 갱신)
+
+
+## Session 15 (2026-04-22) — 🚨 Prod 유실 감지
+
+### 발견 경위
+- /loop 2회차에서 Vercel 프로덕션 헬스 체크 → `bodyatlas-ten.vercel.app` 404 `DEPLOYMENT_NOT_FOUND`
+- `bodyatlas.vercel.app`은 전혀 다른 사람의 Angular "AI Fitness Companion" 앱이 점유 중 (재사용 불가)
+- `npx vercel project ls` 결과: 현재 계정에는 `spinaiq` / `flowvium` / `web`만 존재 — **bodyatlas 프로젝트 없음**
+- `.vercel/project.json`의 `prj_WcoBLejQU7ddyGPpu24PVusSk84h` / `team_Ku8jPGlrgClTAMzdeDkGF6Gr`는 삭제 또는 팀 이전된 것으로 확인됨 ("Your Project was either deleted, transferred to a new Team...")
+
+### 영향
+- 최근 모든 commit (최소 Session 12~14 포함) 이 GitHub까지만 도달, 프로덕션 반영 0
+- case navigator, hand/foot modality, 라이선스 정리, 로깅 시스템 등 Session 12~14 산출물 전부 미공개
+- 검색 엔진(이전에 sitemap 제출된 상태) → 404 반복 → 랭킹 타격 우려
+
+### 조치 한 것 (이 세션)
+- HANDOVER.md 상단에 🚨 블록 추가 (현상 + 복구 옵션 a/b/c + URL baked-in 파일 리스트)
+- HANDOVER.md 배포 섹션에 "⚠ 유실" 표시
+- claude-progress.txt에 이 발견 기록
+
+### 조치 안 한 것 (사용자 결정 대기)
+- Vercel 재배포 — 프로덕션 URL이 바뀔 수 있어 URL 14개 baked 파일 치환 타이밍을 사용자가 결정
+- `.vercel/project.json` 삭제 — 재연결 방식에 따라 달라짐
+- 커스텀 도메인 구매 — 오래 전부터 블로커로 있던 항목
+
+### 좀비 점검
+- 현재 `next dev` 프로세스 3개 (Session 14에 내가 띄운 것, 활성) — 유지
+- Python SPINAI uvicorn + pseudo-label — 활성, 유지
+
+### Git Commits (Session 15)
+- (이 commit: HANDOVER.md + progress log 만 — 사용자 결정 필요 항목은 건드리지 않음)

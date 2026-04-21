@@ -13,10 +13,25 @@
 
 ---
 
+## 🚨 긴급 (Session 15, 2026-04-22 발견)
+
+**프로덕션 배포 유실** — `bodyatlas-ten.vercel.app` → `DEPLOYMENT_NOT_FOUND` (404).
+Vercel 프로젝트(`prj_WcoBLejQU7ddyGPpu24PVusSk84h`, team `team_Ku8jPGlrgClTAMzdeDkGF6Gr`)가 삭제/이전됨. 현재 계정(`taeshinkim11-4365s-projects`)의 프로젝트 목록엔 `spinaiq`·`flowvium`·`web`만 존재, bodyatlas 없음. 최근 모든 commit은 GitHub까지만 도달하고 라이브 반영 0.
+
+**사용자가 결정할 것:**
+- (a) 새 Vercel 프로젝트 생성 — `npx vercel deploy --prod` (현재 `.vercel/project.json` 삭제 필요)
+- (b) `bodyatlas.vercel.app`는 이미 타인 Angular 앱이 점유 — 이 이름 재사용 불가
+- (c) 커스텀 도메인 구매 후 연결 (장기적으로 이 방향이 깔끔)
+
+**URL이 baked-in된 파일** (배포 URL 확정 후 일괄 치환 필요):
+`src/app/layout.tsx` (7곳), `src/app/sitemap.ts`, `src/app/robots.ts`, `scripts/submit-indexnow.mjs`, `src/app/{about,how-to-use,download,privacy,terms}/page.tsx`, `PRD.md`.
+→ 추후 `NEXT_PUBLIC_SITE_URL` env 기반 단일 상수(`src/lib/site-config.ts`)로 centralize 권장.
+
 ## 🏃 지금 바로 할 일
 
-- **현재 상태 (Session 14, 2026-04-22):** 5-modality 파이프라인 (CT/MRI/Spine-XR/Hand-XR/Foot-XR) + X-ray case navigator. 10 케이스 전체 노출(직전엔 0000 하드코딩). 좀비 `next dev` 6개 정리.
+- **현재 상태 (Session 15, 2026-04-22):** 5-modality 파이프라인 + X-ray case navigator 완성. 단, Vercel 라이브 배포 유실로 최근 작업물(case navigator 포함)이 공개되지 않음.
 - **다음 세션 첫 작업:**
+  0. **🚨 Vercel 재배포 결정 후 실행** (위 긴급 블록 참고)
   1. `auto_model_monitor.py` 실행 (매 세션 규칙)
   2. `unet_xray_ANON_v1_c34` 학습 완료 확인 — 직전 Dice 0.78 (5 epoch, in-progress)
   3. `unet_chest_c3` training_history.json 확인 — checkpoint 81MB 있지만 history 비어있음
@@ -169,9 +184,9 @@ pip install kaggle
 
 ## 🌐 배포
 
-- 프로덕션: https://bodyatlas-ten.vercel.app
-- GitHub: github.com/taeshin11/bodyatlas
+- **프로덕션: ⚠ 유실 상태** — 위 "긴급" 블록 참고
+- GitHub: github.com/taeshin11/bodyatlas (정상, commit은 계속 도달)
 
 ---
 
-_마지막 업데이트: 2026-04-22 (Session 14 완료 — X-ray case navigator + zombie cleanup)_
+_마지막 업데이트: 2026-04-22 (Session 15 — prod 유실 감지 / case navigator는 GitHub엔 있으나 미배포)_
