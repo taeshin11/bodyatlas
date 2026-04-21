@@ -1005,3 +1005,18 @@
 
 ### Git Commits (Session 17 Round 15)
 - (이 commit: JSON-LD 호이스팅 + R14 no-op log를 함께 commit)
+
+## Session 17 — Round 16 (2026-04-22)
+- Phase: 마이너 cleanup
+
+### 라이브 테스트
+- 6 라우트 200, 좀비 없음
+
+### Cleanup
+- `src/app/download/DownloadContent.tsx`: `import { ..., Wifi, WifiOff, ... }`에서 `Wifi` 사용처 0 확인 → 제거 (line 294에서 `WifiOff`만 사용).
+
+### 검증
+- `tsc --noEmit` clean, HMR 후 `/download` 200
+
+### Git Commits (Session 17 Round 16)
+- (이 commit: Wifi 미사용 import 제거)

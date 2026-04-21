@@ -12,7 +12,6 @@ import {
   Globe,
   CheckCircle2,
   ArrowLeft,
-  Wifi,
   WifiOff,
   Zap,
   BookOpen,
