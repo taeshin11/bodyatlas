@@ -947,3 +947,21 @@
 
 ### Git Commits (Session 17 Round 12)
 - (이 commit: Eye/EyeOff 미사용 import 제거)
+
+## Session 17 — Round 13 (2026-04-22)
+- Phase: correctness fix (setTimeout cleanup)
+
+### 라이브 테스트
+- 6 라우트 200, 좀비 없음 (uvicorn + 재기동 dev 3-proc)
+
+### 버그 수정 (InstallPrompt)
+- **`src/components/InstallPrompt.tsx`**: `beforeinstallprompt` handler 내부 `setTimeout(() => setShow(true), 30000)` 이 **useEffect cleanup에 포함 안 됨**. 컴포넌트가 이 30초 창 중에 unmount되면 timer가 살아남아 unmounted component setState 호출 가능 (React warning + 잠재 메모리 누수).
+- 수정: effect 스코프에 `timerId` 변수로 추적, handler 재호출 시 이전 timer clear, cleanup에서도 `clearTimeout`.
+
+### 빌드 (safe mode)
+- dev kill → `.next` clean → `npx next build` → dev 재기동
+- 결과: `/` **8.99 kB / 210 kB** (R11 수준 유지)
+- 11 pages 모두 성공
+
+### Git Commits (Session 17 Round 13)
+- (이 commit: InstallPrompt setTimeout cleanup)

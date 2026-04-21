@@ -25,15 +25,21 @@ export default function InstallPrompt() {
       return;
     }
 
+    let timerId: number | null = null;
+
     const handler = (e: Event) => {
       e.preventDefault();
       log.info('beforeinstallprompt received; prompt will show after 30s');
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setTimeout(() => setShow(true), 30000);
+      if (timerId !== null) window.clearTimeout(timerId);
+      timerId = window.setTimeout(() => setShow(true), 30000);
     };
 
     window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      if (timerId !== null) window.clearTimeout(timerId);
+    };
   }, []);
 
   const handleInstall = async () => {
