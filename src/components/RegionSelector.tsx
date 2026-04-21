@@ -4,7 +4,8 @@ import { Lock } from 'lucide-react';
 
 export type BodyRegion =
   | 'head_neck' | 'chest' | 'abdomen' | 'pelvis'
-  | 'our_head' | 'our_chest' | 'our_abdomen' | 'our_pelvis' | 'our_brain_mri' | 'lumbar_mri' | 'our_xray';
+  | 'our_head' | 'our_chest' | 'our_abdomen' | 'our_pelvis' | 'our_brain_mri' | 'lumbar_mri' | 'our_xray'
+  | 'our_hand_xray' | 'our_foot_xray';
 
 interface RegionConfig {
   id: BodyRegion;
@@ -64,6 +65,14 @@ export const BODY_REGIONS: RegionConfig[] = [
   {
     id: 'our_xray', label: 'Spine X-ray', labelKo: '척추 X-ray', icon: '📷',
     dataPath: '/data/our-xray', defaultSlice: 0, free: true, group: 'spinai',
+  },
+  {
+    id: 'our_hand_xray', label: 'Hand X-ray', labelKo: '손 X-ray', icon: '✋',
+    dataPath: '/data/our-hand-xray', defaultSlice: 0, free: true, group: 'spinai',
+  },
+  {
+    id: 'our_foot_xray', label: 'Foot X-ray', labelKo: '발 X-ray', icon: '🦶',
+    dataPath: '/data/our-foot-xray', defaultSlice: 0, free: true, group: 'spinai',
   },
 ];
 

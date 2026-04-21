@@ -1,0 +1,29 @@
+{
+  "totalStructures": 1,
+  "structures": [
+    {
+      "id": 0,
+      "name": "foot",
+      "displayName": {
+        "en": "Foot",
+        "ko": "발",
+        "ja": "Foot",
+        "zh": "Foot",
+        "es": "Foot",
+        "de": "Foot",
+        "fr": "Foot"
+      },
+      "category": "bone",
+      "color": "#EC4899",
+      "bestSlice": {
+        "ap": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ]
+      }
+    }
+  ]
+}

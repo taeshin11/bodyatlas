@@ -15,11 +15,36 @@
 
 ## 🏃 지금 바로 할 일
 
-- **현재 상태:** 3-modality 파이프라인 완성 (CT/MRI/X-ray) + Frontend 통합 + 라이선스 클린업 완료. **전체 배포 데이터가 Apache 2.0 compliant**.
+- **현재 상태 (Session 13, 2026-04-21):** 5-modality 파이프라인 (CT/MRI/Spine-XR/Hand-XR/Foot-XR). 새 모델 `unet_hand_ANON_v3` (Dice 0.9682) + `unet_foot_ANON_v2` (0.9341) 자동 감지/반영. FEATURES.md 의무 hook 첫 실전 동작 확인.
 - **다음 세션 첫 작업:**
-  1. SPINAI 모델 모니터링 (`auto_model_monitor.py` 실행)
-  2. head-ct 소스 라이선스 완전 검증 (CT_Electrodes BSD, TotalSegmentator Apache 맞는지 최종 확인)
-  3. 사용자 수작업 대기: Task Scheduler 등록, 포털 인증코드, 커스텀 도메인
+  1. `auto_model_monitor.py` 실행 (매 세션 규칙)
+  2. `unet_xray_ANON_v1_c34` 학습 완료 확인 — 현재 Dice 0.78 (5 epoch, in-progress)
+  3. `unet_chest_c3` training_history.json 확인 — checkpoint 81MB 있지만 history 비어있음
+  4. 사용자 수작업 대기: Task Scheduler 등록, 포털 인증코드, 커스텀 도메인
+
+## 📝 Session 13 (2026-04-21) 주요 결정사항
+
+- **신규 모달리티 2종 추가 (hand / foot X-ray):**
+  - `gen_our_joint_xray_atlas.py` 신규 — 2-class binary X-ray builder (`--modality hand|foot`)
+  - 소스: `D:/ImageLabelAPI_SPINAI/data/anon/{rsna_hand_train, foot_fracatlas_leg, foot_unifesp}/`
+  - Output: `/data/our-hand-xray/`, `/data/our-foot-xray/` (ap single-view, 10 cases each)
+  - 모델: `unet_hand_ANON_v3_c2` (0.9682), `unet_foot_ANON_v2_c2` (0.9341)
+
+- **`auto_model_monitor.py` 확장:**
+  - THRESHOLDS + MODEL_ATLAS_MAP에 hand/foot 추가
+  - modality 추론에 `_hand_`, `_foot_` 패턴 추가
+  - **`training_history.json` fallback 추가** — train.log 없는 신규 모델도 dice 추출 가능
+  - `run_joint_xray_rebuild(info, modality)` 공통 핸들러
+
+- **`SpineXrayViewer.tsx` 동적 view 지원:**
+  - `info.json`의 planes 키로 available views 자동 결정
+  - Single-view (hand/foot)일 때 grid-cols-1, dual-view (spine)일 때 grid-cols-2
+  - 기존 spine-xray/our-xray는 그대로 작동
+
+- **`RegionSelector.tsx`:**
+  - `our_hand_xray` (✋ Hand X-ray / 손 X-ray), `our_foot_xray` (🦶 Foot X-ray / 발 X-ray) 추가
+  - `BodyRegion` 타입 확장
+  - `page.tsx`: `isXray = 'our_xray' || 'our_hand_xray' || 'our_foot_xray'`
 
 ## 📝 Session 12 (2026-04-18) 주요 결정사항
 

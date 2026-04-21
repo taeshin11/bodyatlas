@@ -145,6 +145,8 @@
 | SPINAI | `our_brain_mri` | Brain MRI / 뇌 MRI | 🧲 | `/data/brain-mri-commercial` | - | 128 | ✓ |
 | SPINAI | `lumbar_mri` | Lumbar MRI / 요추 MRI | 💿 | `/data/our-lumbar-mri` | - | 25 | ✓ |
 | SPINAI | `our_xray` | Spine X-ray / 척추 X-ray | 📷 | `/data/our-xray` | - | 0 | ✓ |
+| SPINAI | `our_hand_xray` | Hand X-ray / 손 X-ray | ✋ | `/data/our-hand-xray` | - | 0 | ✓ |
+| SPINAI | `our_foot_xray` | Foot X-ray / 발 X-ray | 🦶 | `/data/our-foot-xray` | - | 0 | ✓ |
 
 **인터랙션:**
 - 버튼 클릭 → `onRegionSelect(id)` (locked 지역은 AuthGate 호출)
@@ -219,6 +221,8 @@
 | `our-ct/` | our_chest, our_abdomen, our_pelvis | 3-plane | 65 | Apache 2.0 (`unet_ct_c65`) |
 | `our-lumbar-mri/` | lumbar_mri | 3-plane | 17 | Apache 2.0 (`unet_mri_c26`) |
 | `our-xray/` | our_xray | ap, lateral | 21 | Apache 2.0 (`unet_xray_c34`) |
+| `our-hand-xray/` | our_hand_xray | ap | 1 (binary) | Apache 2.0 (`unet_hand_ANON_v3_c2`) |
+| `our-foot-xray/` | our_foot_xray | ap | 1 (binary) | Apache 2.0 (`unet_foot_ANON_v2_c2`) |
 | `brain-mri-commercial/` | our_brain_mri | 3-plane | - | Apache 2.0 (FastSurfer+MedSAM) |
 | `brain-pet/` | (미사용) | axial/sagittal | - | (검토 필요) |
 | `spine-xray/` | (레거시, 미연결) | ap/lateral | - | 자체 polygon 데이터 |
@@ -309,6 +313,7 @@
 - `gen_our_ct_atlas.py` — CT 65-class → `/data/our-ct`
 - `gen_our_lumbar_mri_atlas.py` — MRI 26-class → `/data/our-lumbar-mri`
 - `gen_our_xray_atlas.py` — X-ray 34-class → `/data/our-xray`
+- `gen_our_joint_xray_atlas.py` — 2-class hand/foot binary X-ray → `/data/our-hand-xray`, `/data/our-foot-xray` (`--modality hand|foot`)
 - `gen_full_ct_atlas.py` — chest-ct (TotalSegmentator)
 - `gen_head_ct_atlas.py` — head-ct (TotalSegmentator, 학술 필터링)
 - `gen_brain_mri_hybrid.py` — `/data/brain-mri-commercial` (FastSurfer+MedSAM)
@@ -328,4 +333,4 @@
 
 ---
 
-_마지막 업데이트: 2026-04-19 — 기능 추가/변경 시 이 파일을 반드시 같은 커밋에서 수정할 것._
+_마지막 업데이트: 2026-04-21 — 기능 추가/변경 시 이 파일을 반드시 같은 커밋에서 수정할 것._

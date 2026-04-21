@@ -1,0 +1,29 @@
+{
+  "totalStructures": 1,
+  "structures": [
+    {
+      "id": 0,
+      "name": "hand",
+      "displayName": {
+        "en": "Hand",
+        "ko": "손",
+        "ja": "Hand",
+        "zh": "Hand",
+        "es": "Hand",
+        "de": "Hand",
+        "fr": "Hand"
+      },
+      "category": "bone",
+      "color": "#F59E0B",
+      "bestSlice": {
+        "ap": 0
+      },
+      "sliceRange": {
+        "ap": [
+          0,
+          9
+        ]
+      }
+    }
+  ]
+}

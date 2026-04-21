@@ -1,5 +1,5 @@
 {
-  "last_check": "2026-04-19T21:33:59.018131",
+  "last_check": "2026-04-21T15:54:59.861887",
   "models": {
     "unet_ct_c65_20260407_122225": {
       "dice": 0.8083,
@@ -25,6 +25,42 @@
       "dice": 0.8515,
       "modality": "ct"
     },
+    "unet_foot_ANON_v1_c2_20260421": {
+      "dice": 0.9366766039247203,
+      "modality": "foot"
+    },
+    "unet_foot_ANON_v2_c2_20260421": {
+      "dice": 0.9341275947479278,
+      "modality": "foot"
+    },
+    "unet_foot_c2_20260420_053658": {
+      "dice": 0.8248620671777779,
+      "modality": "foot"
+    },
+    "unet_foot_v2_c2_20260420_091540": {
+      "dice": 0.9072832531684072,
+      "modality": "foot"
+    },
+    "unet_hand_ANON_v1_c2_20260420": {
+      "dice": 0.7951540278318564,
+      "modality": "hand"
+    },
+    "unet_hand_ANON_v2_c2_20260421": {
+      "dice": 0.9274068062080033,
+      "modality": "hand"
+    },
+    "unet_hand_ANON_v3_c2_20260421": {
+      "dice": 0.9682258740646794,
+      "modality": "hand"
+    },
+    "unet_hand_c2_20260420_042844": {
+      "dice": 0.9110774882106562,
+      "modality": "hand"
+    },
+    "unet_hand_v2_c2_20260420_102923": {
+      "dice": 0.9526957644601926,
+      "modality": "hand"
+    },
     "unet_mri_c26_20260409_140851": {
       "dice": 0.5191,
       "modality": "mri"
@@ -33,12 +69,16 @@
       "dice": 0.7016,
       "modality": "mri"
     },
+    "unet_xray_ANON_v1_c34_20260421": {
+      "dice": 0.7873291871149475,
+      "modality": "xray"
+    },
     "unet_xray_c34_20260406_084134": {
       "dice": 0.9042,
       "modality": "xray"
     },
     "unet_xray_c34_20260411_232821": {
-      "dice": 0.0,
+      "dice": 0.9567677777369131,
       "modality": "xray"
     },
     "unet_xray_c34_20260412_154159": {
@@ -60,5 +100,15 @@
     "name": "unet_xray_c34_20260406_084134",
     "dice": 0.9042,
     "applied_at": "2026-04-18T06:40:34.433448"
+  },
+  "applied_hand": {
+    "name": "unet_hand_ANON_v3_c2_20260421",
+    "dice": 0.9682258740646794,
+    "applied_at": "2026-04-21T15:54:53.748632"
+  },
+  "applied_foot": {
+    "name": "unet_foot_ANON_v1_c2_20260421",
+    "dice": 0.9366766039247203,
+    "applied_at": "2026-04-21T15:54:59.860883"
   }
 }

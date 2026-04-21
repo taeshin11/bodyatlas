@@ -480,3 +480,44 @@
 
 ### Git Commits (Session 12 Part 2)
 - (이 commit: Frontend + 라이선스 클린업 + MRI orientation fix)
+
+## Session 13
+- Date: 2026-04-21
+- Focus: 신규 모달리티 자동 감지 (hand/foot X-ray) + auto_monitor training_history.json fallback
+
+### 주요 성과
+1. **신규 모달리티 2종 (hand/foot) 자동 감지 → atlas 생성 → 통합:**
+   - `unet_hand_ANON_v3_c2_20260421` Dice 0.9682 (기준 0.90 통과)
+   - `unet_foot_ANON_v2_c2_20260421` Dice 0.9341 (기준 0.90 통과)
+   - 소스: `D:/ImageLabelAPI_SPINAI/data/anon/` (이미 익명화된 데이터)
+
+2. **`gen_our_joint_xray_atlas.py` 신규:**
+   - `--modality hand|foot` 인자로 2-class binary X-ray 공통 빌더
+   - MODALITY_CONFIG dict로 소스/checkpoint/출력 경로 관리
+   - 향후 chest_lung 등 binary class 모델 추가 시 dict 엔트리만 추가
+
+3. **`auto_model_monitor.py` 주요 개선:**
+   - `_hand_`, `_foot_` modality 인식
+   - **`training_history.json` fallback**: train.log 없는 신규 모델도 val_dice 추출 가능
+     (이전엔 train.log 없으면 scan에서 skip → 신규 모델 감지 불가)
+   - `run_joint_xray_rebuild(info, modality)` 공통 핸들러로 hand/foot 통합
+
+4. **Frontend 업데이트:**
+   - `SpineXrayViewer`: info.json 기반 availableViews 동적 결정
+     - single view (hand/foot) → grid-cols-1
+     - dual view (spine) → grid-cols-2
+   - `RegionSelector`: `our_hand_xray` (✋), `our_foot_xray` (🦶) 추가
+   - `BodyRegion` 타입 확장, `page.tsx`의 `isXray` 분기 3개로 확장
+
+5. **FEATURES.md 의무 hook 첫 실전 동작 확인:**
+   - auto_monitor가 public/data/our-{hand,foot}-xray 생성 후 자동 git commit 시도
+   - `.githooks/commit-msg`가 FEATURES.md 미갱신을 감지하여 차단 — 설계대로 동작
+   - 수동으로 FEATURES.md 업데이트 후 통과
+
+### 비고 (다른 모델 상태)
+- `unet_xray_ANON_v1_c34` Dice 0.7840 (5 epoch, 학습 중) — 완료되면 our-xray 대체 검토
+- `unet_chest_c3` checkpoint 81MB 있으나 training_history.json 비어있음 — 학습 미완 추정
+- 기존 ct/mri/spine xray 전부 up-to-date (rebuild 불필요)
+
+### Git Commits (Session 13)
+- (이 commit: hand/foot 파이프라인 + FEATURES.md 갱신 + Frontend 업데이트)

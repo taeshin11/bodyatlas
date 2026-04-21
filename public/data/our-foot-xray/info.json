@@ -1,0 +1,10 @@
+{
+  "modality": "X-Ray",
+  "planes": {
+    "ap": {
+      "slices": 10,
+      "width": 741,
+      "height": 900
+    }
+  }
+}

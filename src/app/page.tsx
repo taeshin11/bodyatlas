@@ -56,7 +56,7 @@ export default function Home() {
 
   const currentRegion = BODY_REGIONS.find(r => r.id === activeRegion)!;
   const dataPath = currentRegion.dataPath;
-  const isXray = activeRegion === 'our_xray';
+  const isXray = activeRegion === 'our_xray' || activeRegion === 'our_hand_xray' || activeRegion === 'our_foot_xray';
 
   return (
     <ErrorBoundary>

@@ -39,6 +39,7 @@ const VIEW_LABELS: Record<XrayView, { en: string; ko: string }> = {
 export default function SpineXrayViewer({ onStructureSelect, selectedStructure, locale, dataPath = '/data/spine-xray' }: SpineXrayViewerProps) {
   const [structures, setStructures] = useState<Structure[]>([]);
   const [labels, setLabels] = useState<Record<XrayView, SliceLabel[]>>({ lateral: [], ap: [] });
+  const [availableViews, setAvailableViews] = useState<XrayView[]>(['lateral', 'ap']);
   const [hoveredStructure, setHoveredStructure] = useState<string | null>(null);
   const [hoveredView, setHoveredView] = useState<XrayView | null>(null);
   const [showOverlay, setShowOverlay] = useState(true);
@@ -63,12 +64,29 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
         log.error('failed to load X-ray structures.json', e, { dataPath });
       }
     })();
+    (async () => {
+      try {
+        const res = await loggedFetch(log, `${dataPath}/info.json`);
+        if (!res.ok) return;
+        const info = await res.json() as { planes?: Record<string, unknown> };
+        if (cancelled) return;
+        const views = Object.keys(info.planes || {}).filter(
+          (k): k is XrayView => k === 'ap' || k === 'lateral',
+        );
+        if (views.length) {
+          log.debug('views detected', { views });
+          setAvailableViews(views);
+        }
+      } catch (e) {
+        log.error('failed to load X-ray info.json', e, { dataPath });
+      }
+    })();
     return () => { cancelled = true; };
   }, [dataPath]);
 
-  // Load images and labels for both views
+  // Load images and labels for available views only
   useEffect(() => {
-    (['lateral', 'ap'] as XrayView[]).forEach(view => {
+    availableViews.forEach(view => {
       const img = new Image();
       const url = `${dataPath}/${view}/0000.png`;
       img.onload = () => {
@@ -82,7 +100,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
       img.src = url;
     });
 
-    (['lateral', 'ap'] as XrayView[]).forEach(view => {
+    availableViews.forEach(view => {
       const url = `${dataPath}/labels/${view}/0000.json`;
       fetch(url)
         .then(r => {
@@ -95,7 +113,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
         .then(d => setLabels(prev => ({ ...prev, [view]: d })))
         .catch(e => log.fetchError(url, e, { view }));
     });
-  }, [dataPath]);
+  }, [dataPath, availableViews]);
 
   const renderView = useCallback((view: XrayView) => {
     const canvas = canvasRefs.current[view];
@@ -222,7 +240,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
       {/* Header row */}
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          {(['lateral', 'ap'] as XrayView[]).map(v => (
+          {availableViews.map(v => (
             <span
               key={v}
               className="px-3 py-1 rounded-lg bg-white/70 backdrop-blur-xl border border-slate-200/60 text-sm font-medium text-slate-700"
@@ -241,9 +259,9 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
         </button>
       </div>
 
-      {/* Two-panel viewer */}
-      <div className="grid grid-cols-2 gap-2">
-        {(['lateral', 'ap'] as XrayView[]).map(view => (
+      {/* Two-panel viewer (1-col if single view) */}
+      <div className={`grid gap-2 ${availableViews.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+        {availableViews.map(view => (
           <div
             key={view}
             className="relative bg-slate-900 border border-slate-800 rounded-xl overflow-hidden cursor-crosshair"
@@ -285,7 +303,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
 
       {/* Info strip */}
       <p className="text-center text-[11px] text-slate-400">
-        Spine X-ray · T5–S1 · Hover to identify vertebrae
+        X-ray · Hover to identify structures
       </p>
     </div>
   );

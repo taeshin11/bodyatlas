@@ -41,6 +41,8 @@ THRESHOLDS = {
     "ct":   0.85,
     "mri":  0.70,
     "xray": 0.90,
+    "hand": 0.90,
+    "foot": 0.90,
 }
 
 # model -> BodyAtlas atlas mapping
@@ -55,6 +57,14 @@ MODEL_ATLAS_MAP = {
     },
     "xray": {
         "atlas_output": PROJECT_ROOT / "public" / "data" / "our-xray",
+        "max_cases": 10,
+    },
+    "hand": {
+        "atlas_output": PROJECT_ROOT / "public" / "data" / "our-hand-xray",
+        "max_cases": 10,
+    },
+    "foot": {
+        "atlas_output": PROJECT_ROOT / "public" / "data" / "our-foot-xray",
         "max_cases": 10,
     },
 }
@@ -89,8 +99,11 @@ def parse_train_logs() -> list:
 
     for model_dir in model_dirs:
         log_path = model_dir / "train.log"
-        if not log_path.exists():
-            log.debug(f"  skip {model_dir.name}: no train.log")
+        history_path = model_dir / "training_history.json"
+        has_log = log_path.exists()
+        has_history = history_path.exists() and history_path.stat().st_size > 10
+        if not has_log and not has_history:
+            log.debug(f"  skip {model_dir.name}: no train.log + no training_history.json")
             continue
 
         name = model_dir.name
@@ -100,6 +113,10 @@ def parse_train_logs() -> list:
             modality = "mri"
         elif "_xray_" in name:
             modality = "xray"
+        elif "_hand_" in name:
+            modality = "hand"
+        elif "_foot_" in name:
+            modality = "foot"
         else:
             log.debug(f"  skip {name}: cannot infer modality")
             continue
@@ -110,24 +127,40 @@ def parse_train_logs() -> list:
         total_epochs = 0
         has_best_model = (model_dir / "best_model.pth").exists()
 
-        try:
-            text = log_path.read_text(encoding="utf-8", errors="ignore")
-        except OSError as e:
-            log.error(f"  failed to read {log_path}: {e}")
-            continue
+        if has_log:
+            try:
+                text = log_path.read_text(encoding="utf-8", errors="ignore")
+            except OSError as e:
+                log.error(f"  failed to read {log_path}: {e}")
+                text = ""
 
-        for line in text.splitlines():
-            m = re.search(r"Training complete\.\s*Best Dice:\s*([\d.]+)", line)
-            if m:
-                training_complete = True
-                best_dice = max(best_dice, float(m.group(1)))
-            m = re.search(r"New best Dice:\s*([\d.]+)", line)
-            if m:
-                best_dice = max(best_dice, float(m.group(1)))
-            m = re.search(r"Epoch\s+(\d+)/(\d+)", line)
-            if m:
-                last_epoch = int(m.group(1))
-                total_epochs = int(m.group(2))
+            for line in text.splitlines():
+                m = re.search(r"Training complete\.\s*Best Dice:\s*([\d.]+)", line)
+                if m:
+                    training_complete = True
+                    best_dice = max(best_dice, float(m.group(1)))
+                m = re.search(r"New best Dice:\s*([\d.]+)", line)
+                if m:
+                    best_dice = max(best_dice, float(m.group(1)))
+                m = re.search(r"Epoch\s+(\d+)/(\d+)", line)
+                if m:
+                    last_epoch = int(m.group(1))
+                    total_epochs = int(m.group(2))
+
+        # Fallback: training_history.json (list of per-epoch dicts)
+        if best_dice == 0.0 and has_history:
+            try:
+                hist = json.loads(history_path.read_text(encoding="utf-8"))
+            except Exception:
+                log.error(f"  failed to parse {history_path}", exc=True)
+                hist = None
+            if isinstance(hist, list) and hist:
+                val_dices = [e.get("val_dice") for e in hist if isinstance(e, dict) and e.get("val_dice") is not None]
+                if val_dices:
+                    best_dice = max(val_dices)
+                    last_epoch = len(hist)
+                    # heuristic: treat as complete when last epoch has val_dice
+                    training_complete = True
 
         results.append({
             "name": name,
@@ -305,6 +338,35 @@ def run_mri_rebuild(model_info: dict) -> bool:
         return True
 
 
+def run_joint_xray_rebuild(model_info: dict, modality: str) -> bool:
+    """Run hand/foot X-ray atlas rebuild using gen_our_joint_xray_atlas.py."""
+    with Stage(log, f"{modality.upper()} rebuild for {model_info['name']}"):
+        ckpt = Path(model_info["model_dir"]) / "best_model.pth"
+        atlas_out = MODEL_ATLAS_MAP[modality]["atlas_output"]
+        log.kv("checkpoint", ckpt)
+        log.kv("atlas output", atlas_out)
+
+        if not ckpt.exists():
+            log.error(f"{modality} checkpoint missing: {ckpt}")
+            return False
+
+        script = PROJECT_ROOT / "scripts" / "gen_our_joint_xray_atlas.py"
+        max_cases = MODEL_ATLAS_MAP[modality].get("max_cases", 10)
+        ok = log.run_subprocess(
+            [PYTHON_SPINAI, str(script),
+             "--modality", modality,
+             "--checkpoint", str(ckpt),
+             "--out", str(atlas_out),
+             "--max-cases", str(max_cases)],
+            timeout=1800, cwd=PROJECT_ROOT,
+            label=f"{modality} atlas builder (Dice={model_info['best_dice']:.4f})",
+        )
+        if not ok:
+            return False
+        log.ok(f"{modality.upper()} atlas rebuilt -> {atlas_out}")
+        return True
+
+
 def run_xray_rebuild(model_info: dict) -> bool:
     """Run X-ray atlas rebuild using gen_our_xray_atlas.py."""
     with Stage(log, f"X-ray rebuild for {model_info['name']}"):
@@ -421,7 +483,7 @@ def main():
     updated_atlases = []
 
     with Stage(log, "2/4 evaluate + rebuild per modality"):
-        for modality in ["ct", "mri", "xray"]:
+        for modality in ["ct", "mri", "xray", "hand", "foot"]:
             best = find_best_model(models, modality)
             if not best:
                 log.skip(f"[{modality.upper()}] no passing model with checkpoint")
@@ -451,6 +513,8 @@ def main():
                     success = run_mri_rebuild(best)
                 elif modality == "xray" and modality in MODEL_ATLAS_MAP:
                     success = run_xray_rebuild(best)
+                elif modality in ("hand", "foot") and modality in MODEL_ATLAS_MAP:
+                    success = run_joint_xray_rebuild(best, modality)
                 else:
                     log.skip(f"  no rebuild handler for {modality}")
                     continue
