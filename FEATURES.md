@@ -110,21 +110,24 @@
 
 **State toggles:** `activeTab`, `sliceIndices`, `showOverlay`, `hoveredStructure`, `selectedStructure`, `tooltipPos`, `imgNatural`, `forceAxial` (외부 리렌더 트리거)
 
-### 2.2 `SpineXrayViewer.tsx` — 2-view X-ray 뷰어
+### 2.2 `SpineXrayViewer.tsx` — 동적 view X-ray 뷰어
 
-**Primary role:** Lateral + AP 2-view 동시 렌더링.
+**Primary role:** `info.json`의 `planes` 키에 따라 1~2 view 동적 렌더링 (Spine=dual, Hand/Foot=single).
 
 **Sub-features:**
-- View label 행 (Lateral / AP — i18n)
-- Info strip: T5–S1 범위 + hover 안내
-- 2-column grid (모바일 stacked)
+- View label 행 (Lateral / AP — i18n), 가용 view만 표시
+- **Case 네비게이터** (`caseCount > 1`일 때): `← Case N / N →` 버튼 + 좌/우 화살표 키보드 (wrap-around)
+- `caseCount`는 `info.planes[view].slices` 중 최솟값으로 결정
+- Info strip: hover 안내 + 케이스 전환 힌트
+- Dynamic grid: `grid-cols-1` (single) / `grid-cols-2` (dual)
 - **Labels 토글** (showOverlay)
 - Canvas 2D rendering (drawImage + polygon fill/stroke)
 - 호버 view별 독립 tooltip
+- `caseIndex` 변경 시 이미지 + 라벨 재로드 (0-padded 4-digit 파일명)
 
-**Data:** `${dataPath}/structures.json` + `${dataPath}/{view}/0000.png` + `${dataPath}/labels/{view}/0000.json`
+**Data:** `${dataPath}/structures.json` + `${dataPath}/info.json` + `${dataPath}/{view}/{caseId}.png` + `${dataPath}/labels/{view}/{caseId}.json` (caseId = 0-padded 4 digits)
 
-**인터랙션:** canvas hover → point-in-poly → tooltip / canvas click → select
+**인터랙션:** canvas hover → point-in-poly → tooltip / canvas click → select / ←·→ 키 or 버튼 → 케이스 전환
 
 ### 2.3 `RegionSelector.tsx` — Body region 스위처
 
@@ -278,11 +281,13 @@
 |------|------|----------|
 | ↑ / ← | 이전 slice | AtlasViewer |
 | ↓ / → | 다음 slice | AtlasViewer |
+| ← / → | 이전/다음 케이스 (wrap-around, `caseCount > 1`일 때만) | SpineXrayViewer |
 | Esc | 구조 선택 해제 | AtlasViewer |
 | Mouse wheel | ±1 slice (페이지 스크롤 차단) | AtlasViewer |
 | SVG/Canvas hover | point-in-polygon → tooltip | AtlasViewer, SpineXrayViewer |
 | SVG/Canvas click | 구조 선택 | AtlasViewer, SpineXrayViewer |
 | Slider drag | slice 직접 이동 | AtlasViewer |
+| ← Case N / N → 버튼 | 케이스 네비게이션 | SpineXrayViewer |
 | Labels 버튼 | overlay on/off | AtlasViewer, SpineXrayViewer |
 | Plane tab | axial/sagittal/coronal 전환 | AtlasViewer |
 | Region 버튼 | region 전환 (locked → AuthGate) | RegionSelector |

@@ -521,3 +521,46 @@
 
 ### Git Commits (Session 13)
 - (이 commit: hand/foot 파이프라인 + FEATURES.md 갱신 + Frontend 업데이트)
+
+
+## Session 14 (2026-04-22) — X-ray Case Navigator + Zombie Cleanup
+
+### 1. Live test (5-modality 3-xray 파이프라인 건강 검진)
+- dev 서버 `next dev -p 3777` 재기동
+- 6개 라우트 전부 200 (`/`, `/about`, `/how-to-use`, `/download`, `/privacy`, `/terms`)
+- 9개 atlas dataPath `structures.json` + `info.json` 전부 200
+- hand/foot `ap/0000.png` + `labels/ap/0000.json` 정상 서빙
+
+### 2. Zombie process 정리
+- 4월 6일·18일부터 살아있던 `next dev` 프로세스 6개 종료 (3777, 3456 포트 점유)
+- Python `uvicorn` (SPINAI API) + `pseudo_xray34c_anon.py` (활성 pseudo-label 작업) 은 그대로 유지
+
+### 3. 진짜 발견한 버그 → 기능 개선으로 전환
+**문제:** `SpineXrayViewer`가 `${dataPath}/${view}/0000.png` 하드코딩 — 10 케이스 중 첫 번째만 표시.
+- spine X-ray: 10 AP + 10 Lateral 준비됨, but 1+1 노출
+- hand X-ray: 10 AP 준비됨, but 1 노출
+- foot X-ray: 10 AP 준비됨, but 1 노출
+- 총 60 케이스 중 30개만 사용자에게 도달 가능 → 50% 데이터 사각지대
+
+**해결:** Case 네비게이터 구현
+- `caseIndex` state + `caseCount`는 `info.planes[view].slices` 최솟값으로 자동 감지
+- UI: `← Case N / N →` pill 버튼 (`caseCount > 1` 조건부 렌더)
+- 키보드: 좌/우 화살표 키 (input/textarea focus 시 무시, wrap-around)
+- `caseIndex` 변경 시 이미지+라벨 재로드 (0-padded 4-digit 파일명)
+- `dataPath` 전환 시 자동 reset (info.json 로더가 `setCaseIndex(0)`)
+
+### 4. 검증
+- `npx tsc --noEmit` clean (stale `.next/types` 캐시 먼저 제거)
+- `npx next build` 성공 (11 static pages, First Load JS 212kB — 케이스 네비 추가 후에도 동일)
+- 비-zero 케이스 슬롯 HTTP 200 확인 (hand 0003/0007/0009, spine ap/lat 0005/0009)
+
+### 5. 문서
+- `FEATURES.md`:
+  - §2.2 "SpineXrayViewer.tsx"를 "2-view"에서 "동적 view"로 재작성
+  - Sub-features에 Case 네비게이터 상세 추가
+  - Data 경로 템플릿을 `{caseId}` 기반으로 갱신
+  - §6 키보드/마우스 표에 `← / →` 케이스 전환 + 네비 버튼 2행 추가
+- `HANDOVER.md` 덮어쓰기 (Session 14 반영)
+
+### Git Commits (Session 14)
+- (이 commit: X-ray case navigator + FEATURES.md 동기 갱신)

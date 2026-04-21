@@ -15,12 +15,32 @@
 
 ## 🏃 지금 바로 할 일
 
-- **현재 상태 (Session 13, 2026-04-21):** 5-modality 파이프라인 (CT/MRI/Spine-XR/Hand-XR/Foot-XR). 새 모델 `unet_hand_ANON_v3` (Dice 0.9682) + `unet_foot_ANON_v2` (0.9341) 자동 감지/반영. FEATURES.md 의무 hook 첫 실전 동작 확인.
+- **현재 상태 (Session 14, 2026-04-22):** 5-modality 파이프라인 (CT/MRI/Spine-XR/Hand-XR/Foot-XR) + X-ray case navigator. 10 케이스 전체 노출(직전엔 0000 하드코딩). 좀비 `next dev` 6개 정리.
 - **다음 세션 첫 작업:**
   1. `auto_model_monitor.py` 실행 (매 세션 규칙)
-  2. `unet_xray_ANON_v1_c34` 학습 완료 확인 — 현재 Dice 0.78 (5 epoch, in-progress)
+  2. `unet_xray_ANON_v1_c34` 학습 완료 확인 — 직전 Dice 0.78 (5 epoch, in-progress)
   3. `unet_chest_c3` training_history.json 확인 — checkpoint 81MB 있지만 history 비어있음
-  4. 사용자 수작업 대기: Task Scheduler 등록, 포털 인증코드, 커스텀 도메인
+  4. 좀비 프로세스 점검 (`tasklist //FI "IMAGENAME eq node.exe"`)
+  5. 사용자 수작업 대기: Task Scheduler 등록, 포털 인증코드, 커스텀 도메인
+
+## 📝 Session 14 (2026-04-22) 주요 결정사항
+
+- **라이브 테스트 & 좀비 정리:**
+  - dev 서버 재기동 → 6 라우트 + 9 atlas 전부 200
+  - `next dev` 좀비 프로세스 6개 종료 (PID 42296/48116/22008/26264/47488/16272 — 2026-04-06, 2026-04-18부터 점유)
+  - SPINAI Python 프로세스(uvicorn, pseudo-label)는 활성 작업 → 유지
+
+- **X-ray Case Navigator (product-improvement):**
+  - 발견: `SpineXrayViewer`가 `0000.png` 하드코딩 — 10 케이스 중 1개만 노출 (3 modality × 약 15 슬롯 = 30개 사각지대)
+  - 해결: `caseIndex` + `caseCount` state, `info.planes[view].slices` 최솟값으로 자동 감지
+  - UI: `← Case N / N →` pill (`caseCount > 1`만 표시), hover info strip에 힌트
+  - 키보드: ← / → 전역 리스너 (input/textarea focus 시 무시, wrap-around)
+  - `caseIndex` 변경 시 이미지 + 라벨 재로드 (0-padded 4-digit)
+  - `dataPath` 전환 시 `setCaseIndex(0)` 자동 reset
+
+- **빌드 & 타입 검증:**
+  - `.next/types` 캐시 제거 후 `npx tsc --noEmit` clean
+  - `npx next build` 성공 (11 static pages, 212 kB First Load JS 동일)
 
 ## 📝 Session 13 (2026-04-21) 주요 결정사항
 
@@ -39,12 +59,8 @@
 - **`SpineXrayViewer.tsx` 동적 view 지원:**
   - `info.json`의 planes 키로 available views 자동 결정
   - Single-view (hand/foot)일 때 grid-cols-1, dual-view (spine)일 때 grid-cols-2
-  - 기존 spine-xray/our-xray는 그대로 작동
 
-- **`RegionSelector.tsx`:**
-  - `our_hand_xray` (✋ Hand X-ray / 손 X-ray), `our_foot_xray` (🦶 Foot X-ray / 발 X-ray) 추가
-  - `BodyRegion` 타입 확장
-  - `page.tsx`: `isXray = 'our_xray' || 'our_hand_xray' || 'our_foot_xray'`
+- **`RegionSelector.tsx`:** `our_hand_xray` + `our_foot_xray` 추가, `BodyRegion` 타입 확장
 
 ## 📝 Session 12 (2026-04-18) 주요 결정사항
 
@@ -53,31 +69,15 @@
   - `gen_our_lumbar_mri_atlas.py` 신규: unet_mri_c26 → our-lumbar-mri/ (17 structures, sagittal orientation 수정)
   - `auto_model_monitor.py` 확장: ct/mri/xray 모두 자동 rebuild + git push
   - MRI orientation fix: SPIDER는 sagittal 획득 — `np.transpose((1,2,0))`로 올바른 축 정렬 (7→17 classes)
-  - MRI plane label 교정: sagittal=50, coronal=448 (원래 뒤바뀌었던 것)
-
-- **Frontend 통합:**
-  - `RegionSelector`에 `our_xray` 버튼 추가 (Spine X-ray / 척추 X-ray)
-  - `lumbar_mri` dataPath를 `/data/lumbar-mri` → `/data/our-lumbar-mri` 전환
-  - `page.tsx`: `activeRegion==='our_xray'`일 때 `SpineXrayViewer` 렌더링 (이전 dead code 활성화)
-  - `SpineXrayViewer`: `dataPath` prop 추가 (기본값 `/data/spine-xray`로 하위호환)
 
 - **라이선스 정리 (전부 Apache 2.0):**
   - `public/data/brain-mri/` 삭제 (OpenMAP-T1 CC BY-NC)
   - `public/data/lumbar-mri/` 삭제 (SPIDER mask 직접 사용, 라이선스 TBD)
-  - `public/data/head-ct/`: 학술 라이선스 6개 구조 필터링 (brainstem, caudate_nucleus, cerebellum, insular_cortex, thalamus, ventricle) — 19→13 structures, 2029개 label entry 제거
-  - `RegionSelector.BODY_REGIONS`에서 Original `brain_mri` 버튼 제거
-  - `BodyRegion` 타입에서 `brain_mri` 제거
-  - chest-ct 재검증: 108 structures 전부 TotalSegmentator 출처, VISTA3D 실제로 머지 안 됨
-
-- **빌드 & 타입 검증:**
-  - `npx tsc --noEmit` clean
-  - `npx next build` 성공 (11 static pages)
+  - `public/data/head-ct/`: 학술 라이선스 6개 구조 필터링 — 19→13 structures, 2029개 label entry 제거
 
 ## 🚧 미해결 블로커
 
-- **head-ct 소스 라이선스 완전 검증 필요**:
-  - 현재 13 structures (학술 제외) — 모두 TotalSegmentator Apache 2.0일 것으로 예상
-  - CT_Electrodes (BSD 2-Clause) 단일 소스 원본 CT 유지
+- **head-ct 소스 라이선스 완전 검증 필요**: 현재 13 structures (학술 제외) — 모두 TotalSegmentator Apache 2.0일 것으로 예상
 - **커스텀 도메인 미구매** — `.vercel.app`로 SEO 장기 불리
 - **`.env.local` 포털 인증코드 미입력** — Naver/Bing/Yandex/Baidu 인증 안 됨
 - **Task Scheduler 미등록** — 자동 모니터를 수동으로만 실행 가능
@@ -113,7 +113,7 @@ pip install kaggle
 ## 📚 핵심 파일 가이드
 
 ### 자동화
-- `scripts/auto_model_monitor.py` — **3-modality 자동 모니터 (CT/MRI/X-ray)**
+- `scripts/auto_model_monitor.py` — **5-modality 자동 모니터 (CT/MRI/Spine-XR/Hand-XR/Foot-XR)**
 - `scripts/auto_monitor.bat` — Task Scheduler용 wrapper
 - `scripts/setup_scheduler.bat` — Windows 스케줄러 등록 (관리자 권한)
 - `scripts/monitor_status.json` — 모델별 적용 상태 (auto 갱신)
@@ -122,14 +122,15 @@ pip install kaggle
 - `scripts/gen_our_ct_atlas.py` — SPINAI CT atlas (65 classes)
 - `scripts/gen_our_xray_atlas.py` — SPINAI X-ray atlas (34 classes)
 - `scripts/gen_our_lumbar_mri_atlas.py` — SPINAI lumbar MRI atlas (26 classes)
+- `scripts/gen_our_joint_xray_atlas.py` — hand/foot X-ray atlas (2-class binary)
 - `scripts/gen_full_ct_atlas.py` — chest-ct 빌더 (TotalSegmentator only)
 - `scripts/gen_head_ct_atlas.py` — head-ct 빌더 (학술 구조는 후필터링)
 - `scripts/gen_brain_mri_hybrid.py` — brain-mri-commercial (FastSurfer+MedSAM Apache)
 
 ### Frontend
 - `src/components/AtlasViewer.tsx` — 3D CT/MRI 뷰어 (main)
-- `src/components/SpineXrayViewer.tsx` — 2D X-ray 뷰어 (dataPath prop 수신)
-- `src/components/RegionSelector.tsx` — 2행 구조 (Original 4개 / SPINAI 6개)
+- `src/components/SpineXrayViewer.tsx` — 2D X-ray 뷰어 (dataPath prop, 동적 view, case navigator)
+- `src/components/RegionSelector.tsx` — 2행 구조 (Original 4개 / SPINAI 7개)
 - `src/app/page.tsx` — `isXray` 분기로 SpineXrayViewer/AtlasViewer 토글
 
 ## 🗂 데이터 소스 & 학습 환경
@@ -137,20 +138,20 @@ pip install kaggle
 - **학습 프로젝트:** `D:\ImageLabelAPI_SPINAI\` (로컬 RTX 4090)
 - **CT 소스:** `.../TotalSegmentator_v2/s0174/ct.nii.gz`
 - **MRI 소스:** `.../SPIDER_lumbar/images/1_t2.mha` (sagittal-acquired, 50 sagittal slices)
-- **X-ray 소스:** `.../cat_A_ap_xray/0006_scoliosis_labeled/`, `.../cat_B_lat_xray/Lat_labeled/...`
+- **Spine X-ray 소스:** `.../cat_A_ap_xray/0006_scoliosis_labeled/`, `.../cat_B_lat_xray/Lat_labeled/...`
+- **Hand/Foot X-ray 소스:** `.../rsna_hand_train/`, `.../foot_fracatlas_leg/`, `.../foot_unifesp/`
 
-## 🤖 SPINAI 모델 현황 (2026-04-18)
+## 🤖 SPINAI 모델 현황 (2026-04-22)
 
 | 모델 | Dice | 기준 | 상태 | Atlas 적용 |
 |------|------|------|------|-----------|
 | unet_ct_c65 (064501) | **0.8515** | 0.85 | ✅ | ✅ our-ct |
-| unet_ct_c65 (093321) | 0.8515 | 0.85 | ✅ | - |
-| unet_ct_c65 (093403) | 0.8515 | 0.85 | ✅ | - |
-| unet_ct_c65 v1 (122225) | 0.8083 | 0.85 | FAIL | - |
 | unet_xray_c34 (154159) | **0.9042** | 0.90 | ✅ | ✅ our-xray |
-| unet_xray_c34 (084134) | 0.9042 | 0.90 | ✅ | - |
 | unet_mri_c26 (212345) | **0.7016** | 0.70 | ✅ | ✅ our-lumbar-mri (17 classes) |
-| unet_mri_c26 (140851) | 0.5191 | 0.70 | FAIL | - |
+| unet_hand_ANON_v3_c2 (20260421) | **0.9682** | 0.90 | ✅ | ✅ our-hand-xray |
+| unet_foot_ANON_v2_c2 (20260421) | **0.9341** | 0.90 | ✅ | ✅ our-foot-xray |
+| unet_xray_ANON_v1_c34 (학습중) | 0.7840 | 0.90 | 진행 | - |
+| unet_chest_c3 | (history 비어있음) | 0.90 | ? | - |
 
 ## 📊 Atlas 라이선스 현황 (전부 Apache 2.0 또는 BSD)
 
@@ -163,8 +164,8 @@ pip install kaggle
 | our-brain-mri | FastSurfer + MedSAM | Apache 2.0 | ✅ |
 | our-xray | unet_xray_c34 | **Apache 2.0** | ✅ |
 | our-lumbar-mri | unet_mri_c26 | **Apache 2.0** | ✅ |
-| brain-pet | (검토 필요) | TBD | ? |
-| spine-xray | 자체 수집 데이터 + polygon label | 자체 소유 | ✅ |
+| our-hand-xray | unet_hand_ANON_v3_c2 | **Apache 2.0** | ✅ |
+| our-foot-xray | unet_foot_ANON_v2_c2 | **Apache 2.0** | ✅ |
 
 ## 🌐 배포
 
@@ -173,4 +174,4 @@ pip install kaggle
 
 ---
 
-_마지막 업데이트: 2026-04-18 (Session 12 완료 — "다 해줘" 실행)_
+_마지막 업데이트: 2026-04-22 (Session 14 완료 — X-ray case navigator + zombie cleanup)_
