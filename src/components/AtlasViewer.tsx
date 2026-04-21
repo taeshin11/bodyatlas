@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createLogger, loggedFetch } from '@/lib/logger';
 
 const log = createLogger('AtlasViewer');
@@ -195,6 +195,19 @@ export default function AtlasViewer({
     return () => window.removeEventListener('keydown', handler);
   }, [navigate, onStructureSelect]);
 
+  // ── Structure lookup maps (O(1) hot-path access) ──────────────────────────
+  const structuresById = useMemo(() => {
+    const m = new Map<number, Structure>();
+    for (const s of structures) m.set(s.id, s);
+    return m;
+  }, [structures]);
+
+  const structuresByName = useMemo(() => {
+    const m = new Map<string, Structure>();
+    for (const s of structures) m.set(s.name, s);
+    return m;
+  }, [structures]);
+
   // ── SVG hover/click ───────────────────────────────────────────────────────
   const handleSvgMove = useCallback((e: React.MouseEvent<SVGSVGElement>) => {
     if (!imgNatural || labels.length === 0) { setHoveredStructure(null); setTooltipPos(null); return; }
@@ -222,9 +235,9 @@ export default function AtlasViewer({
 
   const handleSvgClick = useCallback(() => {
     if (hoveredStructure) {
-      onStructureSelect?.(structures.find(s => s.name === hoveredStructure) || null);
+      onStructureSelect?.(structuresByName.get(hoveredStructure) || null);
     }
-  }, [hoveredStructure, structures, onStructureSelect]);
+  }, [hoveredStructure, structuresByName, onStructureSelect]);
 
   // ── Render helpers ────────────────────────────────────────────────────────
   const hasSelection = !!selectedStructure || !!hoveredStructure;
@@ -232,7 +245,7 @@ export default function AtlasViewer({
   const contourPath = (contour: number[][]) =>
     contour.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0]},${p[1]}`).join('') + 'Z';
 
-  const hoveredStruct = structures.find(s => s.name === hoveredStructure);
+  const hoveredStruct = hoveredStructure ? structuresByName.get(hoveredStructure) : undefined;
 
   return (
     <div className="space-y-3">
@@ -295,7 +308,7 @@ export default function AtlasViewer({
                 onClick={handleSvgClick}
               >
               {labels.map((label) => {
-                const struct = structures.find(s => s.id === label.id);
+                const struct = structuresById.get(label.id);
                 if (!struct) return null;
                 const isActive = hoveredStructure === label.name || selectedStructure?.name === label.name;
                 const fillOpacity = isActive ? 0.40 : hasSelection ? 0.05 : 0.22;

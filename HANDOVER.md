@@ -32,14 +32,23 @@ Vercel 프로젝트(`prj_WcoBLejQU7ddyGPpu24PVusSk84h`, team `team_Ku8jPGlrgClTA
 
 ## 🏃 지금 바로 할 일
 
-- **현재 상태 (Session 15, 2026-04-22):** 5-modality 파이프라인 + X-ray case navigator 완성. 단, Vercel 라이브 배포 유실로 최근 작업물(case navigator 포함)이 공개되지 않음.
+- **현재 상태 (Session 17, 2026-04-22):** 5-modality 파이프라인 + X-ray case navigator + hot-path 성능 최적화 완료. 여전히 Vercel 라이브 배포 유실 (Session 15 블록 미해결) — 변경분은 GitHub까지만 반영.
 - **다음 세션 첫 작업:**
   0. **🚨 Vercel 재배포 결정 후 실행** (위 긴급 블록 참고)
   1. `auto_model_monitor.py` 실행 (매 세션 규칙)
-  2. `unet_xray_ANON_v1_c34` 학습 완료 확인 — 직전 Dice 0.78 (5 epoch, in-progress)
+  2. `unet_xray_ANON_v1_c34` 학습 완료 확인 — 현재 pseudo_xray34c_anon.py 진행 중 (PID 74996, 2h+)
   3. `unet_chest_c3` training_history.json 확인 — checkpoint 81MB 있지만 history 비어있음
   4. 좀비 프로세스 점검 (`tasklist //FI "IMAGENAME eq node.exe"`)
   5. 사용자 수작업 대기: Task Scheduler 등록, 포털 인증코드, 커스텀 도메인
+
+## 📝 Session 17 (2026-04-22) 주요 결정사항
+
+- **라이브 테스트:** 9 라우트 전수 200 (`/`, `/about`, `/download`, `/how-to-use`, `/privacy`, `/terms`, `/sitemap.xml`, `/robots.txt`, `/opengraph-image`). 좀비 node 없음 — dev 서버 3-proc chain은 정상 활성.
+- **Hot-path perf (`AtlasViewer.tsx` / `SpineXrayViewer.tsx`):**
+  - `structures.find(s => s.id === label.id)` 루프 안에서 선형 탐색 → `useMemo`로 `structuresById` / `structuresByName` Map 구성, O(1) lookup.
+  - brain-mri 275 구조 × 라벨/contour 반복당 호출되던 find 제거 → 마우스 hover 프레임에서 체감 개선 기대.
+- **`next.config.js` 강화:** `poweredByHeader: false`, `compress: true`, `productionBrowserSourceMaps: false`, `compiler.removeConsole` (prod에서 `error`/`warn` 외 console 스트립).
+- **검증:** `npx tsc --noEmit` clean, `npx next build` 성공 (`/` 15.8 kB / 212 kB First Load — 회귀 없음).
 
 ## 📝 Session 14 (2026-04-22) 주요 결정사항
 

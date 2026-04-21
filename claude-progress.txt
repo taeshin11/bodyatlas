@@ -650,3 +650,38 @@
 
 ### Git Commits (Session 16)
 - (이 commit: site-config 도입 + 28 baked URL 치환 + FEATURES/HANDOVER 동기)
+
+## Session 17
+- Date: 2026-04-22
+- Session #: 17
+- Phase: perf + hygiene (live test + optimize)
+- Features Worked On: AtlasViewer / SpineXrayViewer hot-path perf, next.config 강화
+- Completed: O(1) structure lookup, prod console 제거, poweredByHeader off
+- Blockers: Vercel 재배포 미결 (Session 15부터 계승)
+- Next Up: 사용자 결정 필요 — Vercel 새 프로젝트 or 커스텀 도메인
+
+### 라이브 테스트
+- dev 서버 (PID 41628/53608/66876, port 3777) 활성 확인 — 3개 전부 정상 run chain (npm → next dev → server worker), 좀비 아님 유지
+- 라우트 전수 curl: `/`, `/about`, `/download`, `/how-to-use`, `/privacy`, `/terms`, `/sitemap.xml`, `/robots.txt`, `/opengraph-image` 모두 200
+- SPINAI uvicorn (PID 46648, port 8000) 활성 유지, pseudo_xray34c 학습 (PID 74996) 2시간+ 진행 중 — 건드리지 않음
+
+### 성능 최적화 (hot-path)
+1. **`AtlasViewer.tsx`** — `structures.find(...)` 3곳 제거, `useMemo`로 `structuresById` / `structuresByName` Map 생성. 라벨 렌더 루프에서 N×M find → O(M) lookup (head-ct 28, chest-ct 122, brain-mri 275 구조에서 각 슬라이스 라벨당 호출되던 선형 탐색 제거).
+2. **`SpineXrayViewer.tsx`** — 동일 패턴, canvas 2D draw 루프 안의 find 제거. renderView가 hover마다 돌기 때문에 체감 효과 큼.
+3. **`next.config.js`** 강화:
+   - `poweredByHeader: false` (X-Powered-By 제거)
+   - `compress: true` 명시
+   - `productionBrowserSourceMaps: false` 명시
+   - `compiler.removeConsole` production 빌드에서 `error`/`warn` 제외하고 console.* 스트립
+
+### 검증
+- `npx tsc --noEmit` clean
+- `npx next build` 성공 — `/` 15.8 kB / 212 kB First Load, 이전과 동일 (회귀 없음)
+- HMR로 dev 서버 자동 반영, curl 재검증 6라우트 전부 200
+
+### 좀비 프로세스
+- 확인 대상: node(3), python(2), cmd(2)
+- 전부 활성 작업 — kill 없음
+
+### Git Commits (Session 17)
+- (이 commit: hot-path perf + next.config 강화)

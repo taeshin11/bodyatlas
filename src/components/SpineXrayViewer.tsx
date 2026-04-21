@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { createLogger, loggedFetch } from '@/lib/logger';
 
@@ -123,6 +123,18 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     });
   }, [dataPath, availableViews, caseIndex]);
 
+  const structuresById = useMemo(() => {
+    const m = new Map<number, Structure>();
+    for (const s of structures) m.set(s.id, s);
+    return m;
+  }, [structures]);
+
+  const structuresByName = useMemo(() => {
+    const m = new Map<string, Structure>();
+    for (const s of structures) m.set(s.name, s);
+    return m;
+  }, [structures]);
+
   const renderView = useCallback((view: XrayView) => {
     const canvas = canvasRefs.current[view];
     const img = imgRefs.current[view];
@@ -143,7 +155,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     const hasSelection = !!selectedStructure || !!hoveredStructure;
 
     for (const label of viewLabels) {
-      const struct = structures.find(s => s.id === label.id);
+      const struct = structuresById.get(label.id);
       if (!struct) continue;
 
       const isHovered   = hoveredStructure === label.name;
@@ -191,7 +203,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
       }
     }
     ctx.globalAlpha = 1;
-  }, [showOverlay, labels, hoveredStructure, selectedStructure, structures]);
+  }, [showOverlay, labels, hoveredStructure, selectedStructure, structuresById]);
 
   // Re-render both views whenever state changes
   useEffect(() => {
@@ -236,10 +248,9 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
 
   const handleCanvasClick = useCallback(() => {
     if (hoveredStructure) {
-      const struct = structures.find(s => s.name === hoveredStructure);
-      onStructureSelect?.(struct || null);
+      onStructureSelect?.(structuresByName.get(hoveredStructure) || null);
     }
-  }, [hoveredStructure, structures, onStructureSelect]);
+  }, [hoveredStructure, structuresByName, onStructureSelect]);
 
   const goPrev = useCallback(() => setCaseIndex(i => (i - 1 + caseCount) % caseCount), [caseCount]);
   const goNext = useCallback(() => setCaseIndex(i => (i + 1) % caseCount), [caseCount]);
@@ -256,7 +267,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     return () => window.removeEventListener('keydown', onKey);
   }, [caseCount, goPrev, goNext]);
 
-  const hoveredStruct = structures.find(s => s.name === hoveredStructure);
+  const hoveredStruct = hoveredStructure ? structuresByName.get(hoveredStructure) : undefined;
 
   return (
     <div className="space-y-3">
