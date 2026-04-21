@@ -5,7 +5,9 @@
 // Runs as `postbuild` script so it only executes on Vercel builds,
 // not local dev. Non-fatal: a failure to submit won't break the build.
 
-const HOST = 'bodyatlas-ten.vercel.app';
+const HOST = (process.env.INDEXNOW_HOST || process.env.NEXT_PUBLIC_SITE_URL || 'https://bodyatlas-ten.vercel.app')
+  .replace(/^https?:\/\//, '')
+  .replace(/\/$/, '');
 const KEY = '80e55dd3615c60d5ba034ac04a684c496c142f277c1642a1694f2b4508c2366c';
 const KEY_LOC = `https://${HOST}/${KEY}.txt`;
 

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import AboutContent from './AboutContent';
+import { siteUrl, OG_IMAGE } from '@/lib/site-config';
 
 export const metadata: Metadata = {
   title: 'About BodyAtlas — Free Alternative to IMAIOS e-Anatomy | Cross-Sectional Anatomy Atlas',
@@ -8,18 +9,18 @@ export const metadata: Metadata = {
   keywords:
     'free alternative to IMAIOS e-anatomy, cross-sectional anatomy atlas online free, free anatomy atlas, IMAIOS alternative, interactive anatomy atlas free, medical student anatomy tool, radiology anatomy atlas, free CT MRI anatomy viewer',
   alternates: {
-    canonical: 'https://bodyatlas-ten.vercel.app/about',
+    canonical: siteUrl('/about'),
   },
   openGraph: {
     title: 'About BodyAtlas — Free Alternative to IMAIOS e-Anatomy',
     description:
       'Free interactive cross-sectional anatomy atlas. $0 forever vs IMAIOS at $22/mo. Browse CT/MRI with labeled structures.',
-    url: 'https://bodyatlas-ten.vercel.app/about',
+    url: siteUrl('/about'),
     siteName: 'BodyAtlas',
     type: 'website',
     images: [
       {
-        url: 'https://bodyatlas-ten.vercel.app/opengraph-image',
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: 'BodyAtlas — Free Cross-Sectional Anatomy Atlas',

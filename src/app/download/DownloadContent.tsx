@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { SITE_HOST } from '@/lib/site-config';
 import {
   Download,
   Monitor,
@@ -173,7 +174,7 @@ export default function DownloadContent() {
                 <ol className="space-y-2 text-xs text-slate-600">
                   <li className="flex gap-2">
                     <span className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold">1</span>
-                    <span>Open <strong>bodyatlas-ten.vercel.app</strong> in Chrome or Edge</span>
+                    <span>Open <strong>{SITE_HOST}</strong> in Chrome or Edge</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold">2</span>

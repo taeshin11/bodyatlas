@@ -273,6 +273,14 @@
 - `NEXT_PUBLIC_YANDEX_VERIFICATION`
 - `NEXT_PUBLIC_BAIDU_VERIFICATION`
 
+**사이트 URL centralization** (`src/lib/site-config.ts`):
+- `SITE_URL` = `process.env.NEXT_PUBLIC_SITE_URL` || `'https://bodyatlas-ten.vercel.app'` (fallback)
+- `SITE_HOST` = URL.host (표시용, 예: "bodyatlas-ten.vercel.app")
+- `OG_IMAGE` = `${SITE_URL}/opengraph-image`
+- `siteUrl('/path')` 헬퍼
+- 사용처: `layout.tsx`(metadataBase/canonical/og/twitter/JSON-LD), `sitemap.ts`, `robots.ts`, 각 `page.tsx`의 metadata, `DownloadContent.tsx`·`privacy/page.tsx`·`terms/page.tsx`의 도메인 표시, `scripts/submit-indexnow.mjs`
+- 배포 URL 변경 시 `.env.local` (local) + Vercel env (prod)에 `NEXT_PUBLIC_SITE_URL`만 세팅하면 전파
+
 ---
 
 ## 6. 키보드/마우스 인터랙션 요약

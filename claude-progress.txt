@@ -595,3 +595,58 @@
 
 ### Git Commits (Session 15)
 - (이 commit: HANDOVER.md + progress log 만 — 사용자 결정 필요 항목은 건드리지 않음)
+
+
+## Session 16 (2026-04-22) — URL centralization (prod 복구 대비)
+
+### 상황
+- /loop 3회차 시점에 Vercel은 여전히 미복구 (`bodyatlas-ten.vercel.app` 404 지속)
+- 사용자가 다른 프로젝트 12개 이상을 Vercel에 신규 배포하는 것 확인 — BodyAtlas 복구는 후순위
+- 사용자 결정 대기 없이 할 수 있는 code-level 개선 찾음 → URL 상수화
+
+### 작업
+1. **`src/lib/site-config.ts` 신규:**
+   ```ts
+   export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://bodyatlas-ten.vercel.app';
+   export const SITE_HOST = new URL(SITE_URL).host;
+   export const OG_IMAGE = `${SITE_URL}/opengraph-image`;
+   export function siteUrl(path: string = ''): string { ... }
+   ```
+
+2. **28개 baked URL 참조를 site-config 기반으로 전환:**
+   - `src/app/layout.tsx` — metadataBase/canonical/og:url/og:image/twitter image/JSON-LD url·screenshot, HowTo step text (7 URL + 2 display)
+   - `src/app/sitemap.ts` — BASE 상수
+   - `src/app/robots.ts` — baseUrl
+   - `src/app/about/page.tsx` — canonical/og url/og image (3)
+   - `src/app/download/page.tsx` — canonical/og url (2)
+   - `src/app/download/DownloadContent.tsx` — 설치 가이드 도메인 표시 (1)
+   - `src/app/how-to-use/page.tsx` — canonical/og url/og image (3)
+   - `src/app/privacy/page.tsx` — canonical/og url (2) + 본문 2곳
+   - `src/app/terms/page.tsx` — canonical/og url (2) + 본문 2곳
+   - `scripts/submit-indexnow.mjs` — HOST = env var 파싱 (protocol/trailing slash 제거)
+
+3. **재배포 후 사용법:**
+   - `.env.local`: `NEXT_PUBLIC_SITE_URL=https://<new-url>`
+   - Vercel env 동일 세팅
+   - Rebuild → 28+ 지점 자동 반영
+
+### 검증
+- `.next/types` 캐시 제거 후 `npx tsc --noEmit` clean
+- `npx next build` 성공 (11 pages, sizes 동일 /download만 7.38→7.49 kB, SITE_HOST 문자열 리터럴 전환으로 극미세 증가)
+- 로컬 dev는 hot reload로 이미 반영됨
+
+### 문서
+- `FEATURES.md §5` 외부 통합에 "사이트 URL centralization" 블록 추가
+- `HANDOVER.md` 긴급 블록 업데이트 (URL centralization 완료 표시)
+- `HANDOVER.md` 환경변수 섹션에 `NEXT_PUBLIC_SITE_URL` 추가 (최상단)
+
+### 남은 blocker (사용자 결정)
+- **Vercel 프로젝트 새로 생성** — `npx vercel deploy --prod` + `.vercel/project.json` 먼저 삭제
+- **`.env.local` / Vercel env에 `NEXT_PUBLIC_SITE_URL` 세팅** (URL 확정 후)
+- 커스텀 도메인 구매 (장기 과제)
+
+### 좀비 점검
+- node 프로세스 3개 (Session 14에 띄운 dev 서버, 활성 사용 중) — 유지
+
+### Git Commits (Session 16)
+- (이 commit: site-config 도입 + 28 baked URL 치환 + FEATURES/HANDOVER 동기)

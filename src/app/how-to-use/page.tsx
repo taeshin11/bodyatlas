@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { siteUrl, OG_IMAGE } from '@/lib/site-config';
 
 export const metadata: Metadata = {
   title: 'How to Use BodyAtlas — Free Anatomy Atlas Guide & FAQ',
@@ -10,17 +11,17 @@ export const metadata: Metadata = {
     'Learn how to use BodyAtlas, the free interactive cross-sectional anatomy atlas. Step-by-step guide, tips, and frequently asked questions for medical students and professionals.',
   keywords:
     'how to use BodyAtlas, anatomy atlas tutorial, free anatomy atlas guide, cross-sectional anatomy help, medical student anatomy tool, CT MRI viewer guide, IMAIOS alternative tutorial',
-  alternates: { canonical: 'https://bodyatlas-ten.vercel.app/how-to-use' },
+  alternates: { canonical: siteUrl('/how-to-use') },
   openGraph: {
     title: 'How to Use BodyAtlas — Guide & FAQ',
     description:
       'Step-by-step guide to using BodyAtlas free anatomy atlas. Tips, keyboard shortcuts, and answers to common questions.',
-    url: 'https://bodyatlas-ten.vercel.app/how-to-use',
+    url: siteUrl('/how-to-use'),
     siteName: 'BodyAtlas',
     type: 'website',
     images: [
       {
-        url: 'https://bodyatlas-ten.vercel.app/opengraph-image',
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: 'BodyAtlas — How to Use Guide',

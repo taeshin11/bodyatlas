@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
+import { SITE_URL } from '@/lib/site-config';
 
-const BASE = 'https://bodyatlas-ten.vercel.app';
+const BASE = SITE_URL;
 const LOCALES = ['en', 'ko', 'ja', 'zh', 'es', 'de', 'fr'];
 
 function withAlternates(path: string) {

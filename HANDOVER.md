@@ -23,9 +23,12 @@ Vercel 프로젝트(`prj_WcoBLejQU7ddyGPpu24PVusSk84h`, team `team_Ku8jPGlrgClTA
 - (b) `bodyatlas.vercel.app`는 이미 타인 Angular 앱이 점유 — 이 이름 재사용 불가
 - (c) 커스텀 도메인 구매 후 연결 (장기적으로 이 방향이 깔끔)
 
-**URL이 baked-in된 파일** (배포 URL 확정 후 일괄 치환 필요):
-`src/app/layout.tsx` (7곳), `src/app/sitemap.ts`, `src/app/robots.ts`, `scripts/submit-indexnow.mjs`, `src/app/{about,how-to-use,download,privacy,terms}/page.tsx`, `PRD.md`.
-→ 추후 `NEXT_PUBLIC_SITE_URL` env 기반 단일 상수(`src/lib/site-config.ts`)로 centralize 권장.
+**URL centralization 완료 (Session 16, 2026-04-22):**
+- `src/lib/site-config.ts` 신규 — `SITE_URL` / `SITE_HOST` / `OG_IMAGE` / `siteUrl()` export
+- `NEXT_PUBLIC_SITE_URL` env var 미세팅 시 fallback은 `'https://bodyatlas-ten.vercel.app'` (호환성)
+- 모든 baked 참조가 site-config 기반으로 전환됨 (layout.tsx, sitemap.ts, robots.ts, 각 page.tsx metadata, DownloadContent.tsx, privacy·terms 본문, submit-indexnow.mjs)
+- **재배포 후 해야 할 일:** `.env.local` + Vercel env에 `NEXT_PUBLIC_SITE_URL=https://<new-url>` 추가 → rebuild → 28+ 지점 자동 반영
+- 남은 baked: `PRD.md` (문서만, 런타임 영향 없음)
 
 ## 🏃 지금 바로 할 일
 
@@ -100,6 +103,7 @@ Vercel 프로젝트(`prj_WcoBLejQU7ddyGPpu24PVusSk84h`, team `team_Ku8jPGlrgClTA
 ## 🔑 필요한 환경변수 (.env.local)
 
 ```
+NEXT_PUBLIC_SITE_URL=             # 배포 URL, 미설정 시 bodyatlas-ten.vercel.app fallback
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 NEXT_PUBLIC_FORMSPREE_ID=

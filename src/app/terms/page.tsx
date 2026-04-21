@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
+import { siteUrl, SITE_HOST } from '@/lib/site-config';
 
 export const metadata: Metadata = {
   title: 'Terms of Service — BodyAtlas Free Anatomy Atlas',
@@ -9,11 +10,11 @@ export const metadata: Metadata = {
     'Terms of Service for BodyAtlas, a free interactive cross-sectional anatomy atlas. Read our usage terms, disclaimers, and acceptable use policy.',
   keywords:
     'BodyAtlas terms of service, anatomy atlas terms, free medical tool terms, usage policy',
-  alternates: { canonical: 'https://bodyatlas-ten.vercel.app/terms' },
+  alternates: { canonical: siteUrl('/terms') },
   openGraph: {
     title: 'Terms of Service — BodyAtlas',
     description: 'Terms and conditions for using BodyAtlas free anatomy atlas.',
-    url: 'https://bodyatlas-ten.vercel.app/terms',
+    url: siteUrl('/terms'),
     siteName: 'BodyAtlas',
     type: 'website',
   },
@@ -37,7 +38,7 @@ export default function TermsPage() {
           <h2>1. Acceptance of Terms</h2>
           <p>
             By accessing or using <strong>BodyAtlas</strong> (&quot;the Service&quot;), available at{' '}
-            <Link href="/">bodyatlas-ten.vercel.app</Link>, you agree to be bound by these Terms of
+            <Link href="/">{SITE_HOST}</Link>, you agree to be bound by these Terms of
             Service (&quot;Terms&quot;). If you do not agree to these Terms, please do not use the Service.
           </p>
           <p>
@@ -229,7 +230,7 @@ export default function TermsPage() {
             </li>
             <li>
               <strong>Website:</strong>{' '}
-              <Link href="/">bodyatlas-ten.vercel.app</Link>
+              <Link href="/">{SITE_HOST}</Link>
             </li>
           </ul>
         </div>

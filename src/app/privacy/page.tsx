@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
+import { siteUrl, SITE_HOST } from '@/lib/site-config';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy — BodyAtlas Free Anatomy Atlas',
@@ -9,11 +10,11 @@ export const metadata: Metadata = {
     'BodyAtlas privacy policy. Learn how we handle your data, cookies, and third-party services on our free interactive anatomy atlas.',
   keywords:
     'BodyAtlas privacy policy, anatomy atlas privacy, free medical tool privacy, data protection',
-  alternates: { canonical: 'https://bodyatlas-ten.vercel.app/privacy' },
+  alternates: { canonical: siteUrl('/privacy') },
   openGraph: {
     title: 'Privacy Policy — BodyAtlas',
     description: 'How BodyAtlas handles your data and privacy.',
-    url: 'https://bodyatlas-ten.vercel.app/privacy',
+    url: siteUrl('/privacy'),
     siteName: 'BodyAtlas',
     type: 'website',
   },
@@ -38,7 +39,7 @@ export default function PrivacyPage() {
           <p>
             Welcome to <strong>BodyAtlas</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). BodyAtlas is a free interactive
             cross-sectional anatomy atlas available at{' '}
-            <Link href="/">bodyatlas-ten.vercel.app</Link>. We are committed to protecting your
+            <Link href="/">{SITE_HOST}</Link>. We are committed to protecting your
             privacy and being transparent about how we collect, use, and share information when you
             use our website and services (collectively, the &quot;Service&quot;).
           </p>
@@ -253,7 +254,7 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Website:</strong>{' '}
-              <Link href="/">bodyatlas-ten.vercel.app</Link>
+              <Link href="/">{SITE_HOST}</Link>
             </li>
           </ul>
         </div>

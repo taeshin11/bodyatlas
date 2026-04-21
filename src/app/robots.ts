@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { SITE_URL } from '@/lib/site-config';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://bodyatlas-ten.vercel.app';
+  const baseUrl = SITE_URL;
   return {
     rules: [
       // Default rule - allow all well-behaved crawlers
