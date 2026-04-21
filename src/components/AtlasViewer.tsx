@@ -244,11 +244,13 @@ export default function AtlasViewer({
     return m;
   }, [structures]);
 
-  // Precompute bboxes per contour once per label-set — cheap O(N) at load,
-  // lets every mousemove skip O(N) point-in-polygon when the point is outside.
+  // Precompute bboxes + SVG path strings once per label-set. Both are pure
+  // functions of contour points that don't change unless labels change,
+  // so re-hovering shouldn't pay to rebuild them on every React render.
   const labelIndex = useMemo(() => labels.map(l => ({
     label: l,
     bboxes: l.contours.map(contourBBox),
+    paths: l.contours.map(c => c.length < 3 ? null : contourPath(c)),
   })), [labels]);
 
   // ── SVG hover/click ───────────────────────────────────────────────────────
@@ -353,7 +355,7 @@ export default function AtlasViewer({
                 onMouseLeave={() => { setHoveredStructure(null); setTooltipPos(null); }}
                 onClick={handleSvgClick}
               >
-              {labels.map((label) => {
+              {labelIndex.map(({ label, paths }) => {
                 const struct = structuresById.get(label.id);
                 if (!struct) return null;
                 const isActive = hoveredStructure === label.name || selectedStructure?.name === label.name;
@@ -361,9 +363,8 @@ export default function AtlasViewer({
                 const strokeOpacity = isActive ? 1.0 : hasSelection ? 0.20 : 0.55;
                 const strokeW = isActive ? 2.5 : 1;
 
-                return label.contours.map((contour, ci) => {
-                  if (contour.length < 3) return null;
-                  const d = contourPath(contour);
+                return paths.map((d, ci) => {
+                  if (d === null) return null;
                   return (
                     <g key={`${label.id}-${ci}`}>
                       <path d={d} fill={struct.color} fillOpacity={fillOpacity} stroke="none" />
