@@ -40,12 +40,16 @@ interface AtlasViewerProps {
   forceAxial?: number;
   planes?: string[];
   defaultPlane?: string;
+  // Quiz Hard mode: external override that hides labels overlay regardless
+  // of internal showOverlay state. Hides hover tooltips too (the SVG that
+  // owns hover doesn't render). Also suppresses the Labels toggle button.
+  forceHideOverlay?: boolean;
 }
 
 export default function AtlasViewer({
   onStructureSelect, selectedStructure, locale,
   dataPath = '/data/chest-ct', regionAxialRange, regionDefaultSlice, forceAxial,
-  planes: planesProp, defaultPlane,
+  planes: planesProp, defaultPlane, forceHideOverlay,
 }: AtlasViewerProps) {
   const [info, setInfo] = useState<AtlasInfo | null>(null);
   const [structures, setStructures] = useState<Structure[]>([]);
@@ -343,7 +347,7 @@ export default function AtlasViewer({
             />
 
             {/* SVG fills the same space as img — lineHeight:0 prevents baseline gap */}
-            {showOverlay && imgNatural && labels.length > 0 && (
+            {!forceHideOverlay && showOverlay && imgNatural && labels.length > 0 && (
               <svg
                 viewBox={`0 0 ${imgNatural.w} ${imgNatural.h}`}
                 preserveAspectRatio="none"
@@ -401,14 +405,16 @@ export default function AtlasViewer({
           onChange={(e) => setSliceIndices(prev => ({ ...prev, [activeTab]: Number(e.target.value) }))}
           className="flex-1 h-1.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-indigo-500"
         />
-        <button
-          onClick={() => setShowOverlay(!showOverlay)}
-          className={`px-3 py-1 text-xs font-medium rounded-lg transition-all ${
-            showOverlay ? 'bg-indigo-500 text-white' : 'bg-slate-200 text-slate-600'
-          }`}
-        >
-          Labels
-        </button>
+        {!forceHideOverlay && (
+          <button
+            onClick={() => setShowOverlay(!showOverlay)}
+            className={`px-3 py-1 text-xs font-medium rounded-lg transition-all ${
+              showOverlay ? 'bg-indigo-500 text-white' : 'bg-slate-200 text-slate-600'
+            }`}
+          >
+            Labels
+          </button>
+        )}
       </div>
     </div>
   );

@@ -19,6 +19,8 @@ interface QuizPanelProps {
   onStructureSelect: (s: Structure | null) => void;
   locale: string;
   dataPath: string;
+  // Notify parent so it can hide the AtlasViewer label overlay in Hard mode.
+  onHardModeChange?: (hard: boolean) => void;
 }
 
 function pickRandom<T>(arr: T[], exclude?: T): T | null {
@@ -35,13 +37,21 @@ function getDisplayName(s: Structure, locale: string): string {
   return s.displayName[locale] || s.displayName.en || s.name.replace(/_/g, ' ');
 }
 
-export default function QuizPanel({ selectedStructure, onStructureSelect, locale, dataPath }: QuizPanelProps) {
+export default function QuizPanel({ selectedStructure, onStructureSelect, locale, dataPath, onHardModeChange }: QuizPanelProps) {
   const { t } = useI18n();
   const [structures, setStructures] = useState<Structure[]>([]);
   const [target, setTarget] = useState<Structure | null>(null);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
+  const [hardMode, setHardMode] = useState(false);
   const lastJudgedIdRef = useRef<number | null>(null);
+
+  // Broadcast hard mode to parent + cleanup on unmount (so AtlasViewer
+  // doesn't stay locked into Hard if user toggles back to Explore mode).
+  useEffect(() => {
+    onHardModeChange?.(hardMode);
+    return () => onHardModeChange?.(false);
+  }, [hardMode, onHardModeChange]);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -115,6 +125,28 @@ export default function QuizPanel({ selectedStructure, onStructureSelect, locale
         >
           <RotateCcw className="w-3 h-3" />
           {t('quiz.reset')}
+        </button>
+      </div>
+
+      {/* Difficulty toggle */}
+      <div className="flex rounded-lg bg-slate-100 p-0.5 gap-0.5">
+        <button
+          onClick={() => setHardMode(false)}
+          aria-pressed={!hardMode}
+          className={`flex-1 py-1 text-[11px] font-medium rounded-md transition-all ${
+            !hardMode ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          {t('quiz.easy')}
+        </button>
+        <button
+          onClick={() => setHardMode(true)}
+          aria-pressed={hardMode}
+          className={`flex-1 py-1 text-[11px] font-medium rounded-md transition-all ${
+            hardMode ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          {t('quiz.hard')}
         </button>
       </div>
 

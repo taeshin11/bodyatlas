@@ -42,6 +42,7 @@ export default function Home() {
   const [showAuth, setShowAuth] = useState(false);
   const [forceAxial, setForceAxial] = useState(0);
   const [quizMode, setQuizMode] = useState(false);
+  const [quizHardMode, setQuizHardMode] = useState(false);
 
   const isAuthenticated = !!user;
 
@@ -149,6 +150,7 @@ export default function Home() {
                       regionAxialRange={currentRegion.axialRange}
                       regionDefaultSlice={currentRegion.defaultSlice}
                       forceAxial={forceAxial}
+                      forceHideOverlay={quizMode && quizHardMode}
                     />
                   )}
                   {quizMode ? (
@@ -157,6 +159,7 @@ export default function Home() {
                       onStructureSelect={handleStructureSelect}
                       locale={locale}
                       dataPath={dataPath}
+                      onHardModeChange={setQuizHardMode}
                     />
                   ) : (
                     <StructurePanel
@@ -187,6 +190,7 @@ export default function Home() {
                       regionAxialRange={currentRegion.axialRange}
                       regionDefaultSlice={currentRegion.defaultSlice}
                       forceAxial={forceAxial}
+                      forceHideOverlay={quizMode && quizHardMode}
                     />
                   )}
                   {quizMode ? (
@@ -195,6 +199,7 @@ export default function Home() {
                       onStructureSelect={handleStructureSelect}
                       locale={locale}
                       dataPath={dataPath}
+                      onHardModeChange={setQuizHardMode}
                     />
                   ) : (
                     <StructurePanel

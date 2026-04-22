@@ -36,6 +36,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'quiz.hint': 'Click the structure on the image',
     'quiz.loading': 'Loading structures…',
     'quiz.noStructures': 'No structures available',
+    'quiz.easy': 'Easy',
+    'quiz.hard': 'Hard (no labels)',
   },
   ko: {
     'header.about': '소개',
@@ -70,6 +72,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'quiz.hint': '이미지에서 구조를 클릭하세요',
     'quiz.loading': '구조 로딩 중…',
     'quiz.noStructures': '사용 가능한 구조 없음',
+    'quiz.easy': '쉬움',
+    'quiz.hard': '어려움 (라벨 숨김)',
   },
   ja: {
     'header.about': '概要',
@@ -104,6 +108,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'quiz.hint': '画像内の構造をクリック',
     'quiz.loading': '構造を読み込み中…',
     'quiz.noStructures': '利用可能な構造なし',
+    'quiz.easy': 'やさしい',
+    'quiz.hard': '難しい（ラベルなし）',
   },
   zh: {
     'header.about': '关于',
@@ -138,6 +144,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'quiz.hint': '在图像上点击结构',
     'quiz.loading': '加载结构中…',
     'quiz.noStructures': '无可用结构',
+    'quiz.easy': '简单',
+    'quiz.hard': '困难（无标签）',
   },
   es: {
     'header.about': 'Acerca de',
@@ -172,6 +180,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'quiz.hint': 'Haz clic en la estructura en la imagen',
     'quiz.loading': 'Cargando estructuras…',
     'quiz.noStructures': 'No hay estructuras disponibles',
+    'quiz.easy': 'Fácil',
+    'quiz.hard': 'Difícil (sin etiquetas)',
   },
   de: {
     'header.about': 'Über uns',
@@ -206,6 +216,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'quiz.hint': 'Klicke auf die Struktur im Bild',
     'quiz.loading': 'Strukturen werden geladen…',
     'quiz.noStructures': 'Keine Strukturen verfügbar',
+    'quiz.easy': 'Leicht',
+    'quiz.hard': 'Schwer (ohne Labels)',
   },
   fr: {
     'header.about': 'À propos',
@@ -240,6 +252,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'quiz.hint': 'Cliquez sur la structure de l\'image',
     'quiz.loading': 'Chargement des structures…',
     'quiz.noStructures': 'Aucune structure disponible',
+    'quiz.easy': 'Facile',
+    'quiz.hard': 'Difficile (sans étiquettes)',
   },
 };
 
