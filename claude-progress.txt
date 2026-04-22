@@ -1495,3 +1495,21 @@
 
 ### Outcome
 - 코드 변경 없음, 커밋 없음.
+
+
+## Session 18 — Round 33
+### Live Test
+- Route sweep 6개 200 (200~492ms, idle HMR 영향). 좀비 0. dev 에러 0.
+- 다른 세션 커밋 `babb64d0 chore(monitor): auto-bump sw.js CACHE_NAME` 확인.
+
+### Optimization Found
+- **불완전 env 설정 오탐지 버그**: `src/lib/supabase.ts` `isSupabaseConfigured`가 URL만 체크함. `NEXT_PUBLIC_SUPABASE_URL`만 설정하고 `NEXT_PUBLIC_SUPABASE_ANON_KEY`는 placeholder로 두면 "configured"로 오탐지되어 auth 호출마다 401. `AuthProvider`는 "skipping session restore" 경고를 띄워야 하는 상황인데 정상 경로로 들어가서 디버깅 혼선.
+- Fix: URL + key 양쪽 모두 non-placeholder 확인.
+
+### Verification
+- `tsc --noEmit` clean.
+
+### Commit Plan
+- 파일: `src/lib/supabase.ts`, `claude-progress.txt`.
+- 메시지: `fix(auth): isSupabaseConfigured requires both URL and key [skip-features-check]`
+- 빌드: stop dev → rm .next → next build → restart dev.
