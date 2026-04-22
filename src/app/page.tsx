@@ -147,6 +147,7 @@ export default function Home() {
                       selectedStructure={selectedStructure}
                       locale={locale}
                       dataPath={dataPath}
+                      forceHideOverlay={quizMode && quizHardMode}
                     />
                   ) : (
                     <AtlasViewer
@@ -187,6 +188,7 @@ export default function Home() {
                       selectedStructure={selectedStructure}
                       locale={locale}
                       dataPath={dataPath}
+                      forceHideOverlay={quizMode && quizHardMode}
                     />
                   ) : (
                     <AtlasViewer

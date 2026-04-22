@@ -27,6 +27,9 @@ interface SpineXrayViewerProps {
   selectedStructure?: Structure | null;
   locale: string;
   dataPath?: string;
+  // Quiz Hard mode parity with AtlasViewer (R28). When true, suppress all
+  // canvas overlay rendering, hover tooltip, and the Labels toggle button.
+  forceHideOverlay?: boolean;
 }
 
 type XrayView = 'lateral' | 'ap';
@@ -36,7 +39,7 @@ const VIEW_LABELS: Record<XrayView, { en: string; ko: string }> = {
   ap:      { en: 'AP',      ko: '전후면' },
 };
 
-export default function SpineXrayViewer({ onStructureSelect, selectedStructure, locale, dataPath = '/data/our-xray' }: SpineXrayViewerProps) {
+export default function SpineXrayViewer({ onStructureSelect, selectedStructure, locale, dataPath = '/data/our-xray', forceHideOverlay }: SpineXrayViewerProps) {
   const [structures, setStructures] = useState<Structure[]>([]);
   const [labels, setLabels] = useState<Record<XrayView, SliceLabel[]>>({ lateral: [], ap: [] });
   const [availableViews, setAvailableViews] = useState<XrayView[]>(['lateral', 'ap']);
@@ -169,7 +172,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
 
     ctx.drawImage(img, 0, 0);
 
-    if (!showOverlay) return;
+    if (forceHideOverlay || !showOverlay) return;
 
     const viewLabels = labels[view];
     if (!viewLabels?.length) return;
@@ -225,7 +228,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
       }
     }
     ctx.globalAlpha = 1;
-  }, [showOverlay, labels, hoveredStructure, selectedStructure, structuresById]);
+  }, [showOverlay, forceHideOverlay, labels, hoveredStructure, selectedStructure, structuresById]);
 
   // Re-render both views whenever state changes
   useEffect(() => {
@@ -260,7 +263,9 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
 
     setHoveredStructure(found);
 
-    if (found) {
+    // Hard mode: keep hoveredStructure updated (click target identification)
+    // but suppress tooltip — tooltip would reveal the answer on hover.
+    if (found && !forceHideOverlay) {
       const rawX = e.clientX - rect.left + 12;
       const rawY = e.clientY - rect.top - 8;
       const clampedX = Math.min(rawX, rect.width - 240);
@@ -269,7 +274,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     } else {
       setTooltipPos(null);
     }
-  }, [labelIndex]);
+  }, [labelIndex, forceHideOverlay]);
 
   const handleCanvasClick = useCallback(() => {
     if (hoveredStructure) {
@@ -331,14 +336,16 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
               </button>
             </div>
           )}
-          <button
-            onClick={() => setShowOverlay(!showOverlay)}
-            className={`px-3 py-1 text-xs font-medium rounded-lg transition-all ${
-              showOverlay ? 'bg-indigo-500 text-white' : 'bg-slate-200 text-slate-600'
-            }`}
-          >
-            Labels
-          </button>
+          {!forceHideOverlay && (
+            <button
+              onClick={() => setShowOverlay(!showOverlay)}
+              className={`px-3 py-1 text-xs font-medium rounded-lg transition-all ${
+                showOverlay ? 'bg-indigo-500 text-white' : 'bg-slate-200 text-slate-600'
+              }`}
+            >
+              Labels
+            </button>
+          )}
         </div>
       </div>
 

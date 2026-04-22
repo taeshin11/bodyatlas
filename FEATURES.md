@@ -186,7 +186,12 @@
 - atlas 변경 시 자동 reset
 - 채점은 (target, click) 페어당 1회 (`lastJudgedIdRef`로 이중 채점 방지)
 
-**Difficulty modes (R24):** Easy (라벨 표시 — 클릭으로 명명) / Hard (라벨 숨김 — 시각적 hint 0). Hard 토글 시 `onHardModeChange(true)` → page.tsx → AtlasViewer `forceHideOverlay` prop. AtlasViewer는 forceHideOverlay 활성 시 SVG overlay + Labels 토글 버튼 모두 숨김 (hover tooltip도 자동 disabled — SVG가 hover handler 보유).
+**Difficulty modes (R24, R28 fix):** Easy (라벨 표시 — 클릭으로 명명) / Hard (라벨 숨김 — 시각적 hint 0). Hard 토글 시 `onHardModeChange(true)` → page.tsx → 양 viewer (AtlasViewer + SpineXrayViewer)에 `forceHideOverlay` prop 전달. Hard 모드 동작:
+  - SVG/canvas는 마운트 유지 → click handler 활성 → 사용자가 blind 클릭으로 답
+  - 시각적 path/overlay 미렌더 → hint 0
+  - tooltip 억제 → hover로 답 누출 차단
+  - Labels 토글 버튼 숨김 (의미 없으니 UX 단순화)
+  - **R28 fix**: R24의 AtlasViewer SVG 전체 미렌더 버그 수정 + SpineXrayViewer parity (이전엔 X-ray 3개 atlas에서 Hard 모드 무동작)
 
 **i18n keys:** `mode.explore`, `mode.quiz`, `quiz.title`, `quiz.findThis`, `quiz.score`, `quiz.correct`, `quiz.wrong`, `quiz.youClicked`, `quiz.next`, `quiz.reset`, `quiz.hint`, `quiz.loading`, `quiz.noStructures`, `quiz.easy`, `quiz.hard` (전 7 locale 번역 완료 — EN/KO/JA/ZH/ES/DE/FR)
 

@@ -346,8 +346,11 @@ export default function AtlasViewer({
               draggable={false}
             />
 
-            {/* SVG fills the same space as img — lineHeight:0 prevents baseline gap */}
-            {!forceHideOverlay && showOverlay && imgNatural && labels.length > 0 && (
+            {/* SVG fills the same space as img — lineHeight:0 prevents baseline gap.
+                Hard mode (forceHideOverlay): SVG still mounts so it owns the
+                click handler — Quiz Hard requires user to click blind. We just
+                skip rendering the visible <path> children. */}
+            {(showOverlay || forceHideOverlay) && imgNatural && labels.length > 0 && (
               <svg
                 viewBox={`0 0 ${imgNatural.w} ${imgNatural.h}`}
                 preserveAspectRatio="none"
@@ -356,7 +359,7 @@ export default function AtlasViewer({
                 onMouseLeave={() => { setHoveredStructure(null); setTooltipPos(null); }}
                 onClick={handleSvgClick}
               >
-              {labelIndex.map(({ label, paths }) => {
+              {!forceHideOverlay && labelIndex.map(({ label, paths }) => {
                 const struct = structuresById.get(label.id);
                 if (!struct) return null;
                 const isActive = hoveredStructure === label.name || selectedStructure?.name === label.name;
@@ -379,8 +382,8 @@ export default function AtlasViewer({
         </div>
         </div>
 
-        {/* Tooltip */}
-        {hoveredStruct && tooltipPos && (
+        {/* Tooltip — suppressed in Hard mode (would reveal answer on hover) */}
+        {!forceHideOverlay && hoveredStruct && tooltipPos && (
           <div
             className="absolute z-20 pointer-events-none bg-black/80 backdrop-blur-sm text-white text-xs font-medium px-2.5 py-1.5 rounded-lg shadow-lg whitespace-nowrap"
             style={{ left: tooltipPos.x, top: tooltipPos.y }}
