@@ -1673,3 +1673,23 @@
 
 ### Outcome
 - 코드 변경/커밋 없음.
+
+
+## Session 18 — Round 45
+### Live Test
+- Route sweep 6개 200 (32~93ms). 좀비 0. dev 에러 0.
+- 다른 세션 커밋: `936cedba feat(home): persist last-visited region`, `3b5f0a17 docs(prd): v2.2 changelog`. 워크트리 클린.
+
+### Optimization Found
+- **`src/app/about/AboutContent.tsx` 불필요한 `'use client'`**: Link + 아이콘 + Header + Footer만 사용. 훅/이벤트/브라우저 API 전무. Footer 동일 패턴 (R27)과 일치.
+- Fix: `'use client'` 제거 → 서버 컴포넌트. `/about` 페이지에서 AboutContent 서브트리가 SSR HTML로만 전송, 클라이언트 JS 페이로드에서 제외.
+- Header는 여전히 'use client' (mobile menu state) → 클라이언트 경계는 Header subtree로만 좁혀짐.
+
+### Verification
+- `tsc --noEmit` clean.
+- `curl /about` 200.
+
+### Commit Plan
+- 파일: `src/app/about/AboutContent.tsx`, `claude-progress.txt`.
+- 메시지: `perf(about): drop 'use client' — pure server component [skip-features-check]`
+- 빌드: stop dev → rm .next → next build → restart dev.

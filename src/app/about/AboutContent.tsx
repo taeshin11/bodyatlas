@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { BookOpen, Check, ArrowRight } from 'lucide-react';
 import Header from '@/components/Header';
