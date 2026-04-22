@@ -1395,3 +1395,23 @@
 
 ### Outcome
 - 코드 변경 없음, 커밋 없음.
+
+
+## Session 18 — Round 27
+### Live Test
+- Route sweep 6개 200 (62~267ms). 좀비 0. dev 에러 0.
+- 다른 세션 sw.js 변경은 `078b16cf`로 커밋 완료 → 워크트리 클린.
+
+### Optimization Found
+- **Footer 불필요한 `'use client'`**: `src/components/Footer.tsx` 가 `'use client'` 지시자 사용 중이지만 상태/이벤트 핸들러/브라우저 API 전무 (Link + anchor + `new Date().getFullYear()`만). 클라이언트 경계가 무의미하게 생성되어 번들 크기에 영향.
+- Fix: `'use client'` 제거 → 순수 서버 컴포넌트화. `getFullYear()`는 렌더 타임에 서버에서 실행되므로 정상 동작.
+- 잔존 개선 후보 (본 라운드 보류): Footer 링크 텍스트("About", "How to Use", "Privacy Policy", "Terms of Service", "Contact")가 i18n 미적용 영문 하드코딩. 서버 컴포넌트화하면 `useI18n()` 사용 불가 → i18n 원한다면 `'use client'` 복구 필요. 현재 legal 링크 특성상 영문 유지가 실용적이라 변경 안 함.
+
+### Verification
+- `tsc --noEmit` clean.
+- `curl /` 200 193ms, Footer 영역 정상 렌더링 (개발 HMR 통해 확인).
+
+### Commit Plan
+- 파일: `src/components/Footer.tsx`, `claude-progress.txt`.
+- 메시지: `perf(footer): drop 'use client' — pure server component [skip-features-check]`
+- 빌드: stop dev → rm .next → next build → restart dev.
