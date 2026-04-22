@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { Search, Brain } from 'lucide-react';
@@ -52,6 +52,21 @@ export default function Home() {
     return m;
   }, []);
 
+  // Restore last visited region from localStorage once on mount. SSR +
+  // first client paint render head_neck (matches), then this effect
+  // promotes the saved value if valid + free. Empty deps = runs once,
+  // so later auth changes don't re-overwrite the user's manual nav.
+  useEffect(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('bodyatlas:region') : null;
+    if (!saved) return;
+    const cfg = regionsById.get(saved as BodyRegion);
+    if (!cfg) return;
+    if (!cfg.free && !isAuthenticated) return;
+    setActiveRegion(saved as BodyRegion);
+    setForceAxial(p => p + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleStructureSelect = useCallback((s: Structure | null) => {
     setSelectedStructure(s);
   }, []);
@@ -67,6 +82,9 @@ export default function Home() {
     setForceAxial(prev => prev + 1);
     // Quiz on a binary atlas (1 structure) is degenerate — auto-disable.
     if (regionConfig?.binary) setQuizMode(false);
+    if (typeof window !== 'undefined') {
+      try { localStorage.setItem('bodyatlas:region', region); } catch {}
+    }
   }, [isAuthenticated, regionsById]);
 
   const handleAuthDismiss = useCallback(() => {

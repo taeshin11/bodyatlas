@@ -42,6 +42,7 @@
 - **상단 Hero (SEO)**: h1 "Free Interactive Cross-Sectional Anatomy Atlas" + 부제
 - **RegionSelector**: 2행 (Original / SPINAI) — [§2.3](#23-regionselectortsx)
 - **모드 토글**: Explore (기본) / Quiz — 우측 패널 컴포넌트를 결정. **R29**: binary atlas (`our_hand_xray`, `our_foot_xray` — `binary: true`)에서는 Quiz 토글 자체를 숨김 (1 structure quiz는 degenerate). 사용자가 multi-structure atlas에서 Quiz 켠 상태로 binary로 전환 시 자동 disable.
+- **Region 영속화 (R33)**: 마지막 방문한 region이 `localStorage('bodyatlas:region')`에 저장되어 다음 방문 시 자동 복원. SSR + 첫 client paint는 `head_neck` (hydration mismatch 방지), 마운트 후 useEffect가 1회 실행되어 saved value로 promotion. 저장된 region이 locked + 미인증이면 무시 (head_neck 유지).
 - **뷰어 영역** (`isXray` 분기):
   - `our_xray` 선택 시 → `SpineXrayViewer`
   - 그 외 → `AtlasViewer`

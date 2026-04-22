@@ -1659,3 +1659,17 @@
 - 파일: 3개 컴포넌트 + `claude-progress.txt`.
 - 메시지: `feat(a11y): aria-label for icon-only close/dismiss buttons [skip-features-check]`
 - 빌드: stop dev → rm .next → next build → restart dev.
+
+
+## Session 18 — Round 44
+### Live Test
+- 초기 curl 6개 전부 timeout (000, 2.2s) — curl default 2s timeout이 HMR 재컴파일 타이밍과 겹침. `--max-time 15`로 재시도 시 6개 전부 200 (23~81ms) 정상.
+- 원인: 타 세션이 `src/app/page.tsx` 수정 중 → Next dev가 전체 모듈 그래프 재컴파일 → 첫 요청 블록 → curl 기본 2s timeout에 치여 000 반환. 실제 dev 서버는 정상.
+- 좀비 0. dev 에러 0.
+
+### Observation
+- `src/app/page.tsx` 타 세션 수정 상태 → 개입 금지.
+- 향후 라운드에서 curl timeout을 `--max-time 10` 정도로 올리는 게 이 세션 환경에 더 안전할 듯.
+
+### Outcome
+- 코드 변경/커밋 없음.
