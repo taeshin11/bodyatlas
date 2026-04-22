@@ -1478,3 +1478,20 @@
 - 파일: `src/lib/auth-context.tsx`, `claude-progress.txt`.
 - 메시지: `fix(auth,privacy): strip user email from auth logs [skip-features-check]`
 - 빌드: stop dev → rm .next → next build → restart dev.
+
+
+## Session 18 — Round 32
+### Live Test
+- Route sweep 6개 200 (44ms~1.58s, idle HMR 재컴파일 영향). 2차 히트부터 sub-100ms 복귀.
+- 좀비 0. dev 에러 0.
+- 워크트리 클린.
+
+### Investigated Not Applied
+- `src/app/not-found.tsx`: 3개 영문 하드코딩 ("Page not found", "Back to BodyAtlas") 존재. `notfound.title/message/back` i18n 키는 이미 7개 locale 전부 있음. 하지만:
+  - 서버 컴포넌트로 SSR 시 `detectLocale()`는 `typeof window === 'undefined'` 분기로 항상 'en' 반환.
+  - 클라이언트 컴포넌트화하면 거의 방문되지 않는 404 페이지에 클라이언트 JS 번들 추가 → 비용/이익 균형 모호.
+  - 실제 국제화를 하려면 Next.js `headers()` API로 `Accept-Language` 서버 파싱 도입 필요 → 이번 라운드 범위 초과.
+- 기각 근거 기록으로 남김.
+
+### Outcome
+- 코드 변경 없음, 커밋 없음.

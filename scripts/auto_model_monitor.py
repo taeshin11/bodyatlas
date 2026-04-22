@@ -393,6 +393,39 @@ def run_xray_rebuild(model_info: dict) -> bool:
         return True
 
 
+SW_PATH = PROJECT_ROOT / "public" / "sw.js"
+SW_CACHE_RE = re.compile(r"const CACHE_NAME = 'bodyatlas-v(\d+)';")
+
+
+def bump_sw_cache_version() -> bool:
+    """Bump CACHE_NAME 'bodyatlas-vN' -> 'bodyatlas-v(N+1)' in public/sw.js.
+
+    Called before git_commit_and_push when atlas data is about to change, so PWA
+    clients invalidate their cached /data/ entries on next visit (cache-first
+    SW behavior added R23). Returns True on successful bump, False if pattern
+    not found or write failed (caller should warn but not abort the commit).
+    """
+    try:
+        text = SW_PATH.read_text(encoding="utf-8")
+    except OSError as e:
+        log.warn(f"sw.js read failed: {e}")
+        return False
+    m = SW_CACHE_RE.search(text)
+    if not m:
+        log.warn(f"sw.js CACHE_NAME pattern not found, skipping bump")
+        return False
+    old_n = int(m.group(1))
+    new_n = old_n + 1
+    new_text = SW_CACHE_RE.sub(f"const CACHE_NAME = 'bodyatlas-v{new_n}';", text, count=1)
+    try:
+        SW_PATH.write_text(new_text, encoding="utf-8")
+    except OSError as e:
+        log.warn(f"sw.js write failed: {e}")
+        return False
+    log.kv("sw.js CACHE_NAME bumped", f"v{old_n} -> v{new_n}")
+    return True
+
+
 def git_commit_and_push(message: str) -> bool:
     with Stage(log, "git commit + push"):
         try:
@@ -417,8 +450,14 @@ def git_commit_and_push(message: str) -> bool:
         changed_count = len(result.stdout.strip().splitlines())
         log.info(f"{changed_count} changed paths")
 
+        # Atlas data is changing -> bump SW cache so PWA users get fresh data
+        # on next visit. Cache-first /data/ matcher (R23) means stale cache
+        # would otherwise persist until next manual sw.js change.
+        bump_sw_cache_version()
+
         try:
             subprocess.run(["git", "add", "public/data/"], check=True, capture_output=True)
+            subprocess.run(["git", "add", "public/sw.js"], check=False, capture_output=True)
             subprocess.run(["git", "add", "scripts/monitor_status.json"], check=False, capture_output=True)
         except subprocess.CalledProcessError as e:
             log.error(f"git add failed: rc={e.returncode}")
