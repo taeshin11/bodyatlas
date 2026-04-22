@@ -1,7 +1,5 @@
 export type Locale = 'en' | 'ko' | 'ja' | 'zh' | 'es' | 'de' | 'fr';
 
-export const SUPPORTED_LOCALES: Locale[] = ['en', 'ko', 'ja', 'zh', 'es', 'de', 'fr'];
-
 const translations: Record<Locale, Record<string, string>> = {
   en: {
     'header.about': 'About',

@@ -1577,3 +1577,22 @@
 
 ### Outcome
 - 코드 변경/커밋 없음.
+
+
+## Session 18 — Round 39
+### Live Test
+- Route sweep 6개 200 (113~230ms). 좀비 0. dev 에러 0.
+- 다른 세션 커밋 `b26a873b docs(onboarding): add .env.example + refresh HANDOVER` 확인 → 워크트리 클린.
+
+### Optimization Found — Dead Export
+- **`SUPPORTED_LOCALES` 미사용 export**: `src/lib/i18n.ts`에서 선언되었으나 repo 전체에 import 0건 (grep 확인).
+- Fix: 제거. `Locale` 타입은 union type이므로 런타임 배열이 필요한 곳이 없음.
+
+### Verification
+- `tsc --noEmit` clean.
+- `grep SUPPORTED_LOCALES` → 정의 라인 외 0건 (참조 없음 확인).
+
+### Commit Plan
+- 파일: `src/lib/i18n.ts`, `claude-progress.txt`.
+- 메시지: `chore(i18n): drop unused SUPPORTED_LOCALES export [skip-features-check]`
+- 빌드: stop dev → rm .next → next build → restart dev.
