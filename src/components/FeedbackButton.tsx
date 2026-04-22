@@ -90,8 +90,12 @@ export default function FeedbackButton() {
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
               <h3 className="text-sm font-semibold text-slate-800">{t('feedback.title')}</h3>
-              <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-slate-600">
-                <X className="w-4 h-4" />
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-slate-400 hover:text-slate-600"
+                aria-label="Close feedback form"
+              >
+                <X className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="p-4 space-y-3">

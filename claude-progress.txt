@@ -1635,3 +1635,27 @@
 
 ### Outcome
 - 코드 변경/커밋 없음.
+
+
+## Session 18 — Round 43
+### Live Test
+- Route sweep 6개 200 (52~69ms). 워크트리 클린. 좀비 0. dev 에러 0.
+- 다른 세션 커밋 `4da7b659 chore(hooks): pre-commit atlas integrity check` 확인.
+
+### Optimization Found — A11y
+- **icon-only 버튼 3개 aria-label 부재**: 스크린리더가 "button" 또는 아이콘 글리프 이름만 안내.
+  - `FeedbackButton.tsx:93` — X close button
+  - `InstallPrompt.tsx:78` — X dismiss button
+  - `StructurePanel.tsx:157` — ✕ clear structure button
+- Fix: 각 버튼에 `aria-label` 추가, 아이콘에는 `aria-hidden="true"`로 중복 읽기 방지.
+  - FeedbackButton: "Close feedback form"
+  - InstallPrompt: "Dismiss install prompt"
+  - StructurePanel: "Clear selected structure"
+
+### Verification
+- `tsc --noEmit` clean.
+
+### Commit Plan
+- 파일: 3개 컴포넌트 + `claude-progress.txt`.
+- 메시지: `feat(a11y): aria-label for icon-only close/dismiss buttons [skip-features-check]`
+- 빌드: stop dev → rm .next → next build → restart dev.

@@ -157,8 +157,9 @@ export default function StructurePanel({ selectedStructure, onStructureSelect, l
             <button
               onClick={() => onStructureSelect(null)}
               className="ml-auto text-xs text-slate-400 hover:text-slate-600 flex-shrink-0"
+              aria-label="Clear selected structure"
             >
-              ✕
+              <span aria-hidden="true">✕</span>
             </button>
           </div>
           <div className="mt-1 text-xs text-slate-400">
