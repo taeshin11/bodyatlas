@@ -186,7 +186,7 @@
 - atlas 변경 시 자동 reset
 - 채점은 (target, click) 페어당 1회 (`lastJudgedIdRef`로 이중 채점 방지)
 
-**i18n keys:** `mode.explore`, `mode.quiz`, `quiz.title`, `quiz.findThis`, `quiz.score`, `quiz.correct`, `quiz.wrong`, `quiz.youClicked`, `quiz.next`, `quiz.reset`, `quiz.hint`, `quiz.loading`, `quiz.noStructures` (EN+KO 정의, 나머지 5개 locale은 EN fallback)
+**i18n keys:** `mode.explore`, `mode.quiz`, `quiz.title`, `quiz.findThis`, `quiz.score`, `quiz.correct`, `quiz.wrong`, `quiz.youClicked`, `quiz.next`, `quiz.reset`, `quiz.hint`, `quiz.loading`, `quiz.noStructures` (전 7 locale 번역 완료 — EN/KO/JA/ZH/ES/DE/FR)
 
 ### 2.5 `Header.tsx`
 - Logo (BookOpen + "BodyAtlas" + 부제)

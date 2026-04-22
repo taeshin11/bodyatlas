@@ -1298,3 +1298,57 @@
 - 파일: `src/components/ServiceWorkerRegister.tsx`, `claude-progress.txt`.
 - 메시지: `feat(pwa): periodic reg.update() for long-lived tabs [skip-features-check]`
 - 푸시 후 빌드: stop dev → rm .next → next build → restart dev.
+
+
+## Session 18 — Round 24
+### Live Test
+- Route sweep: 6개 전부 200 (200~330ms, HMR 유휴 상태 정상 범위).
+- 좀비 프로세스 6시간 이상: 0.
+- 개발 로그 에러/예외: 0건.
+
+### Concurrent Session
+- 다른 세션 활동: `src/config/features.ts` 삭제, `src/lib/i18n.ts` 수정. 해당 파일에 간섭 금지.
+
+### Outcome
+- 신규 이슈 없음. 코드 변경 없음. 커밋 없음.
+
+
+## Session 22 (2026-04-22) — Round 22: Dead config 제거 + Quiz i18n parity
+- Phase: drift-aware iter, two orthogonal wins
+
+### Drift 신호 점검
+- 4 신호 모두 firing 안 함 (R20/R21에서 perf/Vercel 이미 정리, Quiz 어제 출시).
+- **그러나 발견**: `src/config/features.ts` 9-flag 시스템 + `isFeatureEnabled()` + `FeatureKey` 타입 → 코드 베이스 0 참조 dead code. 새 contributor가 "퀴즈는 quizMode flag로 켠다"고 misread할 confusion source.
+
+### Primary outcome (12자)
+`Dead feature config 제거` — rule 3(c) 삭제/단순화.
+보너스: Quiz i18n 5 locale 번역 — rule 3(a) 핵심 숫자 이동 (1 → 7 locale coverage).
+
+### 산출물
+1. **`src/config/features.ts` 삭제** + 빈 `src/config/` 디렉터리 제거.
+   - 검증: `grep -rn "from '@/config/features'\|isFeatureEnabled\|FeatureKey" src/ scripts/` → 0 hits.
+   - 영향: 빌드/런타임 영향 0 (어차피 import 안 되던 dead code), 코드 베이스 명확성 ↑.
+
+2. **`src/lib/i18n.ts`** Quiz 키 5 locale (ja/zh/es/de/fr) 추가:
+   - 13 keys × 5 locales = **65 신규 번역**.
+   - Quiz UI locale coverage: EN+KO (29%) → 7 locales (100%).
+
+### 검증
+- `tsc --noEmit` clean
+- `next build` PASS — 11 pages, `/` 9.95 kB / 211 kB (R21과 동일, 번들 영향 0)
+- dev 재기동 → 9 라우트 200
+- 좀비 정리: dev 재기동 전 잔존 node 2개 kill
+
+### 핵심 숫자 이동
+- 지원 locale × Quiz UI 번역 완료율: **2/7 → 7/7 (100%)**
+- src/config/ 디렉터리 제거 → 1개 dead module 정리.
+
+### Vercel/번들
+- R20 declaration 준수: prod 헬스 체크 skip, 번들 kB 변동 추적 skip.
+
+### Next iter 후보 (drift 회피)
+- ~~Quiz polish~~ (R21 출시, R22 i18n parity — 3 iter 회피 위해 다음 라운드는 다른 영역)
+- 후보: AtlasViewer hard-mode (overlay 토글 prop), atlas content 추가, accessibility audit, README polish
+
+### Git Commits (Session 22)
+- (이 commit: features.ts 삭제 + Quiz i18n 5 locale + log)
