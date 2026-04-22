@@ -2,9 +2,9 @@
 
 > **This is a living document.** Update this PRD as features ship, priorities shift, or new insights emerge. Add a changelog entry at the bottom of this file for every meaningful update so future sessions can see what changed and why.
 
-**PRD Version:** 2.0  
-**Last Updated:** 2026-04-01  
-**Phase:** MVP (Milestone 1–3)
+**PRD Version:** 2.2  
+**Last Updated:** 2026-04-22  
+**Phase:** Post-MVP — feature breadth + ops hardening (Vercel prod 자동 복구는 R20 공식 포기, 사용자 결정 대기)
 
 ---
 
@@ -534,3 +534,4 @@ Pricing vs. competitor: IMAIOS $22/mo → BodyAtlas $4.99/mo (**77% cheaper**), 
 | 2026-03-31 | 1.0–1.3 | BrainAxis: Brain DICOM AC-PC alignment tool MVP through V1 | Original product |
 | 2026-04-01 | 2.0 | **FULL PIVOT to BodyAtlas** — Free interactive cross-sectional anatomy atlas. Dropped: AC-PC alignment, DICOM upload/parsing, rotation controls, tag editor. Kept: tri-plane viewer infrastructure, i18n, PWA, UI design system. Reason: User feedback from radiologist (류정률) revealed AC-PC alignment already exists in hospital software; real demand is for free IMAIOS alternative (anatomy atlas with interactive labels). IMAIOS costs $22/mo — we go free. | User validation feedback, market opportunity |
 | 2026-04-02 | 2.1 | **MVP COMPLETE (F01-F05 all done).** Deployed to bodyatlas-ten.vercel.app. Changes: removed auth gate (MVP = 100% free, no signup), cleaned up BrainAxis feature flags, fixed SW cache name, added fuzzy search, added 7-language translations for all 108 anatomical structures (en/ko/ja/zh/es/de/fr), updated all URLs to new domain, added .vercelignore for data_pipeline (24GB). | MVP completion, domain change (bodyatlas.vercel.app was taken) |
+| 2026-04-22 | 2.2 | **Post-MVP breadth + ops** (Sessions 18–33, /loop iter 19–33). Atlases: 9 active (head/chest CT 기존 2 + SPINAI our-head/our-ct chest+abdomen+pelvis + brain-mri-commercial + our-lumbar-mri + our-xray + our-hand/foot-xray binary). Removed brain-pet/spine-xray dead data (-3.35 MB). Quiz Mode shipped (Easy/Hard 모드, 7 locale i18n parity, binary atlas 자동 토글 숨김). PWA offline 약속 실현 (sw.js cache-first /data/, auto_model_monitor가 atlas 갱신 시 CACHE_NAME 자동 bump). Accessibility 패스 (skip-link, mobile menu aria, dynamic html lang per locale). Onboarding: README 신설, .env.example 신설, HANDOVER R30 기준 refresh. Atlas integrity check (`npm run check-atlases` + .githooks/pre-commit). Region 영속화 (localStorage). 라이선스 정리: 배포 데이터 전부 Apache 2.0. **공식 선언**: (1) 번들 사이즈 추적 종료 (R11 8.99 kB floor 도달); (2) Vercel prod 자동 복구 시도 종료 — 자격증명·URL·도메인 결정이 사용자 영역, loop iter마다 측정만 하면 시그널 노이즈만 누적. | 4-iter deferred PRD changelog 갱신 (R34); 디시플린 룰에 따라 누적 변화 한 번에 반영 |
