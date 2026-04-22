@@ -1201,3 +1201,75 @@
 - 파일: `next.config.js` (보안 헤더 4종), `src/app/robots.ts` (중복 제거), `claude-progress.txt`.
 - 메시지: `fix(seo,security): robots.txt data leak fix + baseline security headers [skip-features-check]`
 - 빌드: dev 중지 → .next 삭제 → next build → dev 재기동.
+
+
+## Session 18 — Round 22
+### Live Test
+- Route sweep: /, /how-to-use, /download, /privacy, /terms, /about 전부 200 (45~150ms).
+- 좀비 프로세스 6시간 이상 된 것 0개.
+- 개발 로그 에러/경고 0건.
+
+### Observation
+- 다른 세션(또는 사용자)이 동시 작업 중: `src/components/QuizPanel.tsx` 신규 파일, `src/app/page.tsx` + `src/lib/i18n.ts` 수정 상태 → 같은 파일에 중복 편집 위험 있어 본 라운드는 코드 변경 생략.
+- 발견한 잠재 개선점 (우선순위 낮음, 다음 세션 위임):
+  - `ServiceWorkerRegister`는 주기적 `reg.update()` 호출 없음 → 오래 열린 탭은 SW 업데이트 늦게 받음.
+  - `sw.js` cache-first 리스트에 `/_next/data/` 및 `/data/` 경로가 빠져 있음 → Next.config에서 31536000 immutable 설정된 데이터가 런타임 SW 캐시 제외.
+- 두 건 모두 적용 가능성은 있으나 QuizPanel 작업과 충돌 가능성이 있어 현재 세션에서는 보류.
+
+### Outcome
+- 커밋 없음 (short variant + 충돌 회피).
+
+
+## Session 21 (2026-04-22) — Round 21: Quiz Mode MVP (high-risk feature 실험)
+- Phase: drift correction + 신규 기능 실험 (per /loop discipline rules)
+
+### Drift 신호 점검
+- (1) 같은 모듈 영역 3+ iter 연속 — R20에서 이미 pivot, 본 라운드는 새 컴포넌트 + page.tsx + i18n. **N/A.**
+- (2) primary metric 정체 — bundle 추적 R20에서 공식 종료. **N/A.**
+- (3) 3+ "나중에" 미뤄진 항목 — `quizMode` flag (Session 1부터 20+ iter). **HIT → 본 라운드에서 실구현.**
+- (4) 환경 블로커 — Vercel R20에서 공식 포기. **N/A.**
+
+### Primary outcome (10자)
+`퀴즈 모드 MVP 구현` — rule 3(b) 실패 확률 ≥50% 실험 (UX uncertainty + 기존 viewer click 흐름 통합 위험).
+
+### 산출물
+- **`src/components/QuizPanel.tsx` 신규** (175줄):
+  - 현재 atlas의 `structures.json` 로드 (AbortController로 race 방지)
+  - 랜덤 구조 1개 추첨 → 로컬 displayName (`displayName[locale] || displayName.en || name`)으로 출제
+  - viewer 클릭 → `selectedStructure.id === target.id` 채점, `lastJudgedIdRef`로 페어당 1회 채점
+  - 정답/오답 배너 (Check / X 아이콘 + emerald/rose 컬러)
+  - 점수 표시 + 정확도 % (correct/total + Math.round)
+  - "Next question" 버튼 (직전 target 제외 랜덤 재추첨)
+  - "Reset" 버튼 (점수 0 초기화)
+  - dataPath 변경 시 자동 reset
+- **`src/app/page.tsx` 수정**:
+  - `quizMode: boolean` 신규 state
+  - 모드 토글 pill (Search / Brain 아이콘) — RegionSelector 아래
+  - 우측 패널 conditional: `quizMode ? <QuizPanel> : <StructurePanel>` (desktop + mobile 양쪽)
+  - `QuizPanel` `next/dynamic` lazy-load (ssr:false) — 비활성 시 번들 미포함
+- **`src/lib/i18n.ts`**: 13개 신규 키 (`mode.explore`, `mode.quiz`, `quiz.*`) EN+KO 정의. 5개 locale은 `t()`의 EN fallback 사용.
+- **`FEATURES.md`**:
+  - §1.1 모드 토글 + 우측 패널 분기 설명 추가
+  - §2.4b QuizPanel 신설 (sub-features, i18n keys, activation)
+
+### 검증
+- `tsc --noEmit` clean (zero error)
+- `next build` PASS — 11 pages, `/` 9.95 kB / 211 kB (R19 9.03 → +0.92 kB; QuizPanel 추가 비용. 번들 추적 종료 선언했으나 참고치).
+- dev 재기동 → 9 라우트 200
+- HTML 렌더 검증: `curl /` 응답에 "Explore" + "Quiz" 토글 텍스트 노출 확인 ✓
+- 좀비 정리: dev 재기동 전 잔존 node 4개 kill (R19/R20 빌드 잔존)
+
+### 실험 위험 (≥50% 평가)
+- 기존 viewer click 흐름과 통합 — `selectedStructure` 변경이 AtlasViewer의 bestSlice 자동 점프 트리거. quiz 답 클릭 후 jump가 일어나는데, 이는 답 위치 시각 확인 효과 (positive) vs 클릭 위치에서 멀어짐 (UX 혼동). MVP는 그대로 두고 사용자 feedback 후 결정.
+- mobile UX — desktop과 동일 토글 + panel placement, 별도 터치 최적화 안 함. 향후 검토.
+- 라벨 overlay ON 상태에서 quiz는 컬러로 답이 보임 → "쉬움 모드". 향후 difficulty 토글로 hide-labels challenge 추가 가능.
+
+### Negative result 가능성
+- 사용자가 quiz를 안 쓰면 lazy-load 비용은 0 (dynamic import). 본 실험의 downside risk는 dead code 추가 + 유지보수 부담뿐.
+- 만약 사용자가 "쓸데없다"고 판단하면 next round에서 제거 + flag 정리 (negative result도 지식, log).
+
+### Git Commits (Session 21)
+- (이 commit: QuizPanel + page.tsx 모드 토글 + i18n 13 keys + FEATURES 갱신)
+
+### 배포 상태
+- R20 declaration대로 prod 헬스 체크 안 함. GitHub push까지만.

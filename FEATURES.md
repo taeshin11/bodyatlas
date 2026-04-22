@@ -41,10 +41,13 @@
 ### 1.1 `/` Home (`src/app/page.tsx`)
 - **상단 Hero (SEO)**: h1 "Free Interactive Cross-Sectional Anatomy Atlas" + 부제
 - **RegionSelector**: 2행 (Original / SPINAI) — [§2.3](#23-regionselectortsx)
+- **모드 토글**: Explore (기본) / Quiz — 우측 패널 컴포넌트를 결정
 - **뷰어 영역** (`isXray` 분기):
   - `our_xray` 선택 시 → `SpineXrayViewer`
   - 그 외 → `AtlasViewer`
-- **StructurePanel**: 오른쪽(데스크톱) / 아래(모바일) 검색 패널
+- **우측 패널** (`quizMode` 분기):
+  - 기본: `StructurePanel` (검색)
+  - Quiz on: `QuizPanel` (랜덤 구조 맞히기, 점수 기록)
 - **모달 오버레이**: `AuthGate` (locked region 클릭 시)
 - **고정 위치 UI**: `FeedbackButton`(오른쪽 하단), `InstallPrompt`(왼쪽 하단, 30초 후)
 
@@ -168,6 +171,22 @@
 - `regionAxialRange` prop으로 해당 범위의 구조만 필터
 
 **Styling:** glass (bg-white/70 backdrop-blur), maxHeight 80vh overflow-y-auto
+
+### 2.4b `QuizPanel.tsx` — 랜덤 구조 맞히기 (R21 신규)
+
+**Activation:** page.tsx의 모드 토글 → "Quiz" 선택 시 StructurePanel 자리에 렌더 (lazy-loaded `next/dynamic`).
+
+**Sub-features:**
+- 현재 atlas의 `structures.json`에서 랜덤 1개 추첨, 로컬 displayName으로 출제
+- 사용자가 viewer (Atlas/SpineXray)에서 구조 클릭 → `selectedStructure` 변화로 자동 채점
+- 정답: `<Check>` ✓ + emerald 배너 / 오답: `<X>` ✗ + 클릭한 구조 표시
+- 점수 표시: `correct/total` + 정확도 %
+- "Next question" 버튼: 새 랜덤 구조 (직전 문제 제외)
+- "Reset" 버튼: 점수 0으로 초기화
+- atlas 변경 시 자동 reset
+- 채점은 (target, click) 페어당 1회 (`lastJudgedIdRef`로 이중 채점 방지)
+
+**i18n keys:** `mode.explore`, `mode.quiz`, `quiz.title`, `quiz.findThis`, `quiz.score`, `quiz.correct`, `quiz.wrong`, `quiz.youClicked`, `quiz.next`, `quiz.reset`, `quiz.hint`, `quiz.loading`, `quiz.noStructures` (EN+KO 정의, 나머지 5개 locale은 EN fallback)
 
 ### 2.5 `Header.tsx`
 - Logo (BookOpen + "BodyAtlas" + 부제)

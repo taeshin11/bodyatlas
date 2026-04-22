@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
+import { Search, Brain } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -16,10 +17,12 @@ import { useAuth } from '@/lib/auth-context';
 // SpineXrayViewer: only rendered for 3 X-ray regions (not the default).
 // AuthGate: only shown after user clicks a locked region.
 // FeedbackButton / InstallPrompt: defer until after initial paint.
+// QuizPanel: only rendered when user toggles quiz mode (off by default).
 const SpineXrayViewer = dynamic(() => import('@/components/SpineXrayViewer'), { ssr: false });
 const AuthGate = dynamic(() => import('@/components/AuthGate'), { ssr: false });
 const FeedbackButton = dynamic(() => import('@/components/FeedbackButton'), { ssr: false });
 const InstallPrompt = dynamic(() => import('@/components/InstallPrompt'), { ssr: false });
+const QuizPanel = dynamic(() => import('@/components/QuizPanel'), { ssr: false });
 
 interface Structure {
   id: number;
@@ -32,12 +35,13 @@ interface Structure {
 }
 
 export default function Home() {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
   const { user } = useAuth();
   const [selectedStructure, setSelectedStructure] = useState<Structure | null>(null);
   const [activeRegion, setActiveRegion] = useState<BodyRegion>('head_neck');
   const [showAuth, setShowAuth] = useState(false);
   const [forceAxial, setForceAxial] = useState(0);
+  const [quizMode, setQuizMode] = useState(false);
 
   const isAuthenticated = !!user;
 
@@ -102,6 +106,30 @@ export default function Home() {
               isAuthenticated={isAuthenticated}
             />
 
+            {/* Mode toggle */}
+            <div className="flex rounded-xl bg-white/70 backdrop-blur-xl border border-slate-200/60 p-1 gap-1 max-w-xs">
+              <button
+                onClick={() => setQuizMode(false)}
+                aria-pressed={!quizMode}
+                className={`flex-1 flex items-center justify-center gap-1 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                  !quizMode ? 'bg-indigo-500 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                <Search className="w-3 h-3" />
+                {t('mode.explore')}
+              </button>
+              <button
+                onClick={() => { setQuizMode(true); setSelectedStructure(null); }}
+                aria-pressed={quizMode}
+                className={`flex-1 flex items-center justify-center gap-1 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                  quizMode ? 'bg-indigo-500 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                <Brain className="w-3 h-3" />
+                {t('mode.quiz')}
+              </button>
+            </div>
+
             <>
                 {/* Desktop Layout */}
                 <div className="hidden lg:grid lg:grid-cols-[1fr_280px] gap-4">
@@ -123,13 +151,22 @@ export default function Home() {
                       forceAxial={forceAxial}
                     />
                   )}
-                  <StructurePanel
-                    selectedStructure={selectedStructure}
-                    onStructureSelect={handleStructureSelect}
-                    locale={locale}
-                    dataPath={dataPath}
-                    regionAxialRange={currentRegion.axialRange}
-                  />
+                  {quizMode ? (
+                    <QuizPanel
+                      selectedStructure={selectedStructure}
+                      onStructureSelect={handleStructureSelect}
+                      locale={locale}
+                      dataPath={dataPath}
+                    />
+                  ) : (
+                    <StructurePanel
+                      selectedStructure={selectedStructure}
+                      onStructureSelect={handleStructureSelect}
+                      locale={locale}
+                      dataPath={dataPath}
+                      regionAxialRange={currentRegion.axialRange}
+                    />
+                  )}
                 </div>
 
                 {/* Mobile Layout — viewer on top, search below */}
@@ -152,13 +189,22 @@ export default function Home() {
                       forceAxial={forceAxial}
                     />
                   )}
-                  <StructurePanel
-                    selectedStructure={selectedStructure}
-                    onStructureSelect={handleStructureSelect}
-                    locale={locale}
-                    dataPath={dataPath}
-                    regionAxialRange={currentRegion.axialRange}
-                  />
+                  {quizMode ? (
+                    <QuizPanel
+                      selectedStructure={selectedStructure}
+                      onStructureSelect={handleStructureSelect}
+                      locale={locale}
+                      dataPath={dataPath}
+                    />
+                  ) : (
+                    <StructurePanel
+                      selectedStructure={selectedStructure}
+                      onStructureSelect={handleStructureSelect}
+                      locale={locale}
+                      dataPath={dataPath}
+                      regionAxialRange={currentRegion.axialRange}
+                    />
+                  )}
                 </div>
             </>
           </motion.div>
