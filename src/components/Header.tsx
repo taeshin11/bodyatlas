@@ -30,7 +30,7 @@ export default function Header() {
             href="/how-to-use"
             className="hidden sm:inline-block px-2.5 py-1.5 rounded-lg text-sm text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-all"
           >
-            Guide
+            {t('header.guide')}
           </Link>
           <Link
             href="/about"
@@ -69,7 +69,7 @@ export default function Header() {
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 hover:bg-slate-100 transition-colors"
               >
                 <HelpCircle className="w-4 h-4 text-indigo-500" />
-                Guide
+                {t('header.guide')}
               </Link>
               <Link
                 href="/about"

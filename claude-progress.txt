@@ -1352,3 +1352,30 @@
 
 ### Git Commits (Session 22)
 - (이 commit: features.ts 삭제 + Quiz i18n 5 locale + log)
+
+
+## Session 18 — Round 25
+### Live Test
+- Route sweep: 6개 전부 200 (38~230ms).
+- 좀비 6시간+ 0개. dev 에러 0건.
+
+### Optimization Found
+- **i18n 키 누락 버그**: `Header.tsx` 데스크톱/모바일 네비게이션의 `Guide` 링크가 하드코딩된 영문이었음. `header.about` + `header.download`는 7개 locale 전부 번역 되어 있는데 `header.guide`만 빠져 있어 한국어/일본어/중국어 사용자는 "Guide"가 영문으로 표시됨.
+- Fix:
+  - `src/lib/i18n.ts`: 7개 locale에 `header.guide` 추가.
+    - en: `Guide`
+    - ko: `가이드`
+    - ja: `ガイド`
+    - zh: `指南`
+    - es: `Guía`
+    - de: `Anleitung`
+    - fr: `Guide`
+  - `src/components/Header.tsx`: 두 군데 (desktop link + mobile menu link) `Guide` → `{t('header.guide')}`.
+
+### Verification
+- `tsc --noEmit` clean.
+- `curl /` → `>Guide<` 렌더됨 (SSR 기본 locale=en 정상, client에서 사용자 locale로 swap 예정).
+
+### Commit Plan
+- 메시지: `fix(i18n): header.guide key for all 7 locales [skip-features-check]`
+- 빌드: stop dev → rm .next → next build → restart dev.
