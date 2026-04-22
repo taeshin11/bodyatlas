@@ -41,7 +41,7 @@
 ### 1.1 `/` Home (`src/app/page.tsx`)
 - **상단 Hero (SEO)**: h1 "Free Interactive Cross-Sectional Anatomy Atlas" + 부제
 - **RegionSelector**: 2행 (Original / SPINAI) — [§2.3](#23-regionselectortsx)
-- **모드 토글**: Explore (기본) / Quiz — 우측 패널 컴포넌트를 결정
+- **모드 토글**: Explore (기본) / Quiz — 우측 패널 컴포넌트를 결정. **R29**: binary atlas (`our_hand_xray`, `our_foot_xray` — `binary: true`)에서는 Quiz 토글 자체를 숨김 (1 structure quiz는 degenerate). 사용자가 multi-structure atlas에서 Quiz 켠 상태로 binary로 전환 시 자동 disable.
 - **뷰어 영역** (`isXray` 분기):
   - `our_xray` 선택 시 → `SpineXrayViewer`
   - 그 외 → `AtlasViewer`

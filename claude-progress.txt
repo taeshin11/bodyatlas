@@ -1541,3 +1541,12 @@
 - 파일: `src/lib/auth-context.tsx`, `claude-progress.txt`.
 - 메시지: `chore(auth): remove unused signInWithGoogle/signInWithPassword [skip-features-check]`
 - 빌드: stop dev → rm .next → next build → restart dev.
+
+
+## Session 18 — Round 36
+### Live Test
+- Route sweep 6개 200 (74ms~1.51s, idle HMR 재컴파일). 좀비 0. dev 에러 0.
+- 워크트리 클린.
+
+### Outcome
+- 신규 이슈 없음. 코드 변경 없음, 커밋 없음.

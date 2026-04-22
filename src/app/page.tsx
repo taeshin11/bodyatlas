@@ -65,6 +65,8 @@ export default function Home() {
     setActiveRegion(region);
     setSelectedStructure(null);
     setForceAxial(prev => prev + 1);
+    // Quiz on a binary atlas (1 structure) is degenerate — auto-disable.
+    if (regionConfig?.binary) setQuizMode(false);
   }, [isAuthenticated, regionsById]);
 
   const handleAuthDismiss = useCallback(() => {
@@ -74,6 +76,7 @@ export default function Home() {
   const currentRegion = regionsById.get(activeRegion)!;
   const dataPath = currentRegion.dataPath;
   const isXray = activeRegion === 'our_xray' || activeRegion === 'our_hand_xray' || activeRegion === 'our_foot_xray';
+  const quizSupported = !currentRegion.binary;
 
   return (
     <ErrorBoundary>
@@ -114,29 +117,31 @@ export default function Home() {
               isAuthenticated={isAuthenticated}
             />
 
-            {/* Mode toggle */}
-            <div className="flex rounded-xl bg-white/70 backdrop-blur-xl border border-slate-200/60 p-1 gap-1 max-w-xs">
-              <button
-                onClick={() => setQuizMode(false)}
-                aria-pressed={!quizMode}
-                className={`flex-1 flex items-center justify-center gap-1 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                  !quizMode ? 'bg-indigo-500 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                <Search className="w-3 h-3" />
-                {t('mode.explore')}
-              </button>
-              <button
-                onClick={() => { setQuizMode(true); setSelectedStructure(null); }}
-                aria-pressed={quizMode}
-                className={`flex-1 flex items-center justify-center gap-1 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                  quizMode ? 'bg-indigo-500 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                <Brain className="w-3 h-3" />
-                {t('mode.quiz')}
-              </button>
-            </div>
+            {/* Mode toggle — hidden for binary atlases (Quiz would be degenerate) */}
+            {quizSupported && (
+              <div className="flex rounded-xl bg-white/70 backdrop-blur-xl border border-slate-200/60 p-1 gap-1 max-w-xs">
+                <button
+                  onClick={() => setQuizMode(false)}
+                  aria-pressed={!quizMode}
+                  className={`flex-1 flex items-center justify-center gap-1 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                    !quizMode ? 'bg-indigo-500 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  <Search className="w-3 h-3" />
+                  {t('mode.explore')}
+                </button>
+                <button
+                  onClick={() => { setQuizMode(true); setSelectedStructure(null); }}
+                  aria-pressed={quizMode}
+                  className={`flex-1 flex items-center justify-center gap-1 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                    quizMode ? 'bg-indigo-500 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  <Brain className="w-3 h-3" />
+                  {t('mode.quiz')}
+                </button>
+              </div>
+            )}
 
             <>
                 {/* Desktop Layout */}

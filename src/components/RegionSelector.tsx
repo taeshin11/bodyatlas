@@ -17,6 +17,9 @@ interface RegionConfig {
   defaultSlice: number;
   free: boolean;
   group: 'original' | 'spinai';
+  // Atlas with <2 structures makes Quiz mode degenerate (always picks the
+  // same answer). Flag explicitly so page.tsx hides the Quiz toggle.
+  binary?: boolean;
 }
 
 export const BODY_REGIONS: RegionConfig[] = [
@@ -68,11 +71,11 @@ export const BODY_REGIONS: RegionConfig[] = [
   },
   {
     id: 'our_hand_xray', label: 'Hand X-ray', labelKo: '손 X-ray', icon: '✋',
-    dataPath: '/data/our-hand-xray', defaultSlice: 0, free: true, group: 'spinai',
+    dataPath: '/data/our-hand-xray', defaultSlice: 0, free: true, group: 'spinai', binary: true,
   },
   {
     id: 'our_foot_xray', label: 'Foot X-ray', labelKo: '발 X-ray', icon: '🦶',
-    dataPath: '/data/our-foot-xray', defaultSlice: 0, free: true, group: 'spinai',
+    dataPath: '/data/our-foot-xray', defaultSlice: 0, free: true, group: 'spinai', binary: true,
   },
 ];
 
