@@ -1158,3 +1158,46 @@
 
 ### Git Commits (Session 20)
 - (이 commit: dead atlas 삭제 + SpineXrayViewer dangling fix + FEATURES 갱신 + drift discipline 로그)
+
+
+## Session 18 — Round 20
+### Optimization Found
+- **보안 헤더 전무**: `curl -I /` 결과 X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy 전부 부재. Mozilla Observatory fail 수준. 의료/교육 콘텐츠 서비스로 신뢰성 흠.
+- Fix: `next.config.js` `headers()`에 `/:path*` 베이스라인 추가:
+  - `X-Content-Type-Options: nosniff` (MIME sniffing 차단)
+  - `X-Frame-Options: SAMEORIGIN` (기본 clickjacking 보호)
+  - `Referrer-Policy: strict-origin-when-cross-origin` (cross-origin referrer 최소화)
+  - `Permissions-Policy: camera=(), microphone=(), geolocation=()` (미사용 기능 명시적 비활성)
+- CSP는 의도적 제외 — AdSense/analytics script origin 전수 감사 없이 적용 시 광고/추적 전부 깨짐. 별도 라운드 필요.
+
+### Verification
+- dev 재기동 후 `curl -I /`: 4개 헤더 전부 적용 ✓.
+- `/sw.js`: Cache-Control(no-cache) + Content-Type(JS) + X-Content-Type-Options + X-Frame-Options 스택됨 ✓.
+- Route sweep: /, /how-to-use, /download, /privacy, /terms, /about 전부 200, sub-130ms.
+- 좀비 프로세스: 6시간 이상 된 것 0개 (R18에서 모두 정리됨).
+
+### Outcome
+- 본 라운드는 short variant(커밋/푸시 미지정) → 커밋만 스테이징하지 않고 diff 상태로 둠.
+- 다음 long variant 라운드에서 함께 커밋 예정.
+
+
+## Session 18 — Round 21
+### Live Test
+- Route sweep: /, /how-to-use, /download, /privacy, /terms, /about 전부 200 (0.1~1.2s, dev HMR 재컴파일 영향).
+- 좀비 프로세스 6시간 이상 된 것 0개.
+
+### Optimization Found
+- **robots.ts SEO 누출 버그**: 기본 `*` 규칙에는 `disallow: ['/api/', '/data/']`가 있으나, 그 뒤에 나열된 Googlebot/Bingbot/Naver/Baidu/Yandex 등 14개 봇 블록은 `allow: '/'`만 선언 → robots.txt spec상 named User-Agent 블록이 `*` 규칙을 OVERRIDE하므로, 주요 크롤러들이 `/data/` (의료 이미지 원본 JSON) 를 크롤할 수 있는 상태.
+- Fix: 14개 중복 블록 제거, `*` 규칙 하나로 통합.
+  - robots.txt 바이트 크기 ~600B → ~120B 감소 (부수 효과).
+  - 모든 크롤러가 동일한 disallow 경로를 준수.
+- R20에서 staged한 보안 헤더 4종(`X-Content-Type-Options` 등) 포함.
+
+### Verification
+- `curl /robots.txt` 결과 단일 규칙: `User-Agent: *` / `Allow: /` / `Disallow: /api/` / `Disallow: /data/` ✓.
+- `tsc --noEmit` clean.
+
+### Commit Plan
+- 파일: `next.config.js` (보안 헤더 4종), `src/app/robots.ts` (중복 제거), `claude-progress.txt`.
+- 메시지: `fix(seo,security): robots.txt data leak fix + baseline security headers [skip-features-check]`
+- 빌드: dev 중지 → .next 삭제 → next build → dev 재기동.
