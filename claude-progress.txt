@@ -1379,3 +1379,19 @@
 ### Commit Plan
 - 메시지: `fix(i18n): header.guide key for all 7 locales [skip-features-check]`
 - 빌드: stop dev → rm .next → next build → restart dev.
+
+
+## Session 18 — Round 26
+### Live Test
+- Route sweep: 6개 전부 200 (34~151ms).
+- 좀비 6시간+ 0개. dev 에러 0건.
+
+### Observation
+- `public/sw.js` worktree 수정 상태 (내 R23에서 보류했던 `/data/` cache-first 추가). 작성자(사용자 또는 타 세션):
+  - `CACHE_NAME: 'bodyatlas-v1' → 'bodyatlas-v2'` 으로 invalidation 기법 적용 → R23의 "업데이트 시 구 데이터 갇힘" 우려 해결.
+  - 코멘트 명시: "offline mode works for structure panel + labels overlay".
+- JS 문법 검증: `node -c public/sw.js` OK.
+- 커밋 안 함 — 다른 작성자의 in-progress 변경으로 판단, 간섭 회피.
+
+### Outcome
+- 코드 변경 없음, 커밋 없음.
