@@ -13,9 +13,7 @@ interface AuthContextType {
   trialUsed: boolean;
   markTrialUsed: () => void;
   needsAuth: boolean;
-  signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string) => Promise<{ error: string | null }>;
-  signInWithPassword: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -25,9 +23,7 @@ const AuthContext = createContext<AuthContextType>({
   trialUsed: false,
   markTrialUsed: () => {},
   needsAuth: false,
-  signInWithGoogle: async () => {},
   signInWithEmail: async () => ({ error: null }),
-  signInWithPassword: async () => ({ error: null }),
   signOut: async () => {},
 });
 
@@ -83,18 +79,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setTrialUsed(true);
   }, []);
 
-  const signInWithGoogle = useCallback(async () => {
-    log.info('signInWithGoogle: redirecting to OAuth');
-    try {
-      await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: window.location.origin },
-      });
-    } catch (e) {
-      log.error('signInWithGoogle failed', e);
-    }
-  }, []);
-
   const signInWithEmail = useCallback(async (email: string) => {
     // Don't log the email itself — users shouldn't see other users' addresses
     // in shared devtools sessions, screenshots, or future log aggregation.
@@ -105,14 +89,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     if (error) log.error('signInWithOtp returned error', error);
     else log.info('OTP sent');
-    return { error: error?.message ?? null };
-  }, []);
-
-  const signInWithPassword = useCallback(async (email: string, password: string) => {
-    log.info('signInWithPassword: attempting');
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) log.warn('signInWithPassword failed', { error: error.message });
-    else log.info('signInWithPassword OK');
     return { error: error?.message ?? null };
   }, []);
 
@@ -131,8 +107,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Stable value — consumers re-render only when one of these actually changes.
   const value = useMemo(() => ({
     user, loading, trialUsed, markTrialUsed, needsAuth,
-    signInWithGoogle, signInWithEmail, signInWithPassword, signOut,
-  }), [user, loading, trialUsed, needsAuth, markTrialUsed, signInWithGoogle, signInWithEmail, signInWithPassword, signOut]);
+    signInWithEmail, signOut,
+  }), [user, loading, trialUsed, needsAuth, markTrialUsed, signInWithEmail, signOut]);
 
   return (
     <AuthContext.Provider value={value}>

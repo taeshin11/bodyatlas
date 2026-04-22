@@ -1522,3 +1522,22 @@
 
 ### Outcome
 - 신규 이슈 없음. 코드 변경 없음, 커밋 없음.
+
+
+## Session 18 — Round 35
+### Live Test
+- Route sweep 6개 200 (59~213ms). 좀비 0. dev 에러 0.
+- 다른 세션 커밋 `455eed70 fix(quiz): Hard mode click-to-answer` 확인 → 워크트리 클린.
+
+### Optimization Found — Dead Code
+- **`signInWithGoogle` + `signInWithPassword`는 어디서도 호출 안 됨**: `AuthContext` 인터페이스와 `AuthProvider` 구현에 선언되어 있지만 `AuthGate`는 `signInWithEmail`만 사용. OAuth/password 경로는 완전 dead code.
+  - Supabase `signInWithOAuth` + `signInWithPassword` 경로가 클라이언트 번들에 포함되는 양만큼 낭비.
+- Fix: 인터페이스, default context, useCallback 구현, useMemo value, 의존성 배열에서 전부 제거.
+
+### Verification
+- `tsc --noEmit` clean (기존 호출자 없었으므로 타입 에러 없음).
+
+### Commit Plan
+- 파일: `src/lib/auth-context.tsx`, `claude-progress.txt`.
+- 메시지: `chore(auth): remove unused signInWithGoogle/signInWithPassword [skip-features-check]`
+- 빌드: stop dev → rm .next → next build → restart dev.
