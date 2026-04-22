@@ -6,6 +6,11 @@ import { createLogger, loggedFetch } from '@/lib/logger';
 
 const log = createLogger('SpineXrayViewer');
 
+// Parity with AtlasViewer — /data/:path* is served `max-age=31536000 immutable`,
+// so we bust the browser cache with a version query string on every asset URL.
+// Bump when the X-ray atlas content changes shape.
+const CACHE_V = 'v1';
+
 interface Structure {
   id: number;
   name: string;
@@ -58,7 +63,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     let cancelled = false;
     (async () => {
       try {
-        const res = await loggedFetch(log, `${dataPath}/structures.json`);
+        const res = await loggedFetch(log, `${dataPath}/structures.json?${CACHE_V}`);
         if (!res.ok) return;
         const d = await res.json() as { structures: Structure[] };
         if (cancelled) return;
@@ -70,7 +75,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     })();
     (async () => {
       try {
-        const res = await loggedFetch(log, `${dataPath}/info.json`);
+        const res = await loggedFetch(log, `${dataPath}/info.json?${CACHE_V}`);
         if (!res.ok) return;
         const info = await res.json() as { planes?: Record<string, { slices?: number }> };
         if (cancelled) return;
@@ -98,7 +103,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
     const caseId = String(caseIndex).padStart(4, '0');
     availableViews.forEach(view => {
       const img = new Image();
-      const url = `${dataPath}/${view}/${caseId}.png`;
+      const url = `${dataPath}/${view}/${caseId}.png?${CACHE_V}`;
       img.onload = () => {
         log.debug(`image loaded: ${view}`, { url, caseIndex, width: img.naturalWidth, height: img.naturalHeight });
         imgRefs.current[view] = img;
@@ -112,7 +117,7 @@ export default function SpineXrayViewer({ onStructureSelect, selectedStructure, 
 
     const ctrls: AbortController[] = [];
     availableViews.forEach(view => {
-      const url = `${dataPath}/labels/${view}/${caseId}.json`;
+      const url = `${dataPath}/labels/${view}/${caseId}.json?${CACHE_V}`;
       const ctrl = new AbortController();
       ctrls.push(ctrl);
       fetch(url, { signal: ctrl.signal })

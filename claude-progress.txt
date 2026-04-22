@@ -1606,3 +1606,23 @@
 
 ### Outcome
 - 코드 변경/커밋 없음. 운영 정리만.
+
+
+## Session 18 — Round 41
+### Live Test
+- Route sweep 6개 200 (102~262ms). 워크트리 클린.
+- 좀비 2개 (conhost) 종료.
+
+### Optimization Found — Cache-busting parity
+- **`SpineXrayViewer` fetch URL 4개에 cache-busting 없음**: `AtlasViewer`는 `CACHE_V = 'v3'` query param으로 `/data/:path*` immutable cache를 우회하지만 `SpineXrayViewer`는 `structures.json`, `info.json`, `${view}/${caseId}.png`, `labels/${view}/${caseId}.json` 4개 URL 모두 plain — 하드코드 `max-age=31536000 immutable` 때문에 atlas 업데이트 시 사용자가 stale JSON에 고정.
+- sw.js CACHE_NAME bump이 SW 계층은 해결하나 SW 미설치/브라우저 HTTP 캐시 레벨에서는 여전히 문제.
+- Fix: `CACHE_V = 'v1'` 추가 (시작 버전) + 4개 URL에 `?${CACHE_V}` 일괄 부착. AtlasViewer와 동일 패턴.
+  - v3가 아니라 v1로 시작한 이유: SpineXrayViewer 별도 파일이라 기존 atlas-level CACHE_V 히스토리와 분리됨.
+
+### Verification
+- `tsc --noEmit` clean.
+
+### Commit Plan
+- 파일: `src/components/SpineXrayViewer.tsx`, `claude-progress.txt`.
+- 메시지: `fix(xray): add cache-busting query string parity with AtlasViewer [skip-features-check]`
+- 빌드: stop dev → rm .next → next build → restart dev.
