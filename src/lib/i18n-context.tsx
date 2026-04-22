@@ -17,7 +17,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useState<Locale>('en');
 
   useEffect(() => {
-    setLocale(detectLocale());
+    const detected = detectLocale();
+    setLocale(detected);
+    // Set <html lang> so screen readers pronounce content in the user's
+    // language. Server renders lang="en" (default), client updates after
+    // hydration when we know the actual locale.
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = detected;
+    }
   }, []);
 
   const t = useCallback(

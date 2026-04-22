@@ -17,7 +17,7 @@ export default function Footer() {
           {/* Copyright */}
           <div className="text-xs text-slate-400 text-center sm:text-right">
             <span>&copy; {new Date().getFullYear()} BodyAtlas by{' '}
-              <a href="http://www.spinai.net" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-500 transition-colors">
+              <a href="http://www.spinai.net" target="_blank" rel="noopener noreferrer" aria-label="SPINAI website (opens in new tab)" className="hover:text-indigo-500 transition-colors">
                 SPINAI
               </a>
             </span>

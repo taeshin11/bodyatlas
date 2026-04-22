@@ -194,6 +194,7 @@
 - Logo (BookOpen + "BodyAtlas" + 부제)
 - Desktop nav: `/download` / `/how-to-use` / `/about`
 - Mobile hamburger (AnimatePresence 오버레이)
+- **A11y (R25)**: 햄버거 버튼 `aria-label`/`aria-expanded`/`aria-controls="mobile-menu"`, 메뉴 컨테이너 `id="mobile-menu"`, 아이콘 `aria-hidden="true"`
 
 ### 2.6 `Footer.tsx`
 - About / How to Use / Privacy / Terms / Contact(mailto)

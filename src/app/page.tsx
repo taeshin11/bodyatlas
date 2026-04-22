@@ -78,9 +78,16 @@ export default function Home() {
   return (
     <ErrorBoundary>
       <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
+        {/* Skip-to-main: hidden until keyboard focus, jumps past Header nav */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-3 focus:py-2 focus:bg-indigo-600 focus:text-white focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
+        >
+          Skip to main content
+        </a>
         <Header />
 
-        <main className="flex-1">
+        <main id="main" className="flex-1">
           {/* SEO Hero */}
           <section className="bg-gradient-to-b from-indigo-50/80 to-transparent border-b border-slate-100">
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 sm:py-4">

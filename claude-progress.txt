@@ -1448,3 +1448,12 @@
 - 파일: `src/lib/logger.ts`, `claude-progress.txt`.
 - 메시지: `docs(logger): loggedFetch doc — non-2xx returns, doesn't throw [skip-features-check]`
 - 빌드: stop dev → rm .next → next build → restart dev.
+
+
+## Session 18 — Round 30
+### Live Test
+- Route sweep 6개 200 (42~66ms). 좀비 0. dev 에러 0.
+- 다른 세션 a11y 작업 진행 중: `page.tsx`, `Footer.tsx`, `Header.tsx`, `i18n-context.tsx` 수정 상태. 미커밋.
+
+### Outcome
+- 신규 이슈 없음. 충돌 회피 위해 코드 변경/커밋 없음.

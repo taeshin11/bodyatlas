@@ -41,14 +41,18 @@ export default function Header() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="sm:hidden p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" aria-hidden="true" /> : <Menu className="w-5 h-5" aria-hidden="true" />}
           </button>
         </div>
       </div>
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
