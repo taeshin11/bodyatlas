@@ -86,10 +86,11 @@ async function submitOne(ep) {
 }
 
 async function submit() {
-  const results = [];
-  for (const ep of endpoints) {
-    results.push({ name: ep.name, ok: await submitOne(ep) });
-  }
+  // Independent endpoints — fire in parallel instead of sequentially.
+  // Cuts postbuild wall time from ~N×latency to ~max(latency).
+  const results = await Promise.all(
+    endpoints.map(async (ep) => ({ name: ep.name, ok: await submitOne(ep) }))
+  );
   const okCount = results.filter(r => r.ok).length;
   const elapsed = Date.now() - runStart;
   log('STG', `submit summary: ${okCount}/${results.length} OK, ${elapsed}ms total`);
