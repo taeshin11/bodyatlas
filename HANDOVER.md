@@ -13,33 +13,30 @@
 
 ---
 
-## 🚨 긴급 (Session 15, 2026-04-22 발견)
+## 🅿️ Vercel prod 상태 (R20 declaration: 자동 복구 공식 포기)
 
-**프로덕션 배포 유실** — `bodyatlas-ten.vercel.app` → `DEPLOYMENT_NOT_FOUND` (404).
-Vercel 프로젝트(`prj_WcoBLejQU7ddyGPpu24PVusSk84h`, team `team_Ku8jPGlrgClTAMzdeDkGF6Gr`)가 삭제/이전됨. 현재 계정(`taeshinkim11-4365s-projects`)의 프로젝트 목록엔 `spinaiq`·`flowvium`·`web`만 존재, bodyatlas 없음. 최근 모든 commit은 GitHub까지만 도달하고 라이브 반영 0.
+`bodyatlas-ten.vercel.app` 여전히 404 (Session 15 발견 이후 미복구). R20 공식 선언으로 **자동 헬스 체크 / 복구 시도 중단** — 자격증명·URL·도메인 결정이 사용자 영역이라 loop iter마다 측정만 하면 시그널 노이즈만 누적. 사용자가 명시적으로 "새 Vercel 프로젝트 만들었다, URL은 X" 하면 그때 재진입.
 
-**사용자가 결정할 것:**
-- (a) 새 Vercel 프로젝트 생성 — `npx vercel deploy --prod` (현재 `.vercel/project.json` 삭제 필요)
-- (b) `bodyatlas.vercel.app`는 이미 타인 Angular 앱이 점유 — 이 이름 재사용 불가
-- (c) 커스텀 도메인 구매 후 연결 (장기적으로 이 방향이 깔끔)
+**남아있는 사용자 결정 옵션 (변화 없음):**
+- (a) 새 Vercel 프로젝트 생성 — `npx vercel deploy --prod` (`.vercel/project.json` 먼저 삭제)
+- (b) 다른 호스팅 (Cloudflare Pages, Netlify) 마이그레이션
+- (c) 커스텀 도메인 구매 후 연결 (장기 방향)
 
-**URL centralization 완료 (Session 16, 2026-04-22):**
-- `src/lib/site-config.ts` 신규 — `SITE_URL` / `SITE_HOST` / `OG_IMAGE` / `siteUrl()` export
-- `NEXT_PUBLIC_SITE_URL` env var 미세팅 시 fallback은 `'https://bodyatlas-ten.vercel.app'` (호환성)
-- 모든 baked 참조가 site-config 기반으로 전환됨 (layout.tsx, sitemap.ts, robots.ts, 각 page.tsx metadata, DownloadContent.tsx, privacy·terms 본문, submit-indexnow.mjs)
-- **재배포 후 해야 할 일:** `.env.local` + Vercel env에 `NEXT_PUBLIC_SITE_URL=https://<new-url>` 추가 → rebuild → 28+ 지점 자동 반영
-- 남은 baked: `PRD.md` (문서만, 런타임 영향 없음)
+**URL centralization (R16) 동작:** `src/lib/site-config.ts`가 모든 baked URL의 단일 소스. 새 URL 확정 시 `.env.local` + Vercel env에 `NEXT_PUBLIC_SITE_URL=https://<new>` 세팅 → rebuild → 28+ 지점 자동 반영.
 
-## 🏃 지금 바로 할 일
+## 🏃 지금 바로 할 일 (R29 시점)
 
-- **현재 상태 (Session 17, 2026-04-22):** 5-modality 파이프라인 + X-ray case navigator + hot-path 성능 최적화 완료. 여전히 Vercel 라이브 배포 유실 (Session 15 블록 미해결) — 변경분은 GitHub까지만 반영.
-- **다음 세션 첫 작업:**
-  0. **🚨 Vercel 재배포 결정 후 실행** (위 긴급 블록 참고)
-  1. `auto_model_monitor.py` 실행 (매 세션 규칙)
-  2. `unet_xray_ANON_v1_c34` 학습 완료 확인 — 현재 pseudo_xray34c_anon.py 진행 중 (PID 74996, 2h+)
-  3. `unet_chest_c3` training_history.json 확인 — checkpoint 81MB 있지만 history 비어있음
-  4. 좀비 프로세스 점검 (`tasklist //FI "IMAGENAME eq node.exe"`)
-  5. 사용자 수작업 대기: Task Scheduler 등록, 포털 인증코드, 커스텀 도메인
+**현재 상태:** 9 atlas, Quiz Mode (Easy/Hard, 7 locale 번역, binary atlas 자동 숨김), PWA offline (sw.js cache-first /data/), accessibility (skip-link/aria/dynamic html lang), README, auto_model_monitor sw.js bump 자동화. 모든 변경 GitHub master 도달, prod는 Vercel 미복구로 미반영.
+
+**다음 세션 첫 작업:**
+1. `python scripts/auto_model_monitor.py` 실행 (매 세션 규칙) — atlas 변경 시 sw.js CACHE_NAME 자동 bump됨 (R27)
+2. `tasklist //FI "IMAGENAME eq node.exe"` 좀비 점검
+3. 신규 SPINAI 모델 진행 확인 (R13 hand/foot 이후 추가된 것)
+4. 사용자 수작업 대기 (R20부터 동일):
+   - Task Scheduler 등록 (`scripts/setup_scheduler.bat` 관리자)
+   - 검색 포털 인증코드 (Google/Naver/Bing/Baidu/Yandex) `.env.local`
+   - Vercel 새 프로젝트 결정 (위 블록)
+5. **`.env.example` 신규 (R30)** — 새 contributor는 그것 복사해서 `.env.local` 작성
 
 ## 📝 Session 17 (2026-04-22) 주요 결정사항
 
@@ -210,4 +207,4 @@ pip install kaggle
 
 ---
 
-_마지막 업데이트: 2026-04-22 (Session 15 — prod 유실 감지 / case navigator는 GitHub엔 있으나 미배포)_
+_마지막 업데이트: 2026-04-22 (R30 — `.env.example` 신설 + HANDOVER state refresh; prod는 R20 declaration대로 사용자 결정 대기)_

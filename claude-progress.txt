@@ -1569,3 +1569,11 @@
 - 파일: `scripts/submit-indexnow.mjs`, `claude-progress.txt`.
 - 메시지: `perf(postbuild): parallelize IndexNow submissions (1.5s → 500ms) [skip-features-check]`
 - 빌드: stop dev → rm .next → next build → restart dev.
+
+
+## Session 18 — Round 38
+### Live Test
+- Route sweep 6개 200 (66~784ms, idle HMR). 좀비 0. dev 에러 0. 워크트리 클린.
+
+### Outcome
+- 코드 변경/커밋 없음.
