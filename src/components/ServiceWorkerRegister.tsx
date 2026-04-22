@@ -12,6 +12,7 @@ export default function ServiceWorkerRegister() {
       return;
     }
     log.info('registering /sw.js');
+    let updateTimer: number | null = null;
     navigator.serviceWorker
       .register('/sw.js')
       .then((reg) => {
@@ -28,10 +29,19 @@ export default function ServiceWorkerRegister() {
             });
           }
         });
+        // Long-lived tabs (PWA kiosk, study session) only see SW updates
+        // on next visit otherwise. Poll every hour; reg.update() is cheap
+        // when nothing changed (HTTP 304 on sw.js).
+        updateTimer = window.setInterval(() => {
+          reg.update().catch(() => {});
+        }, 60 * 60 * 1000);
       })
       .catch((e) => {
         log.error('service worker registration failed', e);
       });
+    return () => {
+      if (updateTimer !== null) window.clearInterval(updateTimer);
+    };
   }, []);
 
   return null;

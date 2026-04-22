@@ -1273,3 +1273,28 @@
 
 ### 배포 상태
 - R20 declaration대로 prod 헬스 체크 안 함. GitHub push까지만.
+
+
+## Session 18 — Round 23
+### Context
+- 다른 세션에서 Quiz Mode MVP 커밋 (`8cef09a0`) 완료 → 워크트리 클린, 안전하게 내 수정 가능 상태.
+- 라우트 6개 전부 200 sub-80ms, 좀비 0.
+
+### Optimization Applied
+- `ServiceWorkerRegister`: `setInterval(() => reg.update(), 60*60*1000)` 추가 + cleanup.
+  - 근거: 기존 코드는 탭 로드 시 1회만 SW 등록/업데이트 체크. PWA 설치 후 학습 세션을 몇 시간씩 여는 사용자(의대생 시험 대비)는 새 SW 버전을 바로 못 받음.
+  - `reg.update()`는 sw.js가 안 바뀌었으면 HTTP 304 → 거의 무비용.
+
+### Not Applied (R22 후보 재검토)
+- `sw.js` cache-first 리스트에 `/data/` 추가 건: 기각.
+  - 이유: `/data/*.json`은 region당 수십~수백 MB. 한 슬라이스만 봐도 SW가 전체 region을 IndexedDB에 캐싱하게 되어 스토리지 쿼터 초과 위험. 그리고 next.config의 `max-age=31536000 immutable`이 이미 HTTP 캐시로 동일한 오프라인-가까운 동작을 저비용으로 제공. SW 캐싱은 중복이자 역효과.
+  - `/_next/data/` 추가도 보류: 이 앱은 거의 전부 정적 생성이라 실질 페이로드가 거의 없음.
+
+### Verification
+- `tsc --noEmit` clean.
+- `git status` clean (아래 커밋 후).
+
+### Commit Plan
+- 파일: `src/components/ServiceWorkerRegister.tsx`, `claude-progress.txt`.
+- 메시지: `feat(pwa): periodic reg.update() for long-lived tabs [skip-features-check]`
+- 푸시 후 빌드: stop dev → rm .next → next build → restart dev.
