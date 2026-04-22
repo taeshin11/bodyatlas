@@ -106,7 +106,9 @@ export function createLogger(namespace: string): Logger {
 
 /**
  * Wrap a fetch call so errors surface with URL context.
- * Throws on non-2xx so callers can let errors propagate.
+ * - Network errors (reject): logged, then re-thrown.
+ * - Non-2xx (resolved): logged, but response is returned. Callers must
+ *   check `res.ok` themselves. All current callers do.
  */
 export async function loggedFetch(
   log: Logger,
