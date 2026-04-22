@@ -24,19 +24,23 @@
 
 **URL centralization (R16) 동작:** `src/lib/site-config.ts`가 모든 baked URL의 단일 소스. 새 URL 확정 시 `.env.local` + Vercel env에 `NEXT_PUBLIC_SITE_URL=https://<new>` 세팅 → rebuild → 28+ 지점 자동 반영.
 
-## 🏃 지금 바로 할 일 (R29 시점)
+## 🏃 지금 바로 할 일 (R34 세션 종료 시점)
 
-**현재 상태:** 9 atlas, Quiz Mode (Easy/Hard, 7 locale 번역, binary atlas 자동 숨김), PWA offline (sw.js cache-first /data/), accessibility (skip-link/aria/dynamic html lang), README, auto_model_monitor sw.js bump 자동화. 모든 변경 GitHub master 도달, prod는 Vercel 미복구로 미반영.
+**현재 상태 요약:** 9 atlas (head-ct, chest-ct, our-head-ct, our-ct, brain-mri-commercial, our-lumbar-mri, our-xray, our-hand-xray, our-foot-xray). Quiz Mode (Easy/Hard, 7 locale i18n, binary atlas 자동 토글 숨김 + 자동 disable). PWA offline (sw.js cache-first `/data/` + auto_model_monitor가 atlas 갱신 시 CACHE_NAME 자동 bump). Accessibility 스택 (skip-link, mobile 햄버거 aria, dynamic html lang). Region localStorage 영속화. Atlas integrity check (`npm run check-atlases` + .githooks/pre-commit). README + .env.example + HANDOVER 모두 갱신. 모든 변경 GitHub master 도달, **prod는 Vercel 미복구로 미반영** (R20 declaration: 자동 복구 공식 포기).
 
-**다음 세션 첫 작업:**
-1. `python scripts/auto_model_monitor.py` 실행 (매 세션 규칙) — atlas 변경 시 sw.js CACHE_NAME 자동 bump됨 (R27)
-2. `tasklist //FI "IMAGENAME eq node.exe"` 좀비 점검
-3. 신규 SPINAI 모델 진행 확인 (R13 hand/foot 이후 추가된 것)
-4. 사용자 수작업 대기 (R20부터 동일):
-   - Task Scheduler 등록 (`scripts/setup_scheduler.bat` 관리자)
-   - 검색 포털 인증코드 (Google/Naver/Bing/Baidu/Yandex) `.env.local`
-   - Vercel 새 프로젝트 결정 (위 블록)
-5. **`.env.example` 신규 (R30)** — 새 contributor는 그것 복사해서 `.env.local` 작성
+**세션 시작 시 매번:**
+1. `python scripts/auto_model_monitor.py` 실행 (매 세션 규칙). atlas 갱신 시 sw.js CACHE_NAME 자동 bump 포함 (R27).
+2. 좀비 점검: `tasklist //FI "IMAGENAME eq node.exe"`
+3. (선택) 신규 SPINAI 모델 진행 확인
+4. (개발 시작 전) `bash scripts/install-hooks.sh` — `.githooks/` 활성화 (commit-msg + pre-commit)
+
+**상시 사용자 결정 대기:**
+- Vercel 새 프로젝트 (위 🅿️ 블록) — 결정 시 `NEXT_PUBLIC_SITE_URL` 세팅으로 28+ baked URL 자동 반영
+- Task Scheduler 등록 (`scripts/setup_scheduler.bat` 관리자 권한)
+- 검색 포털 인증코드 (Google/Naver/Bing/Baidu/Yandex) → `.env.local`
+- 커스텀 도메인 (장기 방향)
+
+**Loop discipline 메모 (`.claude/.../memory/feedback_drift_declarations.md`):** 다음 /loop 라운드들은 (a) 번들 사이즈 변동 보고 금지 (R11 floor), (b) Vercel prod 헬스 체크 금지 (R20 포기), (c) 같은 모듈 영역 3 iter 연속 회피 권장.
 
 ## 📝 Session 17 (2026-04-22) 주요 결정사항
 
@@ -207,4 +211,4 @@ pip install kaggle
 
 ---
 
-_마지막 업데이트: 2026-04-22 (R30 — `.env.example` 신설 + HANDOVER state refresh; prod는 R20 declaration대로 사용자 결정 대기)_
+_마지막 업데이트: 2026-04-22 (R34 세션 종료 — PRD v2.2 changelog 반영 + HANDOVER R34 state refresh; prod는 R20 declaration대로 사용자 결정 대기)_

@@ -1693,3 +1693,47 @@
 - 파일: `src/app/about/AboutContent.tsx`, `claude-progress.txt`.
 - 메시지: `perf(about): drop 'use client' — pure server component [skip-features-check]`
 - 빌드: stop dev → rm .next → next build → restart dev.
+
+
+## Session 34 — 종료 (2026-04-22)
+- /loop dynamic 모드 R19~R34 16 라운드 후 사용자 종료.
+
+### R34 산출물
+- `PRD.md` v2.0 → **v2.2** changelog entry — Sessions 18~33 / R19~R33 21일치 변화 누적 반영.
+- `HANDOVER.md` R34 종료 시점 갱신 — "지금 바로 할 일" R29 → R34 현재 상태로, 세션 시작 4단계 + 사용자 결정 대기 4종 + drift 메모리 가이드 추가.
+
+### 세션 누적 (R19 → R34, 16 round)
+- R19 perf — sw.js no-cache + AtlasViewer contourPath hoist + img decode hint + /data immutable cache
+- R20 drift 보정 — dead atlas data 삭제 (-3.35 MB), **공식 선언** 2건 (번들 추적 종료 / Vercel 자동 복구 포기)
+- R21 feature — Quiz Mode MVP (random structure + click 채점)
+- R22 cleanup — features.ts 삭제 + Quiz i18n 5 locale (65 신규 번역)
+- R23 PWA — sw.js cache-first /data/ + CACHE_NAME bump v1→v2 (offline 약속 실현)
+- R24 feature — Quiz Hard mode (forceHideOverlay)
+- R25 a11y — skip-link + mobile aria + dynamic html lang
+- R26 onboarding — README.md 신설 (84 lines)
+- R27 ops — auto_model_monitor sw.js CACHE_NAME 자동 bump
+- R28 bug — R24 click target 사라짐 fix + SpineXrayViewer Hard parity
+- R29 Quiz — binary atlas (hand/foot) 자동 토글 숨김 + auto-disable
+- R30 onboarding — `.env.example` 신설 + HANDOVER refresh
+- R31 ops — scripts/check_atlases.mjs + npm run check-atlases
+- R32 ops — .githooks/pre-commit atlas integrity
+- R33 feature — Atlas region localStorage 영속화 (재방문 UX)
+- R34 docs — PRD v2.2 changelog + HANDOVER 종료 refresh
+
+### 누적 commits (R19~R34 내 작성분)
+8addc53f cd234404 6b8856fe 8cef09a0 9edaef70 078b16cf 338fd84a 5bbe7fdb ad9a7f3a babb64d0 455eed70 f1a499ac b26a873b e9f08dc1 4da7b659 936cedba 3b5f0a17 + 본 종료 commit (HANDOVER + 본 log entry).
+
+### Drift discipline 결과
+- 모든 3+ iter 미룸 항목 해소 또는 공식 포기 완료 (Vercel/번들/quizMode/Quiz hard/a11y/README/monitor sw.js/PRD changelog).
+- 같은 모듈 3-iter 회피 준수 — 영역 분산.
+
+### 다음 세션 시작 시 체크리스트
+1. `python scripts/auto_model_monitor.py`
+2. `tasklist //FI "IMAGENAME eq node.exe"` 좀비 점검
+3. `bash scripts/install-hooks.sh` (clone 최초 1회 또는 hookpath 변경 시)
+4. 사용자 결정 대기 (HANDOVER): Vercel, Task Scheduler, 포털 인증, 커스텀 도메인
+5. 메모리 `feedback_drift_declarations.md` 가이드 준수
+
+### 종료 시 git 상태
+- 브랜치: master, origin sync 완료
+- /loop ScheduleWakeup 호출 안 함 → 사이클 정지
