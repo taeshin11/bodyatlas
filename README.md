@@ -28,9 +28,10 @@
 
 ```bash
 npm install
-npm run dev          # dev server on :3000 (or PORT=3500 npm run dev)
-npm run build        # production build
-npm run start        # serve production build
+npm run dev             # dev server on :3000 (or PORT=3500 npm run dev)
+npm run build           # production build
+npm run start           # serve production build
+npm run check-atlases   # verify every BODY_REGIONS atlas has matching public/data/ folder
 ```
 
 Optional environment variables (`.env.local`):

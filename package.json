@@ -7,7 +7,8 @@
     "build": "next build",
     "postbuild": "node scripts/submit-indexnow.mjs",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check-atlases": "node scripts/check_atlases.mjs"
   },
   "keywords": [],
   "author": "",

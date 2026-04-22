@@ -1596,3 +1596,13 @@
 - 파일: `src/lib/i18n.ts`, `claude-progress.txt`.
 - 메시지: `chore(i18n): drop unused SUPPORTED_LOCALES export [skip-features-check]`
 - 빌드: stop dev → rm .next → next build → restart dev.
+
+
+## Session 18 — Round 40
+### Live Test
+- Route sweep 6개 200 (54~859ms, idle HMR). 워크트리 클린.
+- 좀비 1개 감지 (conhost 13548, 6시간+ 된 것) → 종료.
+- dev 에러 0건.
+
+### Outcome
+- 코드 변경/커밋 없음. 운영 정리만.
