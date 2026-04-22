@@ -1,0 +1,31 @@
+#!/bin/sh
+# Atlas integrity pre-commit hook — run scripts/check_atlases.mjs when a
+# commit touches atlas data or the RegionSelector that registers them.
+#
+# Catches two regression modes locally:
+#   1. RegionSelector dataPath refers to a folder that doesn't exist.
+#   2. An atlas folder gets pruned but the BODY_REGIONS entry stays.
+#
+# Skipped when staged files don't touch either area (cheap).
+#
+# Escape hatches:
+#   - git commit --no-verify  (skip all hooks)
+#
+# Install via scripts/install-hooks.sh (sets core.hooksPath=.githooks).
+
+staged="$(git diff --cached --name-only --diff-filter=ACMRD)"
+
+if ! printf '%s\n' "$staged" | grep -qE '^(public/data/|src/components/RegionSelector\.tsx$)'; then
+  exit 0
+fi
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "[pre-commit] node not on PATH — skipping atlas check"
+  exit 0
+fi
+
+if ! node scripts/check_atlases.mjs; then
+  echo ""
+  echo "[pre-commit] atlas integrity FAILED — fix the issues above or use --no-verify"
+  exit 1
+fi
