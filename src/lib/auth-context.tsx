@@ -96,21 +96,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signInWithEmail = useCallback(async (email: string) => {
-    log.info('signInWithEmail: sending OTP', { email });
+    // Don't log the email itself — users shouldn't see other users' addresses
+    // in shared devtools sessions, screenshots, or future log aggregation.
+    log.info('signInWithEmail: sending OTP');
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: window.location.origin },
     });
-    if (error) log.error('signInWithOtp returned error', error, { email });
-    else log.info('OTP sent', { email });
+    if (error) log.error('signInWithOtp returned error', error);
+    else log.info('OTP sent');
     return { error: error?.message ?? null };
   }, []);
 
   const signInWithPassword = useCallback(async (email: string, password: string) => {
-    log.info('signInWithPassword: attempting', { email });
+    log.info('signInWithPassword: attempting');
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) log.warn('signInWithPassword failed', { email, error: error.message });
-    else log.info('signInWithPassword OK', { email });
+    if (error) log.warn('signInWithPassword failed', { error: error.message });
+    else log.info('signInWithPassword OK');
     return { error: error?.message ?? null };
   }, []);
 

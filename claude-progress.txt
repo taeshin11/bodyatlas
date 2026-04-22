@@ -1457,3 +1457,24 @@
 
 ### Outcome
 - 신규 이슈 없음. 충돌 회피 위해 코드 변경/커밋 없음.
+
+
+## Session 18 — Round 31
+### Live Test
+- Route sweep 6개 200 (48~104ms). 좀비 0. dev 에러 0.
+- 타 세션 커밋: `5bbe7fdb feat(a11y)`, `ad9a7f3a docs: add README` → 워크트리 클린.
+
+### Optimization Found — Privacy
+- **auth 로그에 이메일 PII 유출**: `src/lib/auth-context.tsx`에서 5곳의 log 호출이 사용자 이메일을 콘솔 컨텍스트에 포함.
+  - `signInWithEmail: sending OTP` / `signInWithOtp returned error` / `OTP sent`
+  - `signInWithPassword: attempting` / `signInWithPassword failed` / `signInWithPassword OK`
+  - 의료 대상 서비스로서 DevTools/스크린샷/향후 로그 집계에서 다른 사용자의 이메일이 보일 위험. production에서 `info`는 `removeConsole`로 제거되지만 `warn`/`error`는 살아있고 dev에서는 전부 노출.
+- Fix: 이메일을 로그 context에서 제거. 이벤트 시퀀스로 충분히 디버그 가능.
+
+### Verification
+- `tsc --noEmit` clean.
+
+### Commit Plan
+- 파일: `src/lib/auth-context.tsx`, `claude-progress.txt`.
+- 메시지: `fix(auth,privacy): strip user email from auth logs [skip-features-check]`
+- 빌드: stop dev → rm .next → next build → restart dev.
